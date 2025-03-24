@@ -1,0 +1,71 @@
+{
+  "name": "async-race",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Single page application to manage the collection of cars, operate their engines, and show race statistics.",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "format": "prettier --write .",
+    "deploy": "npm run build && npx gh-pages -d dist -e async-race",
+    "ci:format": "prettier --check .",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "lint:fix": "eslint --ext ts --fix .",
+    "stylelint": "stylelint \"**/*.css\"",
+    "stylelint:fix": "stylelint \"**/*.css\" --fix",
+    "prepare": "cd .. && husky async-race/.husky"
+  },
+  "lint-staged": {
+    "*": [
+      "prettier --write --ignore-unknown"
+    ],
+    "*.css": [
+      "stylelint --fix"
+    ],
+    "*.{js,mjs,ts,jsx,tsx}": [
+      "eslint --max-warnings 0"
+    ]
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^19.7.1",
+    "@commitlint/config-conventional": "^19.7.1",
+    "@eslint/eslintrc": "^3.0.2",
+    "@eslint/js": "^9.21.0",
+    "@typescript-eslint/eslint-plugin": "^8.25.0",
+    "@typescript-eslint/parser": "^8.25.0",
+    "eslint": "^9.21.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-import-resolver-typescript": "^3.5.5",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-perfectionist": "^4.9.0",
+    "eslint-plugin-prettier": "^5.2.3",
+    "eslint-plugin-unicorn": "^57.0.0",
+    "gh-pages": "^6.2.0",
+    "globals": "^16.0.0",
+    "husky": "^9.0.11",
+    "import": "^0.0.6",
+    "lint-staged": "^15.4.3",
+    "prettier": "^3.5.2",
+    "sharp": "^0.33.5",
+    "sonarlint": "^1.1.0",
+    "stylelint": "^16.14.1",
+    "stylelint-config-clean-order": "^7.0.0",
+    "stylelint-config-standard": "^37.0.0",
+    "stylelint-declaration-block-no-ignored-properties": "^2.8.0",
+    "stylelint-order": "^6.0.4",
+    "svgo": "^3.2.0",
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.25.0",
+    "vite": "^6.2.0"
+  },
+  "dependencies": {
+    "autoprefixer": "^10.4.19",
+    "modern-normalize": "^3.0.1",
+    "vite-plugin-checker": "^0.8.0",
+    "vite-plugin-image-optimizer": "^1.1.7",
+    "vite-tsconfig-paths": "^5.1.4"
+  }
+}
