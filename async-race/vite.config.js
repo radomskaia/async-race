@@ -2,7 +2,6 @@ import path, { resolve } from "path";
 import { defineConfig } from "vite";
 import autoprefixer from "autoprefixer";
 import checker from "vite-plugin-checker";
-import { ViteImageOptimizer } from "vite-plugin-image-optimizer";
 import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
@@ -22,17 +21,6 @@ export default defineConfig({
     },
   },
   plugins: [
-    ViteImageOptimizer({
-      jpg: {
-        quality: 85,
-      },
-      png: {
-        quality: 85,
-      },
-      webp: {
-        quality: 70,
-      },
-    }),
     tsconfigPaths(),
     checker({
       typescript: true,
