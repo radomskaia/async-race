@@ -1,5 +1,4 @@
 export type Callback = () => void;
-export type CallbackEvent = (option?: Event) => void;
 
 export type TypeGuard<T> = (value: unknown) => value is T;
 
@@ -22,13 +21,7 @@ export interface CreateSVGIconOptions extends Options {
   path: string;
 }
 
-export enum InputType {
-  Title = "title",
-  Weight = "weight",
-}
-
 export enum StorageKeys {
-  optionListValue = "optionListValue",
   soundSettings = "soundSettings",
 }
 
@@ -41,7 +34,12 @@ export interface Route {
   };
 }
 
-export interface Car {
+export interface CarProperties {
+  name: string;
+  color: string;
+}
+
+export interface Car extends CarProperties {
   name: string;
   color: string;
   id: number;
