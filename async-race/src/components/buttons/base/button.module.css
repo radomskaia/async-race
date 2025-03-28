@@ -1,0 +1,91 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background-color: transparent;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.actionButton {
+  border: 1px solid var(--primary);
+  border-radius: var(--border-radius);
+  padding: 10px 20px;
+  box-shadow: none;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 2rem;
+  text-transform: uppercase;
+  color: var(--dark);
+  background-color: var(--secondary);
+  transform: translateY(0);
+}
+
+.iconButton {
+  width: 50px;
+  height: 50px;
+  filter: invert(0) brightness(1);
+  transform: scale(1);
+  transition: 0.3s ease-in-out;
+  cursor: pointer;
+}
+
+.settings {
+  width: 40px;
+  height: 40px;
+}
+
+.actions {
+  width: 50px;
+  height: 50px;
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: auto;
+}
+
+.button:disabled .iconButton {
+  filter: invert(0.2) brightness(1);
+  transform: scale(0.9);
+}
+
+[data-theme] {
+  .iconButton {
+    filter: invert(1) brightness(1);
+  }
+
+  .button:disabled .iconButton {
+    filter: invert(1) brightness(0.5);
+    transform: scale(0.9);
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .actionButton:hover {
+    filter: brightness(1.1);
+  }
+
+  .iconButton:hover {
+    transform: scale(1.2);
+  }
+
+  .iconButton:active {
+    transform: scale(1.05);
+  }
+
+  button:disabled:hover {
+    cursor: auto;
+  }
+
+  button:disabled .iconButton:hover {
+    transform: scale(0.9);
+    cursor: auto;
+  }
+
+  button:disabled .iconButton:active {
+    transform: scale(0.9);
+    cursor: auto;
+  }
+}

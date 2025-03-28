@@ -1,0 +1,22 @@
+declare const utilitiesStyles: {
+  container: string;
+  flex: string;
+  flexColumn: string;
+  alignCenter: string;
+  center: string;
+  justifyAround: string;
+  justifyBetween: string;
+  flexWrap: string;
+  gap30: string;
+  gap20: string;
+  gap10: string;
+  displayNone: string;
+  image: string;
+  widthFull: string;
+  noPointerEvents: string;
+  hidden: string;
+  centerMargin: string;
+  width80: string;
+  positionRelative: string;
+};
+export default utilitiesStyles;

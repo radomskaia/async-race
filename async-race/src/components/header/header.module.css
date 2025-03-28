@@ -1,0 +1,9 @@
+.headerPrimary {
+  font-weight: 600;
+  font-size: 3.2rem;
+  text-transform: uppercase;
+}
+
+.header {
+  margin-block: 2rem;
+}

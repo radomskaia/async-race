@@ -1,0 +1,16 @@
+.buttonWrapper {
+  /* position: fixed; */
+  /* right: 50%; */
+  /* bottom: 25px; */
+  border-radius: var(--border-radius);
+  padding: 15px;
+  width: 100%;
+  max-width: 480px;
+  background-color: transparent;
+  transform: translateX(50%);
+  transition: all 0.2s ease-in-out;
+}
+
+.highlight {
+  background-color: var(--content-background-alpha);
+}

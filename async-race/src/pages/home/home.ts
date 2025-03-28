@@ -1,0 +1,89 @@
+import { BaseComponent } from "@/components/base-component.ts";
+import utilitiesStyles from "@/styles/utilities.module.css";
+import type { Callback } from "@/types";
+import { BUTTON_TEXT } from "@/constants/buttons-constants.ts";
+import styles from "@/pages/home/home.module.css";
+import { TextButton } from "@/components/buttons/text-button.ts";
+import { carsList } from "@/components/options/option-list/cars-list.ts";
+import { ApiHandler } from "@/services/api-handler.ts";
+
+export class Home extends BaseComponent<"main"> {
+  private static instance: Home | undefined;
+  private readonly buttonsConfig: {
+    title: (typeof BUTTON_TEXT)[keyof typeof BUTTON_TEXT];
+    callback: Callback;
+  }[] = [
+    {
+      title: BUTTON_TEXT.START_RACE,
+      callback: (): void => {
+        throw new Error("NOT IMPLEMENTED");
+      },
+    },
+    {
+      title: BUTTON_TEXT.RESET,
+      callback: (): void => {
+        throw new Error("NOT IMPLEMENTED");
+      },
+    },
+    {
+      title: BUTTON_TEXT.GENERATE_CARS,
+      callback: (): void => {
+        throw new Error("NOT IMPLEMENTED");
+      },
+    },
+  ];
+
+  private constructor() {
+    super();
+    this.createButtonWrapper();
+    this.addCars();
+  }
+
+  public static getInstance(): Home {
+    if (!Home.instance) {
+      Home.instance = new Home();
+    }
+    return Home.instance;
+  }
+
+  protected createView(): HTMLElement {
+    return this.createDOMElement({
+      tagName: "main",
+      classList: [
+        utilitiesStyles.container,
+        utilitiesStyles.flex,
+        utilitiesStyles.gap30,
+        utilitiesStyles.flexColumn,
+        utilitiesStyles.alignCenter,
+      ],
+    });
+  }
+
+  private async addCars(): Promise<void> {
+    const carsData = await ApiHandler.getInstance().getCars();
+    const carsWrapper = new carsList(carsData);
+    this.element.append(carsWrapper.getElement());
+  }
+
+  private addButtons(buttonWrapper: HTMLDivElement): void {
+    for (const { title, callback } of this.buttonsConfig) {
+      const button = new TextButton(title, callback);
+      buttonWrapper.append(button.getElement());
+    }
+  }
+
+  private createButtonWrapper(): HTMLDivElement {
+    const buttonWrapper = this.createDOMElement({
+      tagName: "div",
+      classList: [
+        styles.buttonWrapper,
+        utilitiesStyles.flex,
+        utilitiesStyles.alignCenter,
+        utilitiesStyles.justifyBetween,
+      ],
+    });
+    this.addButtons(buttonWrapper);
+    this.appendElement(buttonWrapper);
+    return buttonWrapper;
+  }
+}
