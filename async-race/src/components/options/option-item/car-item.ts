@@ -7,47 +7,78 @@ import {
 } from "@/constants/buttons-constants.ts";
 import { IconButton } from "@/components/buttons/icon-button.ts";
 import styles from "@/components/options/option.module.css";
-import type { Callback, Car } from "@/types";
+import type { Callback, CarProperties } from "@/types";
+import { TextButton } from "@/components/buttons/text-button.ts";
 
-export class CarItem extends BaseComponent<"li", Car> {
-  private button: BaseButton;
-  constructor(value?: Car) {
-    super(value);
-
+export class CarItem extends BaseComponent<"li"> {
+  private deleteButton: BaseButton;
+  private editButton: BaseButton;
+  private nameElement: HTMLParagraphElement | null = null;
+  private useElement: SVGUseElement | null = null;
+  constructor(value: CarProperties) {
+    super();
+    this.createCarView(value);
     const buttonWrapper = this.createDOMElement({
       tagName: "div",
     });
-    this.button = this.addDeleteButton();
-    buttonWrapper.append(this.button.getElement());
+    this.deleteButton = this.addDeleteButton();
+    this.editButton = this.addEditButton();
+    buttonWrapper.append(
+      this.deleteButton.getElement(),
+      this.editButton.getElement(),
+    );
     this.element.append(buttonWrapper);
   }
 
   public addDeleteListener(callback: Callback): void {
-    this.button.addListener(callback);
+    this.deleteButton.addListener(callback);
   }
 
-  protected createView({ name, color }: Car): HTMLElementTagNameMap["li"] {
-    const carRow = this.createDOMElement({
+  public addEditListener(callback: Callback): void {
+    this.editButton.addListener(callback);
+  }
+
+  public updateCarView(
+    value: CarProperties,
+    elements?: { name: HTMLParagraphElement; use: SVGUseElement },
+  ): void {
+    const carName = elements?.name || this.nameElement;
+    const carUse = elements?.use || this.useElement;
+    if (!carName || !carUse) {
+      return;
+    }
+    carName.textContent = value.name;
+    carUse.setAttribute("fill", value.color);
+  }
+
+  protected createView(): HTMLElementTagNameMap["li"] {
+    return this.createDOMElement({
       tagName: "li",
       classList: [styles.optionItem],
     });
-    const carName = this.createDOMElement({
+  }
+
+  private createCarView(carProperties: CarProperties): void {
+    this.nameElement = this.createDOMElement({
       tagName: "p",
-      textContent: name,
     });
     const svg = document.createElementNS(SVG_CONFIG.NAMESPACE_SVG, "svg");
     this.addAttributes({ role: "img" }, svg);
     const use = document.createElementNS(SVG_CONFIG.NAMESPACE_SVG, "use");
+    this.useElement = use;
     use.setAttributeNS(
       SVG_CONFIG.NAMESPACE_XLINK,
       SVG_CONFIG.QUALIFIED_NAME,
       ICON_PATH.CAR,
     );
-    use.setAttribute("fill", color);
     svg.append(use);
 
-    carRow.append(carName, svg);
-    return carRow;
+    this.updateCarView(carProperties, {
+      name: this.nameElement,
+      use: this.useElement,
+    });
+
+    this.appendElement(this.nameElement, svg);
   }
 
   private addDeleteButton(): BaseButton {
@@ -57,6 +88,12 @@ export class CarItem extends BaseComponent<"li", Car> {
     });
     button.getElement().classList.add(styles.button);
     button.addClassSVG(styles.icon);
+    this.appendElement(button.getElement());
+    return button;
+  }
+
+  private addEditButton(): BaseButton {
+    const button = new TextButton(BUTTON_TEXT.EDIT);
     this.appendElement(button.getElement());
     return button;
   }

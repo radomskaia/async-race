@@ -17,6 +17,9 @@ export class carsList extends BaseComponent<"ul"> {
     carItem.addDeleteListener(() => {
       this.deleteOption(carData.id, carItem);
     });
+    carItem.addEditListener(() => {
+      this.editOption(carData.id, carItem);
+    });
   }
 
   protected createView(): HTMLElementTagNameMap["ul"] {
@@ -35,5 +38,17 @@ export class carsList extends BaseComponent<"ul"> {
   private deleteOption(id: number, carItem: CarItem): void {
     ApiHandler.getInstance().deleteCar(id);
     carItem.getElement().remove();
+  }
+
+  private editOption(id: number, carItem: CarItem): void {
+    ApiHandler.getInstance().updateCar({
+      id,
+      name: "newName",
+      color: "#ffffff",
+    });
+    carItem.updateCarView({
+      name: "newName",
+      color: "#ffffff",
+    });
   }
 }
