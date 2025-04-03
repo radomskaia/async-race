@@ -7,6 +7,7 @@ import { ThemeButton } from "@/components/buttons/settings/theme-button.ts";
 import { ThemeService } from "@/services/settings/theme-service.ts";
 import { APP_NAME } from "@/constants/constants.ts";
 import { TextButton } from "@/components/buttons/text-button.ts";
+import { BUTTON_TEXT } from "@/constants/buttons-constants.ts";
 
 export class Header extends BaseComponent<"header"> {
   private readonly settingsButton = {
@@ -41,11 +42,14 @@ export class Header extends BaseComponent<"header"> {
     const button = new TextButton(buttonName);
     this.pagesButtons.push(button);
     button.addListener(() => {
-      for (const button of this.pagesButtons) {
-        button.disabledElement(false);
+      for (const element of this.pagesButtons) {
+        element.toggleDisabled();
       }
-      button.disabledElement(true);
     });
+
+    if (buttonName === BUTTON_TEXT.GARAGE) {
+      button.disabledElement(true);
+    }
     this.pagesWrapper.append(button.getElement());
     return this;
   }
