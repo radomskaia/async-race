@@ -1,6 +1,6 @@
 import type { Callback } from "src/types";
-import { BaseButton } from "@/components/buttons/base/base-button.ts";
-import styles from "@/components/buttons/base/button.module.css";
+import { BaseButton } from "@/components/buttons/base-button.ts";
+import styles from "@/components/buttons/button.module.css";
 
 export class TextButton extends BaseButton {
   constructor(text: string, callback?: Callback) {

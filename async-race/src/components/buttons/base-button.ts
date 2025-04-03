@@ -10,6 +10,11 @@ export class BaseButton extends BaseComponent<"button", ButtonOptions> {
       this.addListener(callback);
     }
   }
+
+  public toggleDisabled(): void {
+    this.disabledElement(!this.element.disabled);
+  }
+
   public disabledElement(isDisabled: boolean): void {
     this.element.disabled = isDisabled;
   }

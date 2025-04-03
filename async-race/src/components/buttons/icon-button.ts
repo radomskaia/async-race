@@ -1,7 +1,7 @@
-import styles from "./base/button.module.css";
+import styles from "./button.module.css";
 
-import { BaseButton } from "@/components/buttons/base/base-button.ts";
 import type { ButtonOptions, Callback } from "src/types";
+import { BaseButton } from "@/components/buttons/base-button.ts";
 import { ATTRIBUTES } from "@/constants/buttons-constants.ts";
 
 export class IconButton extends BaseButton {

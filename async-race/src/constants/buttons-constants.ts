@@ -12,6 +12,8 @@ export const BUTTON_TEXT = {
   EDIT: "Edit",
   START_ENGINE: " Start engine",
   STOP_ENGINE: "Stop engine",
+  CROSS: "cross",
+  CONFIRM: "confirm",
 } as const;
 export const BUTTON_TITLE = {
   VOLUME: "Volume",
@@ -35,15 +37,17 @@ export const ICON_PATH = {
   },
   DELETE: SPRITE_PATH + "delete",
   BACK: SPRITE_PATH + "back",
-  PASTE: SPRITE_PATH + "paste",
-  CLEAR: SPRITE_PATH + "clear",
-  PLAY: SPRITE_PATH + "play",
+  START_ENGINE: SPRITE_PATH + "start",
+  STOP_ENGINE: SPRITE_PATH + "stop",
   ADD: SPRITE_PATH + "add",
   CAR: SPRITE_PATH + "car",
+  EDIT: SPRITE_PATH + "edit",
+  CROSS: SPRITE_PATH + "cross",
+  CONFIRM: SPRITE_PATH + "confirm",
 } as const;
 export const ATTRIBUTES = {
   ariaLabel: "aria-label",
 } as const;
 export const BUTTON_TYPES = {
-  BUTTON: "button",
+  SUBMIT: "submit",
 } as const;
