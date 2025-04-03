@@ -1,4 +1,4 @@
-import type { AddCarsList, Car } from "@/types";
+import type { AddCarsList, Car, SetPageCallback } from "@/types";
 import { ControllsButtonConfig } from "@/types";
 import { BaseComponent } from "@/components/base-component.ts";
 import styles from "@/components/options/cars-list.module.css";
@@ -7,22 +7,14 @@ import { ApiHandler } from "@/services/api-handler.ts";
 import utilitiesStyles from "@/styles/utilities.module.css";
 
 export class CarsList extends BaseComponent<"ul"> {
-  private static deleteOption(id: number, carItem: CarItem): void {
-    ApiHandler.getInstance()
-      .deleteCar(id, () => {
-        carItem.getElement().remove();
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }
+  private deleteCallback: SetPageCallback | null = null;
 
   public addCar(carData: Car): void {
     const carItem = new CarItem(carData);
     this.appendElement(carItem.getElement());
 
     carItem.addControlsListener(() => {
-      CarsList.deleteOption(carData.id, carItem);
+      this.deleteOption(carData.id);
     }, ControllsButtonConfig.DELETE);
   }
 
@@ -32,6 +24,10 @@ export class CarsList extends BaseComponent<"ul"> {
       this.addCar(car);
     }
   };
+
+  public addDeleteCallback(callback: SetPageCallback): void {
+    this.deleteCallback = callback;
+  }
 
   protected createElement(): HTMLElementTagNameMap["ul"] {
     return this.createDOMElement({
@@ -43,5 +39,16 @@ export class CarsList extends BaseComponent<"ul"> {
         utilitiesStyles.gap30,
       ],
     });
+  }
+
+  private deleteOption(id: number): void {
+    if (!this.deleteCallback) {
+      return;
+    }
+    ApiHandler.getInstance()
+      .deleteCar(id, this.deleteCallback)
+      .catch((error) => {
+        console.error(error);
+      });
   }
 }

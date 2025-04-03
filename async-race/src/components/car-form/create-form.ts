@@ -1,10 +1,10 @@
 import { ApiHandler } from "@/services/api-handler.ts";
-import type { CarUpdateCallback } from "@/types";
+import type { SetPageCallback } from "@/types";
 import { FormButtonsConfig } from "@/types";
 import { BaseForm } from "@/components/car-form/base-form.ts";
 
 export class CreateForm extends BaseForm {
-  constructor(private callback: CarUpdateCallback) {
+  constructor(private callback: SetPageCallback) {
     super();
     this.addFormButton();
     this.callback = callback;

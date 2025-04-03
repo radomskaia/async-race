@@ -1,6 +1,6 @@
 import type {
-  Callback,
   Car,
+  SetPageCallback,
   CarProperties,
   CarUpdateCallback,
   GetCarsHandler,
@@ -74,16 +74,17 @@ export class ApiHandler {
     return data;
   };
 
-  public async deleteCar(id: number, callback: Callback): Promise<void> {
+  public async deleteCar(id: number, callback: SetPageCallback): Promise<void> {
     const url = `${this.url}${this.garage}/${id}`;
 
-    ApiHandler.getResponse(url, {
-      method: "DELETE",
-    })
-      .then(callback)
-      .catch((error) => {
-        console.error(error);
+    try {
+      await ApiHandler.getResponse(url, {
+        method: "DELETE",
       });
+      await callback(null);
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   public async updateCar(
@@ -111,7 +112,7 @@ export class ApiHandler {
 
   public async createCar(
     properties: CarProperties,
-    callback: CarUpdateCallback,
+    callback?: SetPageCallback,
   ): Promise<void> {
     const url = `${this.url}${this.garage}`;
     const init = {
@@ -119,11 +120,11 @@ export class ApiHandler {
       headers: this.headers,
       body: JSON.stringify(properties),
     };
-    ApiHandler.getResponse(url, init)
-      .then((response) => response.json())
-      .then(callback)
-      .catch((error) => {
-        console.error(error);
-      });
+    try {
+      await ApiHandler.getResponse(url, init);
+      callback?.(null, true);
+    } catch (error) {
+      console.error(error);
+    }
   }
 }

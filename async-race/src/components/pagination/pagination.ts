@@ -10,7 +10,7 @@ import {
 import { IconButton } from "@/components/buttons/icon-button.ts";
 import { BUTTON_TEXT, ICON_PATH } from "@/constants/buttons-constants.ts";
 import styles from "@/components/options/cars-list.module.css";
-import { ELEMENTS_PER_PAGE, ONE } from "@/constants/constants.ts";
+import { ELEMENTS_PER_PAGE, ONE, ZERO } from "@/constants/constants.ts";
 
 export class Pagination extends BaseComponent<"div"> {
   private buttons: Record<string, BaseButton> = {};
@@ -21,45 +21,42 @@ export class Pagination extends BaseComponent<"div"> {
     {
       name: PaginationButtonConfig.FIRST,
       callback: (): void => {
-        this.currentPage = ONE;
-        this.setPage().catch(console.error);
+        this.setPage(ONE).catch(console.error);
       },
     },
     {
       name: PaginationButtonConfig.PREVIOUS,
       callback: (): void => {
-        this.currentPage = this.currentPage - ONE;
-        this.setPage().catch(console.error);
+        this.setPage(this.currentPage - ONE).catch(console.error);
       },
     },
     {
       name: PaginationButtonConfig.NEXT,
       callback: (): void => {
-        this.currentPage = this.currentPage + ONE;
-        this.setPage().catch(console.error);
+        this.setPage(this.currentPage + ONE).catch(console.error);
       },
     },
     {
       name: PaginationButtonConfig.LAST,
       callback: (): void => {
-        this.currentPage = this.totalPages;
-        this.setPage().catch(console.error);
+        this.setPage(this.lastPage).catch(console.error);
       },
     },
   ];
   private readonly currentPageElement: HTMLParagraphElement;
   private readonly elementsCountElement: HTMLSpanElement;
   private currentPage: number;
-  private totalPages: number;
+  private lastPage: number;
   private limit = ELEMENTS_PER_PAGE;
+
   constructor(
     pageName: string,
     private readonly apiHandler: GetCarsHandler,
     private callback: AddCarsList,
   ) {
     super();
-    this.currentPage = ONE;
-    this.totalPages = ONE;
+    this.currentPage = ZERO;
+    this.lastPage = ONE;
     this.elementsCountElement = this.createDOMElement({
       tagName: "span",
     });
@@ -68,31 +65,31 @@ export class Pagination extends BaseComponent<"div"> {
     });
     this.addPagination();
     this.addPageName(pageName);
-    this.setPage();
+    this.setPage(ONE).catch(console.error);
   }
 
-  public async setPage(): Promise<void> {
+  public async setPage(
+    newPage: number | null,
+    isCreate?: boolean,
+  ): Promise<void> {
+    if (newPage === this.currentPage) {
+      return;
+    }
+    this.currentPage = newPage ?? this.currentPage;
     this.setPageNumber();
     const carsData = await this.apiHandler(this.currentPage, this.limit);
-    this.callback(carsData.data);
     this.setElementsCount(carsData.count);
-    this.setTotalPages(carsData.count);
-    if (this.currentPage === ONE) {
-      this.buttons[PaginationButtonConfig.FIRST].disabledElement(true);
-      this.buttons[PaginationButtonConfig.PREVIOUS].disabledElement(true);
-      this.buttons[PaginationButtonConfig.NEXT].disabledElement(false);
-      this.buttons[PaginationButtonConfig.LAST].disabledElement(false);
-    } else if (this.currentPage === this.totalPages) {
-      this.buttons[PaginationButtonConfig.NEXT].disabledElement(true);
-      this.buttons[PaginationButtonConfig.LAST].disabledElement(true);
-      this.buttons[PaginationButtonConfig.FIRST].disabledElement(false);
-      this.buttons[PaginationButtonConfig.PREVIOUS].disabledElement(false);
-    } else {
-      this.buttons[PaginationButtonConfig.NEXT].disabledElement(false);
-      this.buttons[PaginationButtonConfig.LAST].disabledElement(false);
-      this.buttons[PaginationButtonConfig.FIRST].disabledElement(false);
-      this.buttons[PaginationButtonConfig.PREVIOUS].disabledElement(false);
+    if (carsData.data.length === ZERO && this.currentPage !== ONE) {
+      await this.setPage(this.currentPage - ONE);
+      return;
     }
+    const oldLastPage = this.lastPage;
+    this.setLastPage(carsData.count);
+    this.updateButtonsState();
+    if (isCreate && this.currentPage !== oldLastPage) {
+      return;
+    }
+    this.callback(carsData.data);
   }
 
   protected createElement(): HTMLElementTagNameMap["div"] {
@@ -107,8 +104,18 @@ export class Pagination extends BaseComponent<"div"> {
     });
   }
 
-  private setTotalPages(elementsCount: number): void {
-    this.totalPages = Math.ceil(elementsCount / this.limit);
+  private updateButtonsState(): void {
+    const isFirstPage = this.currentPage === ONE;
+    const isLastPage = this.currentPage === this.lastPage;
+
+    this.buttons[PaginationButtonConfig.FIRST].disabledElement(isFirstPage);
+    this.buttons[PaginationButtonConfig.PREVIOUS].disabledElement(isFirstPage);
+    this.buttons[PaginationButtonConfig.NEXT].disabledElement(isLastPage);
+    this.buttons[PaginationButtonConfig.LAST].disabledElement(isLastPage);
+  }
+
+  private setLastPage(elementsCount: number): void {
+    this.lastPage = Math.ceil(elementsCount / this.limit);
   }
 
   private setPageNumber(): void {

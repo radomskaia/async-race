@@ -1,6 +1,9 @@
 export type Callback = () => void;
 export type CarUpdateCallback = (data: CarProperties) => void;
-export type CarCreateCallback = (data: Car) => void;
+export type SetPageCallback = (
+  newPage: number | null,
+  isCreate?: boolean,
+) => Promise<void>;
 
 export type TypeGuard<T> = (value: unknown) => value is T;
 
