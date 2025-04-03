@@ -2,6 +2,7 @@ import type { Callback } from "@/types";
 import { BaseComponent } from "@/components/base-component.ts";
 
 export class BaseInput extends BaseComponent<"input"> {
+  private defaultValue = "";
   constructor(value?: string) {
     super();
     if (value) {
@@ -12,8 +13,24 @@ export class BaseInput extends BaseComponent<"input"> {
     return this.element.value;
   }
 
+  public setDefaultValue(): void {
+    this.defaultValue = this.element.value;
+  }
+
+  public resetValue(): void {
+    this.element.value = this.defaultValue;
+  }
+
+  public toggleDisabled(): void {
+    this.element.disabled = !this.element.disabled;
+  }
+
   public addListener(callback: Callback): void {
     this.element.addEventListener("change", callback);
+  }
+
+  public toggleClass(className: string): void {
+    this.element.classList.toggle(className);
   }
 
   protected createElement(): HTMLInputElement {
