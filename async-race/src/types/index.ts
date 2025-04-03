@@ -61,7 +61,20 @@ export enum ControllsButtonConfig {
   STOP_ENGINE = "STOP_ENGINE",
 }
 
+export enum PaginationButtonConfig {
+  NEXT = "NEXT",
+  PREVIOUS = "PREVIOUS",
+  FIRST = "FIRST",
+  LAST = "LAST",
+}
+
 export enum FormButtonsConfig {
   CROSS = "CROSS",
   CONFIRM = "CONFIRM",
 }
+
+export type GetCarsHandler = (
+  page: number,
+  limit: number,
+) => Promise<ResponseData>;
+export type AddCarsList = (list: Car[]) => void;

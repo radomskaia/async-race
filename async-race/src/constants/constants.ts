@@ -62,3 +62,5 @@ export const RESPONSE_DATA_KEYS = {
   DATA: "data",
   COUNT: "count",
 } as const;
+
+export const ELEMENTS_PER_PAGE = 7;

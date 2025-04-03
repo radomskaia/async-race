@@ -3,7 +3,7 @@ import type {
   Car,
   CarProperties,
   CarUpdateCallback,
-  ResponseData,
+  GetCarsHandler,
 } from "@/types";
 import { API_URLS, ZERO } from "@/constants/constants.ts";
 import { isResponseData } from "@/services/validator.ts";
@@ -56,11 +56,12 @@ export class ApiHandler {
     };
   }
 
-  public async getCars(page?: number): Promise<ResponseData> {
-    let url = `${this.url}${this.garage}`;
-    if (page) {
-      url += `?page=${page}&_limit=7`;
-    }
+  public getCars: GetCarsHandler = async (page, limit) => {
+    const query = new URLSearchParams({
+      _page: String(page),
+      _limit: String(limit),
+    });
+    const url = `${this.url}${this.garage}?${query}`;
     let data;
     try {
       data = await ApiHandler.getResponseData(url);
@@ -71,7 +72,7 @@ export class ApiHandler {
       throw new Error("Invalid data");
     }
     return data;
-  }
+  };
 
   public async deleteCar(id: number, callback: Callback): Promise<void> {
     const url = `${this.url}${this.garage}/${id}`;

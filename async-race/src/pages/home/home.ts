@@ -6,13 +6,13 @@ import styles from "@/pages/home/home.module.css";
 import { TextButton } from "@/components/buttons/text-button.ts";
 import { CarsList } from "@/components/options/car-list/cars-list.ts";
 import { ApiHandler } from "@/services/api-handler.ts";
-import { CreateForm } from "@/components/car-form/create-form.ts";
-import { CARS_COUNT, ONE, ZERO } from "@/constants/constants.ts";
-import { getRandomCarName, getRandomHEX } from "@/utilities/utilities.ts";
+// import { CreateForm } from "@/components/car-form/create-form.ts";
+// import { CARS_COUNT, ZERO } from "@/constants/constants.ts";
+// import { getRandomCarName, getRandomHEX } from "@/utilities/utilities.ts";
+import { Pagination } from "@/components/pagination/pagination.ts";
 
 export class Home extends BaseComponent<"main"> {
   private static instance: Home | undefined;
-  private currentPage: number = ONE;
   private readonly buttonsConfig: {
     title: (typeof BUTTON_TEXT)[keyof typeof BUTTON_TEXT];
     callback: Callback;
@@ -32,28 +32,37 @@ export class Home extends BaseComponent<"main"> {
     {
       title: BUTTON_TEXT.GENERATE_CARS,
       callback: (): void => {
-        for (let index = ZERO; index < CARS_COUNT; index++) {
-          const name = getRandomCarName();
-          const color = getRandomHEX();
-          ApiHandler.getInstance()
-            .createCar(
-              {
-                name,
-                color,
-              },
-              this.addCars.bind(this),
-            )
-            .catch(console.error);
-        }
+        // for (let index = ZERO; index < CARS_COUNT; index++) {
+        //   const name = getRandomCarName();
+        //   const color = getRandomHEX();
+        //   ApiHandler.getInstance()
+        //     .createCar(
+        //       {
+        //         name,
+        //         color,
+        //       },
+        //       this.addCars.bind(this),
+        //     )
+        //     .catch(console.error);
+        // }
       },
     },
   ];
   private carsList: CarsList;
+  private pagination: Pagination;
   private constructor() {
     super();
-    this.appendElement(this.createUIPanel());
     this.carsList = new CarsList();
-    this.addCars().catch(console.error);
+    this.pagination = new Pagination(
+      "Garage",
+      ApiHandler.getInstance().getCars,
+      this.carsList.addCarsList,
+    );
+    this.appendElement(
+      this.pagination.getElement(),
+      this.createUIPanel(),
+      this.carsList.getElement(),
+    );
   }
 
   public static getInstance(): Home {
@@ -76,11 +85,12 @@ export class Home extends BaseComponent<"main"> {
     });
   }
 
-  private async addCars(): Promise<void> {
-    const carsData = await ApiHandler.getInstance().getCars(this.currentPage);
-    this.carsList.addCarsList(carsData);
-    this.element.append(this.carsList.getElement());
-  }
+  // private async addCars(): Promise<void> {
+  //   // const carsData = await ApiHandler.getInstance().getCars(this.currentPage);
+  //   this.pagination.setElementsCount(carsData.count);
+  //   this.carsList.addCarsList(carsData.data);
+  //
+  // }
 
   private addButtons(buttonWrapper: HTMLDivElement): void {
     for (const { title, callback } of this.buttonsConfig) {
@@ -99,8 +109,8 @@ export class Home extends BaseComponent<"main"> {
         utilitiesStyles.widthFull,
       ],
     });
-    const createForm = new CreateForm(this.addCars.bind(this));
-    uiPanel.append(createForm.getElement(), this.createButtonWrapper());
+    // const createForm = new CreateForm(this.addCars.bind(this));
+    uiPanel.append(/*createForm.getElement(),*/ this.createButtonWrapper());
     return uiPanel;
   }
 

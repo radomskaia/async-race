@@ -138,4 +138,92 @@
                   stroke-linejoin="round"/>
         </g>
     </symbol>
+    <symbol viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" id="doubleArrowLeft">
+        <g id="SVGRepo_bgCarrier" stroke-width="0"/>
+        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/>
+        <g id="SVGRepo_iconCarrier">
+            <path d="M13 19L7 12L13 5" stroke="var(--primary)" stroke-width="1.5" stroke-linecap="round"
+                  stroke-linejoin="round"/>
+            <path d="M17 19L11 12L17 5" stroke="var(--primary)" stroke-width="1.5" stroke-linecap="round"
+                  stroke-linejoin="round"/>
+        </g>
+    </symbol>
+    <symbol viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" id="doubleArrowRight">
+        <g id="SVGRepo_bgCarrier" stroke-width="0"/>
+        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/>
+        <g id="SVGRepo_iconCarrier">
+            <path d="M11 19L17 12L11 5" stroke="var(--primary)" stroke-width="1.5" stroke-linecap="round"
+                  stroke-linejoin="round"/>
+            <path d="M7 19L13 12L7 5" stroke="var(--primary)" stroke-width="1.5" stroke-linecap="round"
+                  stroke-linejoin="round"/>
+        </g>
+    </symbol>
+    <symbol viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" id="arrowLeft">
+        <g id="SVGRepo_bgCarrier" stroke-width="0"/>
+        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/>
+        <g id="SVGRepo_iconCarrier">
+            <path d="M15 5L9 12L15 19" stroke="var(--primary)" stroke-width="1.5" stroke-linecap="round"
+                  stroke-linejoin="round"/>
+        </g>
+    </symbol>
+    <symbol viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" id="arrowRight">
+        <g id="SVGRepo_bgCarrier" stroke-width="0"/>
+        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/>
+        <g id="SVGRepo_iconCarrier">
+            <path d="M9 5L15 12L9 19" stroke="var(--primary)" stroke-width="1.5" stroke-linecap="round"
+                  stroke-linejoin="round"/>
+        </g>
+    </symbol>
+    <symbol viewBox="0 0 711 409" class="icon" xmlns="http://www.w3.org/2000/svg" fill="inherit" id="car2">
+        <style type="text/css">
+            .st0{fill:#A4A9AD;}
+            .st1{fill:#333E48; stroke: var(--primary); stroke-width: 4px;}
+            .st2{fill:inherit; stroke: var(--primary); stroke-width: 10px;}
+            .st3{fill:#FFB819;}
+            .st4{fill:#FFFFFF;}
+            .st5{fill:#inherit; filter: brightness(0.5);}
+        </style>
+        <path class="st0" d="M111.9,80.6c-6.2,0-11.3-5.1-11.3-11.3V21.7c0-6.2,5.1-11.3,11.3-11.3s11.3,5.1,11.3,11.3v47.6
+	C123.2,75.5,118.1,80.6,111.9,80.6z"/>
+        <path d="M111.9,10.3c-6.2,0-11.3,5.1-11.3,11.3v19.9h22.7V21.6C123.2,15.4,118.1,10.3,111.9,10.3z"/>
+        <path class="st0" d="M421.8,80.6c-6.2,0-11.3-5.1-11.3-11.3V21.7c0-6.2,5.1-11.3,11.3-11.3s11.3,5.1,11.3,11.3v47.6
+	C433.1,75.5,428.1,80.6,421.8,80.6z"/>
+        <path d="M421.8,10.3c-6.2,0-11.3,5.1-11.3,11.3v19.9h22.7V21.6C433.1,15.4,428.1,10.3,421.8,10.3z"/>
+        <path class="st0" d="M451.3,28.5h-369c-6.2,0-11.3-5.1-11.3-11.3S76.1,5.8,82.3,5.8h369c6.2,0,11.3,5.1,11.3,11.3
+	S457.6,28.5,451.3,28.5z"/>
+        <path class="st1" d="M611.2,108.8h22.7v71.6h-22.7V108.8z"/>
+        <path d="M611.2,108.8v22.8c3.6,1.2,7.3,1.9,11.3,1.9s7.8-0.7,11.3-1.9v-22.8H611.2z"/>
+        <path class="st0"
+              d="M599.4,98.7c0,12.8,10.4,23.2,23.2,23.2s23.2-10.4,23.2-23.2s-10.4-23.2-23.2-23.2S599.4,85.9,599.4,98.7z"/>
+        <path class="st2" d="M659.5,177.5h-163L480.6,84c-2.4-14.3-16.2-26-30.8-26h-355c-14.5,0-28.4,11.7-30.8,26L27.5,299.6
+	c-2.4,14.3,7.4,26,22,26h610c14.5,0,26.4-11.9,26.4-26.4v-95.3C685.9,189.4,674,177.5,659.5,177.5z"/>
+        <path class="st3" d="M631.7,245.8h54.1v36.7h-54.1V245.8z"/>
+        <path class="st4" d="M640.3,282.5h-12.4c-2.9,0-5.3-2.3-5.3-5.2V251c0-2.9,2.3-5.2,5.3-5.2h12.4V282.5z"/>
+        <path class="st3" d="M36.6,245.8l-6.2,36.7h47.1v-36.7H36.6z"/>
+        <path class="st4" d="M69,282.5h12.4c2.9,0,5.2-2.3,5.2-5.2V251c0-2.9-2.3-5.2-5.2-5.2H69V282.5z"/>
+        <path d="M270.3,325.6c0-51.2-41.6-92.8-92.8-92.8s-92.8,41.6-92.8,92.8H270.3z"/>
+        <path class="st1"
+              d="M101.3,325.6c0,42.1,34.1,76.2,76.2,76.2s76.2-34.1,76.2-76.2s-34.1-76.2-76.2-76.2S101.3,283.5,101.3,325.6z"
+        />
+        <path class="st0" d="M138.9,325.6c0,21.3,17.3,38.6,38.6,38.6c21.3,0,38.6-17.3,38.6-38.6S198.8,287,177.5,287
+	S138.9,304.3,138.9,325.6L138.9,325.6z"/>
+        <path d="M605.5,325.6c0-51.2-41.6-92.8-92.8-92.8s-92.8,41.6-92.8,92.8H605.5z"/>
+        <path class="st1"
+              d="M436.5,325.6c0,42.1,34.1,76.2,76.2,76.2s76.2-34.1,76.2-76.2s-34.1-76.2-76.2-76.2S436.5,283.5,436.5,325.6z"
+        />
+        <path class="st0" d="M474.1,325.6c0,21.3,17.3,38.6,38.6,38.6c21.3,0,38.6-17.3,38.6-38.6c0,0,0,0,0,0c0-21.3-17.3-38.6-38.6-38.6
+	C491.4,287,474.1,304.2,474.1,325.6C474.1,325.6,474.1,325.6,474.1,325.6z"/>
+        <path class="st0" d="M706,319.4c0,7.7-6.3,14.1-14.1,14.1h-31.6c-7.7,0-14.1-6.3-14.1-14.1v-22.8c0-7.7,6.3-14.1,14.1-14.1H692
+	c7.7,0,14.1,6.3,14.1,14.1V319.4z M63.8,319.4c0,7.7-6.3,14.1-14.1,14.1H18.1c-7.7,0-14.1-6.3-14.1-14.1v-22.8
+	c0-7.7,6.3-14.1,14.1-14.1h31.6c7.7,0,14.1,6.3,14.1,14.1V319.4z"/>
+        <path class="st1" d="M313.2,100.4c0-6.6,5.5-12.1,12.1-12.1h99.1c6.6,0,12.1,5.5,12.1,12.1V155c0,6.6-5.5,12.1-12.1,12.1h-99.2
+	c-6.6,0-12.1-5.5-12.1-12.1L313.2,100.4L313.2,100.4z M111,100.1c1.1-6.6,7.5-12,14.1-12h108.2c6.6,0,12.1,5.5,12.1,12.1v54.6
+	c0,6.6-5.5,12.1-12.1,12.1H111.8c-6.6,0-11.2-5.4-10.1-12L111,100.1L111,100.1z"/>
+        <path class="st5" d="M364.8,209.3h-41c-6.2,0-11.3-5.1-11.3-11.3s5.1-11.3,11.3-11.3h41c6.2,0,11.3,5.1,11.3,11.3
+	S371,209.3,364.8,209.3z M144.1,209.3h-41c-6.2,0-11.3-5.1-11.3-11.3s5.1-11.3,11.3-11.3h41c6.2,0,11.3,5.1,11.3,11.3
+	S150.4,209.3,144.1,209.3z"/>
+        <path d="M424.5,88.3h-99.2c-6.6,0-12.1,5.5-12.1,12.1v13.5c0-6.6,5.5-12.1,12.1-12.1h99.1c6.6,0,12.1,5.5,12.1,12.1v-13.5
+	C436.5,93.6,431.1,88.3,424.5,88.3z M233.3,88.3H125.2c-6.6,0-13,5.4-14.1,12l-2.2,12.9c1.4-6.2,7.6-11.2,14-11.2h110.5
+	c6.6,0,12.1,5.5,12.1,12.1v-13.5C245.4,93.6,240,88.3,233.3,88.3L233.3,88.3z"/>
+    </symbol>
 </svg>

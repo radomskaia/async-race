@@ -2,8 +2,10 @@
 export const BUTTON_TEXT = {
   GARAGE: "To garage",
   WINNERS: "To winners",
-  PREVIOUS_PAGE: "Prev",
-  NEXT_PAGE: "Next",
+  PREVIOUS: "Previous page",
+  NEXT: "Next page",
+  FIRST: "First page",
+  LAST: "Last page",
   START_RACE: "Start race",
   RESET: "Reset",
   GENERATE_CARS: "Generate cars",
@@ -41,10 +43,14 @@ export const ICON_PATH = {
   START_ENGINE: SPRITE_PATH + "start",
   STOP_ENGINE: SPRITE_PATH + "stop",
   ADD: SPRITE_PATH + "add",
-  CAR: SPRITE_PATH + "car",
+  CAR: SPRITE_PATH + "car2",
   EDIT: SPRITE_PATH + "edit",
   CROSS: SPRITE_PATH + "cross",
   CONFIRM: SPRITE_PATH + "confirm",
+  FIRST: SPRITE_PATH + "doubleArrowLeft",
+  LAST: SPRITE_PATH + "doubleArrowRight",
+  NEXT: SPRITE_PATH + "arrowRight",
+  PREVIOUS: SPRITE_PATH + "arrowLeft",
 } as const;
 export const ATTRIBUTES = {
   ariaLabel: "aria-label",

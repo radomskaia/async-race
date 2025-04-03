@@ -1,4 +1,4 @@
-import type { Car } from "@/types";
+import type { AddCarsList, Car } from "@/types";
 import { ControllsButtonConfig } from "@/types";
 import { BaseComponent } from "@/components/base-component.ts";
 import styles from "@/components/options/cars-list.module.css";
@@ -26,12 +26,12 @@ export class CarsList extends BaseComponent<"ul"> {
     }, ControllsButtonConfig.DELETE);
   }
 
-  public addCarsList(list: Car[]): void {
+  public addCarsList: AddCarsList = (list) => {
     this.clearElement();
     for (const car of list) {
       this.addCar(car);
     }
-  }
+  };
 
   protected createElement(): HTMLElementTagNameMap["ul"] {
     return this.createDOMElement({
