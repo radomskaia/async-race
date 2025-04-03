@@ -27,11 +27,6 @@ export class Header extends BaseComponent<"header"> {
     this.settingsWrapper = this.createSettingsWrapper();
     this.pagesWrapper = this.createPagesWrapper();
     this.appendElement(this.pagesWrapper, this.settingsWrapper);
-
-    // fetch("http://127.0.0.1:3000/garage/7")
-    //   .then((response) => response.json()) // Парсим JSON
-    //   .then((data) => console.log(data))
-    //   .catch((error) => console.error("Ошибка:", error));
   }
 
   public addSettingsButton(buttonName: keyof typeof this.settingsButton): this {

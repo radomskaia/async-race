@@ -33,7 +33,7 @@ body {
   padding-bottom: 20px;
   font-family: "Montserrat", sans-serif;
   font-size: 1.8rem;
-  color: var(--dark);
+  color: var(--primary);
   background-image:
     linear-gradient(
       rgba(var(--content-background-alpha50)),

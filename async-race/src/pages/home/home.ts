@@ -4,7 +4,7 @@ import type { Callback } from "@/types";
 import { BUTTON_TEXT } from "@/constants/buttons-constants.ts";
 import styles from "@/pages/home/home.module.css";
 import { TextButton } from "@/components/buttons/text-button.ts";
-import { carsList } from "@/components/options/option-list/cars-list.ts";
+import { carsList } from "@/components/options/car-list/cars-list.ts";
 import { ApiHandler } from "@/services/api-handler.ts";
 
 export class Home extends BaseComponent<"main"> {
