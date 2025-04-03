@@ -1,5 +1,5 @@
 import { LS_PREFIX } from "@/constants/constants.ts";
-import type { OptionListValue, TypeGuard, StorageKeys } from "@/types";
+import type { TypeGuard, StorageKeys } from "@/types";
 
 export class LocalStorage {
   private static instance = new LocalStorage();
@@ -12,7 +12,7 @@ export class LocalStorage {
     return LocalStorage.instance;
   }
 
-  public save(key: StorageKeys, value: OptionListValue | boolean): void {
+  public save(key: StorageKeys, value: boolean): void {
     const storageKey = this.prefix + key;
     globalThis.localStorage.setItem(storageKey, JSON.stringify(value));
   }

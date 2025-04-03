@@ -15,10 +15,12 @@ export interface ElementOptions<T> extends Options {
 export interface ButtonOptions {
   title: string;
   path?: string;
+  classList?: string[];
 }
 
-export interface CreateSVGIconOptions extends Options {
-  path: string;
+export interface CreateSVGIconOptions
+  extends Required<Omit<ButtonOptions, "title">> {
+  attributes?: Record<string, string>;
 }
 
 export enum StorageKeys {
@@ -43,4 +45,16 @@ export interface Car extends CarProperties {
   name: string;
   color: string;
   id: number;
+}
+
+export enum ControllsButtonConfig {
+  EDIT = "EDIT",
+  DELETE = "DELETE",
+  START_ENGINE = "START_ENGINE",
+  STOP_ENGINE = "STOP_ENGINE",
+}
+
+export enum FormButtonsConfig {
+  CROSS = "CROSS",
+  CONFIRM = "CONFIRM",
 }
