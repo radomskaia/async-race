@@ -10,8 +10,8 @@ export class ApiHandler {
     "Content-Type": "application/json",
   };
   private garage = API_URLS.GARAGE;
-  private engine = API_URLS.ENGINE;
-  private winners = API_URLS.WINNERS;
+  // private engine = API_URLS.ENGINE;
+  // private winners = API_URLS.WINNERS;
   private constructor() {
     this.validator = Validator.getInstance();
   }
@@ -20,6 +20,11 @@ export class ApiHandler {
       ApiHandler.instance = new ApiHandler();
     }
     return ApiHandler.instance;
+  }
+
+  public static async getTotalCountCars(response: Response): Promise<number> {
+    const total = response.headers.get("X-Total-Count");
+    return total ? Number(total) : ZERO;
   }
 
   private static async getResponse(
@@ -38,14 +43,6 @@ export class ApiHandler {
   private static async getResponseData(url: string): Promise<unknown> {
     const response = await this.getResponse(url);
     return response.json();
-  }
-
-  private static async getResponseHeaders(
-    url: string,
-    headerName: string,
-  ): Promise<string | null> {
-    const response = await this.getResponse(url);
-    return response.headers.get(headerName);
   }
 
   public async getCars(page?: number): Promise<Car[]> {
@@ -75,16 +72,23 @@ export class ApiHandler {
     });
   }
 
-  public async updateCar({ id, ...properties }: Car): Promise<void> {
+  public async updateCar({ id, ...properties }: Car): Promise<Car> {
     const url = `${this.url}${this.garage}/${id}`;
     const init = {
       method: "PUT",
       headers: this.headers,
       body: JSON.stringify(properties),
     };
-    ApiHandler.getResponse(url, init).catch((error) => {
-      console.error(error);
-    });
+    return ApiHandler.getResponse(url, init)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(response.statusText);
+        }
+        return response.json();
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
 
   public async createCar(properties: CarProperties): Promise<Car> {
@@ -99,17 +103,5 @@ export class ApiHandler {
       .catch((error) => {
         console.error(error);
       });
-  }
-
-  public async getTotalCountCars(): Promise<number> {
-    let url = `${this.url}${this.garage}?_limit=[]`;
-    const totalCount = await ApiHandler.getResponseHeaders(
-      url,
-      "X-Total-Count",
-    );
-    if (totalCount && Validator.isPositiveNumber(totalCount)) {
-      return totalCount;
-    }
-    return ZERO;
   }
 }
