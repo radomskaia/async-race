@@ -25,13 +25,13 @@ export const PAGE_PATH = {
   DECISION_PICKER: "/winners",
   NOT_FOUND: "404",
 } as const;
+
 // Messages
 export const MESSAGES = {
   ROUTE_NOT_FOUND: "Route not found",
   NOT_INITIALIZED: "Class is not initialized",
   PAGE_NOT_FOUND: "Sorry, page not found",
-  INIT_WHEEL_TEXT: "Please, press the button to start the wheel",
-  VALIDATION: `Please add at least 2 valid options.\n\nAn option is considered valid if its title is not empty and its weight is greater than 0`,
+  INVALID_FORM_DATA: "Invalid form data",
 } as const;
 
 export const DELAY_TIME = 300;
