@@ -51,3 +51,14 @@ export const API_URLS = {
   GARAGE: "/garage",
   ENGINE: "/engine",
 };
+
+export const CAR_KEYS = {
+  NAME: "name",
+  COLOR: "color",
+  ID: "id",
+} as const;
+
+export const RESPONSE_DATA_KEYS = {
+  DATA: "data",
+  COUNT: "count",
+} as const;

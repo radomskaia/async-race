@@ -68,7 +68,7 @@ export abstract class BaseComponent<
     attributes,
   }: CreateSVGIconOptions): SVGUseElement {
     const svg = document.createElementNS(SVG_CONFIG.NAMESPACE_SVG, "svg");
-    this.addAttributes({ ...attributes, role: "img" }, svg);
+    this.addAttributes({ ...attributes, role: SVG_CONFIG.ROLE }, svg);
     this.addClassList(classList, svg);
     const use = document.createElementNS(SVG_CONFIG.NAMESPACE_SVG, "use");
     use.setAttributeNS(
