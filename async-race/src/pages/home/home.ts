@@ -46,7 +46,7 @@ export class Home extends BaseComponent<"main"> {
     return Home.instance;
   }
 
-  protected createView(): HTMLElement {
+  protected createElement(): HTMLElement {
     return this.createDOMElement({
       tagName: "main",
       classList: [

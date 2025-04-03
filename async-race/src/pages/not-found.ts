@@ -22,7 +22,7 @@ export class NotFound extends BaseComponent<"main"> {
     return NotFound.instance;
   }
 
-  protected createView(): HTMLElementTagNameMap["main"] {
+  protected createElement(): HTMLElementTagNameMap["main"] {
     const main = this.createDOMElement({
       tagName: "main",
       classList: [

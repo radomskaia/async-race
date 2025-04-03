@@ -18,7 +18,7 @@ export class BaseButton extends BaseComponent<"button", ButtonOptions> {
     this.element.addEventListener("click", callback);
   }
 
-  protected createView(): HTMLButtonElement {
+  protected createElement(): HTMLButtonElement {
     return this.createDOMElement({
       tagName: "button",
       classList: [styles.button],

@@ -16,7 +16,7 @@ export class BaseInput extends BaseComponent<"input"> {
     this.element.addEventListener("change", callback);
   }
 
-  protected createView(): HTMLInputElement {
+  protected createElement(): HTMLInputElement {
     return this.createDOMElement({
       tagName: "input",
     });

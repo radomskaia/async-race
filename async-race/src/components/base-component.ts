@@ -6,7 +6,7 @@ export abstract class BaseComponent<
 > {
   protected element: HTMLElementTagNameMap[T];
   protected constructor(options?: O) {
-    this.element = this.createView(options);
+    this.element = this.createElement(options);
   }
 
   public getElement(): HTMLElementTagNameMap[T] {
@@ -61,5 +61,5 @@ export abstract class BaseComponent<
     element.textContent = textContent;
   }
 
-  protected abstract createView(options?: O): HTMLElementTagNameMap[T];
+  protected abstract createElement(options?: O): HTMLElementTagNameMap[T];
 }

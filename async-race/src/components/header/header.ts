@@ -50,7 +50,7 @@ export class Header extends BaseComponent<"header"> {
     return this;
   }
 
-  protected createView(): HTMLElement {
+  protected createElement(): HTMLElement {
     const header = this.createDOMElement({
       tagName: "header",
       classList: [
