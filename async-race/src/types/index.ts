@@ -49,6 +49,11 @@ export interface Car extends CarProperties {
   id: number;
 }
 
+export interface ResponseData {
+  data: Car[];
+  count: number;
+}
+
 export enum ControllsButtonConfig {
   EDIT = "EDIT",
   DELETE = "DELETE",

@@ -1,10 +1,15 @@
-import { Validator } from "@/services/validator.ts";
-import type { Callback, Car, CarProperties, CarUpdateCallback } from "@/types";
+import type {
+  Callback,
+  Car,
+  CarProperties,
+  CarUpdateCallback,
+  ResponseData,
+} from "@/types";
 import { API_URLS, ZERO } from "@/constants/constants.ts";
+import { isResponseData } from "@/services/validator.ts";
 
 export class ApiHandler {
   private static instance: ApiHandler | undefined;
-  private readonly validator: Validator;
   private url = "http://127.0.0.1:3000";
   private headers = {
     "Content-Type": "application/json",
@@ -12,9 +17,7 @@ export class ApiHandler {
   private garage = API_URLS.GARAGE;
   // private engine = API_URLS.ENGINE;
   // private winners = API_URLS.WINNERS;
-  private constructor() {
-    this.validator = Validator.getInstance();
-  }
+
   public static getInstance(): ApiHandler {
     if (!ApiHandler.instance) {
       ApiHandler.instance = new ApiHandler();
@@ -22,7 +25,7 @@ export class ApiHandler {
     return ApiHandler.instance;
   }
 
-  public static async getTotalCountCars(response: Response): Promise<number> {
+  public static getTotalCountCars(response: Response): number {
     const total = response.headers.get("X-Total-Count");
     return total ? Number(total) : ZERO;
   }
@@ -42,10 +45,18 @@ export class ApiHandler {
 
   private static async getResponseData(url: string): Promise<unknown> {
     const response = await this.getResponse(url);
-    return response.json();
+    let totalCount;
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
+    totalCount = ApiHandler.getTotalCountCars(response);
+    return {
+      data: await response.json(),
+      count: totalCount,
+    };
   }
 
-  public async getCars(page?: number): Promise<Car[]> {
+  public async getCars(page?: number): Promise<ResponseData> {
     let url = `${this.url}${this.garage}`;
     if (page) {
       url += `?page=${page}&_limit=7`;
@@ -56,10 +67,10 @@ export class ApiHandler {
     } catch (error) {
       throw new Error(`Error while fetching data: ${error}`);
     }
-    if (this.validator.isCarArray(data)) {
-      return data;
+    if (!isResponseData(data)) {
+      throw new Error("Invalid data");
     }
-    return [];
+    return data;
   }
 
   public async deleteCar(id: number, callback: Callback): Promise<void> {

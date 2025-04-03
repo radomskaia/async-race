@@ -1,53 +1,51 @@
 import { ZERO } from "@/constants/constants.ts";
-import type { Car } from "@/types";
+import type { Car, ResponseData } from "@/types";
 
-export class Validator {
-  private static instance: Validator | undefined;
+export function isBoolean(value: unknown): value is boolean {
+  return typeof value === "boolean";
+}
 
-  public static getInstance(): Validator {
-    if (!Validator.instance) {
-      Validator.instance = new Validator();
-    }
-    return Validator.instance;
+export function isResponseData(value: unknown): value is ResponseData {
+  if (!isObject(value)) {
+    return false;
   }
-  public static isBoolean(value: unknown): value is boolean {
-    return typeof value === "boolean";
-  }
+  return (
+    "data" in value &&
+    isCarArray(value.data) &&
+    "count" in value &&
+    isPositiveNumber(value.count)
+  );
+}
 
-  public static isPositiveNumber(value: unknown): value is number {
-    return Validator.isNumber(value) && value >= ZERO;
-  }
+function isPositiveNumber(value: unknown): value is number {
+  return isNumber(value) && value >= ZERO;
+}
 
-  private static isObject(value: unknown): value is object {
-    return typeof value === "object" && value !== null;
-  }
+function isObject(value: unknown): value is object {
+  return typeof value === "object" && value !== null;
+}
 
-  private static isString(value: unknown): value is string {
-    return typeof value === "string";
-  }
+function isString(value: unknown): value is string {
+  return typeof value === "string";
+}
 
-  private static isNumber(value: unknown): value is number {
-    return typeof value === "number";
-  }
+function isNumber(value: unknown): value is number {
+  return typeof value === "number";
+}
 
-  public isCar(value: unknown): value is Car {
-    if (!Validator.isObject(value)) {
-      return false;
-    }
-    if (!("name" in value && "color" in value && "id" in value)) {
-      return false;
-    }
-    return (
-      Validator.isString(value.name) &&
-      Validator.isString(value.color) &&
-      Validator.isNumber(value?.id)
-    );
+function isCar(value: unknown): value is Car {
+  if (!isObject(value)) {
+    return false;
   }
+  if (!("name" in value && "color" in value && "id" in value)) {
+    return false;
+  }
+  return isString(value.name) && isString(value.color) && isNumber(value?.id);
+}
 
-  public isCarArray(value: unknown): value is Car[] {
-    if (!Array.isArray(value)) {
-      return false;
-    }
-    return value.every((car) => this.isCar(car));
+function isCarArray(value: unknown): value is Car[] {
+  if (!Array.isArray(value)) {
+    return false;
   }
+  return value.every((car) => isCar(car));
 }

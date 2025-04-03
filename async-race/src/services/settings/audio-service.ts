@@ -3,7 +3,7 @@ import { SettingsAction } from "@/services/settings/settings-action.ts";
 import { MESSAGES } from "@/constants/constants.ts";
 import { LocalStorage } from "@/services/local-storage.ts";
 import { StorageKeys } from "@/types";
-import { Validator } from "@/services/validator.ts";
+import { isBoolean } from "@/services/validator.ts";
 
 export class AudioService extends SettingsAction {
   private static instance: AudioService | undefined;
@@ -73,7 +73,7 @@ export class AudioService extends SettingsAction {
   private init(): void {
     const lsData = LocalStorage.getInstance().load(
       StorageKeys.soundSettings,
-      Validator.isBoolean,
+      isBoolean,
     );
     if (lsData !== null) {
       this.isOff = lsData;
