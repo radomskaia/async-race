@@ -42,10 +42,6 @@ body {
     url("../bg.webp");
 }
 
-input:invalid {
-  background-color: var(--red);
-}
-
 input::placeholder {
   color: inherit;
   opacity: 0.5;

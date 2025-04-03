@@ -7,7 +7,8 @@ import { TextButton } from "@/components/buttons/text-button.ts";
 import { CarsList } from "@/components/options/car-list/cars-list.ts";
 import { ApiHandler } from "@/services/api-handler.ts";
 import { CreateForm } from "@/components/car-form/create-form.ts";
-import { ONE } from "@/constants/constants.ts";
+import { CARS_COUNT, ONE, ZERO } from "@/constants/constants.ts";
+import { getRandomCarName, getRandomHEX } from "@/utilities/utilities.ts";
 
 export class Home extends BaseComponent<"main"> {
   private static instance: Home | undefined;
@@ -31,16 +32,27 @@ export class Home extends BaseComponent<"main"> {
     {
       title: BUTTON_TEXT.GENERATE_CARS,
       callback: (): void => {
-        throw new Error("NOT IMPLEMENTED");
+        for (let index = ZERO; index < CARS_COUNT; index++) {
+          const name = getRandomCarName();
+          const color = getRandomHEX();
+          ApiHandler.getInstance()
+            .createCar(
+              {
+                name,
+                color,
+              },
+              this.addCars.bind(this),
+            )
+            .catch(console.error);
+        }
       },
     },
   ];
-
+  private carsList: CarsList;
   private constructor() {
     super();
-    this.createButtonWrapper();
-    const createForm = new CreateForm(this.addCars.bind(this));
-    this.appendElement(createForm.getElement());
+    this.appendElement(this.createUIPanel());
+    this.carsList = new CarsList();
     this.addCars().catch(console.error);
   }
 
@@ -66,8 +78,8 @@ export class Home extends BaseComponent<"main"> {
 
   private async addCars(): Promise<void> {
     const carsData = await ApiHandler.getInstance().getCars(this.currentPage);
-    const carsWrapper = new CarsList(carsData);
-    this.element.append(carsWrapper.getElement());
+    this.carsList.addCarsList(carsData);
+    this.element.append(this.carsList.getElement());
   }
 
   private addButtons(buttonWrapper: HTMLDivElement): void {
@@ -77,6 +89,21 @@ export class Home extends BaseComponent<"main"> {
     }
   }
 
+  private createUIPanel(): HTMLDivElement {
+    const uiPanel = this.createDOMElement({
+      tagName: "div",
+      classList: [
+        utilitiesStyles.flex,
+        utilitiesStyles.justifyBetween,
+        utilitiesStyles.alignCenter,
+        utilitiesStyles.widthFull,
+      ],
+    });
+    const createForm = new CreateForm(this.addCars.bind(this));
+    uiPanel.append(createForm.getElement(), this.createButtonWrapper());
+    return uiPanel;
+  }
+
   private createButtonWrapper(): HTMLDivElement {
     const buttonWrapper = this.createDOMElement({
       tagName: "div",
@@ -84,11 +111,10 @@ export class Home extends BaseComponent<"main"> {
         styles.buttonWrapper,
         utilitiesStyles.flex,
         utilitiesStyles.alignCenter,
-        utilitiesStyles.justifyBetween,
+        utilitiesStyles.gap20,
       ],
     });
     this.addButtons(buttonWrapper);
-    this.appendElement(buttonWrapper);
     return buttonWrapper;
   }
 }

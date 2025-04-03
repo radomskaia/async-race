@@ -16,7 +16,7 @@ export class CarItem extends BaseComponent<"li"> {
 
   constructor(value: Car) {
     super();
-    this.form = new UpdateForm(value);
+    this.form = new UpdateForm(value, this.updateCarView.bind(this));
     this.element.append(this.createCarPanel());
     this.useElement = this.createSVG({
       classList: [styles.carIcon],

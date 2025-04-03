@@ -1,10 +1,10 @@
 import { ApiHandler } from "@/services/api-handler.ts";
-import type { Car } from "@/types";
+import type { CarUpdateCallback } from "@/types";
 import { FormButtonsConfig } from "@/types";
 import { BaseForm } from "@/components/car-form/base-form.ts";
 
 export class CreateForm extends BaseForm {
-  constructor(private callback: (data: Car) => void) {
+  constructor(private callback: CarUpdateCallback) {
     super();
     this.addFormButton();
     this.callback = callback;
@@ -21,15 +21,12 @@ export class CreateForm extends BaseForm {
     }
 
     ApiHandler.getInstance()
-      .createCar(formData)
-      .then((data) => {
-        this.callback(data);
-      })
+      .createCar(formData, this.callback)
       .catch((error) => {
         console.error(error);
       })
       .finally(() => {
-        this.element.reset();
+        this.nameElement.resetValue();
       });
   }
 

@@ -7,15 +7,9 @@ import { ApiHandler } from "@/services/api-handler.ts";
 import utilitiesStyles from "@/styles/utilities.module.css";
 
 export class CarsList extends BaseComponent<"ul"> {
-  constructor(list: Car[]) {
-    super();
-    this.addCarsList(list);
-  }
-
   private static deleteOption(id: number, carItem: CarItem): void {
     ApiHandler.getInstance()
-      .deleteCar(id)
-      .then(() => {
+      .deleteCar(id, () => {
         carItem.getElement().remove();
       })
       .catch((error) => {
@@ -32,6 +26,13 @@ export class CarsList extends BaseComponent<"ul"> {
     }, ControllsButtonConfig.DELETE);
   }
 
+  public addCarsList(list: Car[]): void {
+    this.clearElement();
+    for (const car of list) {
+      this.addCar(car);
+    }
+  }
+
   protected createElement(): HTMLElementTagNameMap["ul"] {
     return this.createDOMElement({
       tagName: "ul",
@@ -42,11 +43,5 @@ export class CarsList extends BaseComponent<"ul"> {
         utilitiesStyles.gap30,
       ],
     });
-  }
-
-  private addCarsList(list: Car[]): void {
-    for (const car of list) {
-      this.addCar(car);
-    }
   }
 }

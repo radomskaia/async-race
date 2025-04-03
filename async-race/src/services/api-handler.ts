@@ -1,5 +1,5 @@
 import { Validator } from "@/services/validator.ts";
-import type { Car, CarProperties } from "@/types";
+import type { Callback, Car, CarProperties, CarUpdateCallback } from "@/types";
 import { API_URLS, ZERO } from "@/constants/constants.ts";
 
 export class ApiHandler {
@@ -62,44 +62,54 @@ export class ApiHandler {
     return [];
   }
 
-  public async deleteCar(id: number): Promise<void> {
+  public async deleteCar(id: number, callback: Callback): Promise<void> {
     const url = `${this.url}${this.garage}/${id}`;
 
     ApiHandler.getResponse(url, {
       method: "DELETE",
-    }).catch((error) => {
-      console.error(error);
-    });
+    })
+      .then(callback)
+      .catch((error) => {
+        console.error(error);
+      });
   }
 
-  public async updateCar({ id, ...properties }: Car): Promise<Car> {
+  public async updateCar(
+    { id, ...properties }: Car,
+    callback: CarUpdateCallback,
+  ): Promise<void> {
     const url = `${this.url}${this.garage}/${id}`;
     const init = {
       method: "PUT",
       headers: this.headers,
       body: JSON.stringify(properties),
     };
-    return ApiHandler.getResponse(url, init)
+    ApiHandler.getResponse(url, init)
       .then((response) => {
         if (!response.ok) {
           throw new Error(response.statusText);
         }
         return response.json();
       })
+      .then(callback)
       .catch((error) => {
         console.error(error);
       });
   }
 
-  public async createCar(properties: CarProperties): Promise<Car> {
+  public async createCar(
+    properties: CarProperties,
+    callback: CarUpdateCallback,
+  ): Promise<void> {
     const url = `${this.url}${this.garage}`;
     const init = {
       method: "POST",
       headers: this.headers,
       body: JSON.stringify(properties),
     };
-    return ApiHandler.getResponse(url, init)
+    ApiHandler.getResponse(url, init)
       .then((response) => response.json())
+      .then(callback)
       .catch((error) => {
         console.error(error);
       });

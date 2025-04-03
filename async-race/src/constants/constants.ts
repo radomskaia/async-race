@@ -13,11 +13,21 @@ export const NOT_FOUND_INDEX = -1;
 export const LAST_INDEX = -1;
 export const REMOVE_ONE_ITEM = 1;
 
+export const CARS_COUNT = 100;
+
 export const SYMBOLS = {
   // line: "\n",
   // comma: ",",
   // dash: "-",
   hash: "#",
+};
+
+export const COLOR = {
+  RGB: "RGB",
+  RANGE: 256,
+  HEX_BASE: 16,
+  HEX_LENGTH: 2,
+  ZERO_PAD: "0",
 };
 
 export const PAGE_PATH = {
