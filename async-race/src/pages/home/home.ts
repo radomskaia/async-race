@@ -4,11 +4,14 @@ import type { Callback } from "@/types";
 import { BUTTON_TEXT } from "@/constants/buttons-constants.ts";
 import styles from "@/pages/home/home.module.css";
 import { TextButton } from "@/components/buttons/text-button.ts";
-import { carsList } from "@/components/options/car-list/cars-list.ts";
+import { CarsList } from "@/components/options/car-list/cars-list.ts";
 import { ApiHandler } from "@/services/api-handler.ts";
+import { CreateForm } from "@/components/car-form/create-form.ts";
+import { ONE } from "@/constants/constants.ts";
 
 export class Home extends BaseComponent<"main"> {
   private static instance: Home | undefined;
+  private currentPage: number = ONE;
   private readonly buttonsConfig: {
     title: (typeof BUTTON_TEXT)[keyof typeof BUTTON_TEXT];
     callback: Callback;
@@ -36,7 +39,9 @@ export class Home extends BaseComponent<"main"> {
   private constructor() {
     super();
     this.createButtonWrapper();
-    this.addCars();
+    const createForm = new CreateForm(this.addCars.bind(this));
+    this.appendElement(createForm.getElement());
+    this.addCars().catch(console.error);
   }
 
   public static getInstance(): Home {
@@ -60,8 +65,8 @@ export class Home extends BaseComponent<"main"> {
   }
 
   private async addCars(): Promise<void> {
-    const carsData = await ApiHandler.getInstance().getCars();
-    const carsWrapper = new carsList(carsData);
+    const carsData = await ApiHandler.getInstance().getCars(this.currentPage);
+    const carsWrapper = new CarsList(carsData);
     this.element.append(carsWrapper.getElement());
   }
 
