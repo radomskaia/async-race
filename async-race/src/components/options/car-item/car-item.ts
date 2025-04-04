@@ -50,7 +50,7 @@ export class CarItem extends BaseComponent<"li"> {
       classList: [
         utilitiesStyles.flex,
         utilitiesStyles.flexColumn,
-        utilitiesStyles.gap20,
+        utilitiesStyles.gap10,
       ],
     });
   }

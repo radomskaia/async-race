@@ -59,6 +59,7 @@ export class Pagination extends BaseComponent<"div"> {
     this.lastPage = ONE;
     this.elementsCountElement = this.createDOMElement({
       tagName: "span",
+      textContent: String(ZERO),
     });
     this.currentPageElement = this.createDOMElement({
       tagName: "p",
@@ -99,7 +100,7 @@ export class Pagination extends BaseComponent<"div"> {
         utilitiesStyles.flex,
         utilitiesStyles.gap30,
         utilitiesStyles.alignCenter,
-        utilitiesStyles.widthFull,
+        // utilitiesStyles.widthFull,
       ],
     });
   }

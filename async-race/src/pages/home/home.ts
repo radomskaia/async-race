@@ -1,36 +1,37 @@
 import { BaseComponent } from "@/components/base-component.ts";
 import utilitiesStyles from "@/styles/utilities.module.css";
 import type { Callback } from "@/types";
-import { BUTTON_TEXT } from "@/constants/buttons-constants.ts";
+import { RaceButtonConfig } from "@/types";
+import { BUTTON_TEXT, ICON_PATH } from "@/constants/buttons-constants.ts";
 import styles from "@/pages/home/home.module.css";
-import { TextButton } from "@/components/buttons/text-button.ts";
 import { CarsList } from "@/components/options/car-list/cars-list.ts";
 import { ApiHandler } from "@/services/api-handler.ts";
 import { CreateForm } from "@/components/car-form/create-form.ts";
 import { CARS_COUNT, ZERO } from "@/constants/constants.ts";
 import { getRandomCarName, getRandomHEX } from "@/utilities/utilities.ts";
 import { Pagination } from "@/components/pagination/pagination.ts";
+import { IconButton } from "@/components/buttons/icon-button.ts";
 
 export class Home extends BaseComponent<"main"> {
   private static instance: Home | undefined;
   private readonly buttonsConfig: {
-    title: (typeof BUTTON_TEXT)[keyof typeof BUTTON_TEXT];
+    title: RaceButtonConfig;
     callback: Callback;
   }[] = [
     {
-      title: BUTTON_TEXT.START_RACE,
+      title: RaceButtonConfig.START_RACE,
       callback: (): void => {
         throw new Error("NOT IMPLEMENTED");
       },
     },
     {
-      title: BUTTON_TEXT.RESET,
+      title: RaceButtonConfig.RESET,
       callback: (): void => {
         throw new Error("NOT IMPLEMENTED");
       },
     },
     {
-      title: BUTTON_TEXT.GENERATE_CARS,
+      title: RaceButtonConfig.GENERATE_CARS,
       callback: (): void => {
         const requests: Promise<void>[] = [];
         for (let index = ZERO; index < CARS_COUNT; index++) {
@@ -92,7 +93,15 @@ export class Home extends BaseComponent<"main"> {
 
   private addButtons(buttonWrapper: HTMLDivElement): void {
     for (const { title, callback } of this.buttonsConfig) {
-      const button = new TextButton(title, callback);
+      let button;
+      button = new IconButton(
+        {
+          title: BUTTON_TEXT[title],
+          path: ICON_PATH[title],
+          classList: [],
+        },
+        callback,
+      );
       buttonWrapper.append(button.getElement());
     }
   }

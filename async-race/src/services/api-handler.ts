@@ -16,7 +16,7 @@ export class ApiHandler {
   };
   private garage = API_URLS.GARAGE;
   // private engine = API_URLS.ENGINE;
-  // private winners = API_URLS.WINNERS;
+  private winners = API_URLS.WINNERS;
 
   public static getInstance(): ApiHandler {
     if (!ApiHandler.instance) {
@@ -81,7 +81,7 @@ export class ApiHandler {
       await ApiHandler.getResponse(url, {
         method: "DELETE",
       });
-      await callback(null);
+      void Promise.allSettled([this.deleteWinner(id), callback(null)]);
     } catch (error) {
       console.error(error);
     }
@@ -123,6 +123,18 @@ export class ApiHandler {
     try {
       await ApiHandler.getResponse(url, init);
       callback?.(null, true);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  private async deleteWinner(id: number): Promise<void> {
+    const url = `${this.url}${this.winners}/${id}`;
+
+    try {
+      await ApiHandler.getResponse(url, {
+        method: "DELETE",
+      });
     } catch (error) {
       console.error(error);
     }

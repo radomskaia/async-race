@@ -9,6 +9,7 @@ import { CarNameInput } from "@/components/input/car-name-input.ts";
 import { CarColorInput } from "@/components/input/car-color-input.ts";
 import { INPUT_NAMES } from "@/constants/input-constants.ts";
 import { MESSAGES } from "@/constants/constants.ts";
+import { getRandomHEX } from "@/utilities/utilities.ts";
 
 export abstract class BaseForm extends BaseComponent<"form", number> {
   protected readonly nameElement: CarNameInput;
@@ -16,7 +17,8 @@ export abstract class BaseForm extends BaseComponent<"form", number> {
   protected constructor(value?: Car) {
     super(value?.id);
     this.nameElement = this.addCarName(value?.name);
-    this.colorElement = new CarColorInput(value?.color);
+    const color = value?.color ?? getRandomHEX();
+    this.colorElement = new CarColorInput(color);
     this.appendElement(
       this.colorElement.getElement(),
       this.nameElement.getElement(),

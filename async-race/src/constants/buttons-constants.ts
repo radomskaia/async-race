@@ -51,6 +51,9 @@ export const ICON_PATH = {
   LAST: SPRITE_PATH + "doubleArrowRight",
   NEXT: SPRITE_PATH + "arrowRight",
   PREVIOUS: SPRITE_PATH + "arrowLeft",
+  START_RACE: SPRITE_PATH + "startRace",
+  RESET: SPRITE_PATH + "reset",
+  GENERATE_CARS: SPRITE_PATH + "wheel",
 } as const;
 export const ATTRIBUTES = {
   ariaLabel: "aria-label",

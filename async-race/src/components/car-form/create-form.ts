@@ -2,6 +2,7 @@ import { ApiHandler } from "@/services/api-handler.ts";
 import type { SetPageCallback } from "@/types";
 import { FormButtonsConfig } from "@/types";
 import { BaseForm } from "@/components/car-form/base-form.ts";
+import { getRandomHEX } from "@/utilities/utilities.ts";
 
 export class CreateForm extends BaseForm {
   constructor(private callback: SetPageCallback) {
@@ -27,6 +28,7 @@ export class CreateForm extends BaseForm {
       })
       .finally(() => {
         this.nameElement.resetValue();
+        this.colorElement.value = getRandomHEX();
       });
   }
 

@@ -76,6 +76,12 @@ export enum FormButtonsConfig {
   CONFIRM = "CONFIRM",
 }
 
+export enum RaceButtonConfig {
+  START_RACE = "START_RACE",
+  RESET = "RESET",
+  GENERATE_CARS = "GENERATE_CARS",
+}
+
 export type GetCarsHandler = (
   page: number,
   limit: number,

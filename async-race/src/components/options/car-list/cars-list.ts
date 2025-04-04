@@ -36,7 +36,7 @@ export class CarsList extends BaseComponent<"ul"> {
         styles.carsList,
         utilitiesStyles.flex,
         utilitiesStyles.flexColumn,
-        utilitiesStyles.gap30,
+        utilitiesStyles.gap20,
       ],
     });
   }

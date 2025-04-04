@@ -13,6 +13,10 @@ export class BaseInput extends BaseComponent<"input"> {
     return this.element.value;
   }
 
+  public set value(value: string) {
+    this.element.value = value;
+  }
+
   public setDefaultValue(): void {
     this.defaultValue = this.element.value;
   }
