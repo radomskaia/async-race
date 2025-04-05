@@ -10,7 +10,7 @@ export class IconButton extends BaseButton {
   constructor(options: Required<ButtonOptions>, callback?: Callback) {
     super(callback);
     this.element.title = options.title;
-    this.useSVGIcon = this.createSVG({
+    const { use, svg } = this.createSVG({
       path: options.path,
       classList: [styles.iconButton, ...options.classList],
       attributes: {
@@ -18,5 +18,7 @@ export class IconButton extends BaseButton {
         [ATTRIBUTES.ariaLabel]: options.title,
       },
     });
+    this.useSVGIcon = use;
+    this.appendElement(svg);
   }
 }

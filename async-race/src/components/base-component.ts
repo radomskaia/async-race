@@ -62,11 +62,10 @@ export abstract class BaseComponent<
     element.textContent = textContent;
   }
 
-  protected createSVG({
-    path,
-    classList,
-    attributes,
-  }: CreateSVGIconOptions): SVGUseElement {
+  protected createSVG({ path, classList, attributes }: CreateSVGIconOptions): {
+    use: SVGUseElement;
+    svg: SVGElement;
+  } {
     const svg = document.createElementNS(SVG_CONFIG.NAMESPACE_SVG, "svg");
     this.addAttributes({ ...attributes, role: SVG_CONFIG.ROLE }, svg);
     this.addClassList(classList, svg);
@@ -77,8 +76,8 @@ export abstract class BaseComponent<
       path,
     );
     svg.append(use);
-    this.appendElement(svg);
-    return use;
+    // this.appendElement(svg);
+    return { use, svg };
   }
 
   protected abstract createElement(options?: O): HTMLElementTagNameMap[T];

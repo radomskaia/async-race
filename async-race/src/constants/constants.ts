@@ -3,22 +3,12 @@ export const APP_NAME = "Async Race";
 export const LS_PREFIX = "radomskaia--async-race--";
 
 // Common constants
-export const HALF = 0.5;
 export const ZERO = 0;
 export const ONE = 1;
-export const DOUBLE = 2;
 export const EMPTY_STRING = "";
-export const FIRST_INDEX = 0;
-export const NOT_FOUND_INDEX = -1;
-export const LAST_INDEX = -1;
-export const REMOVE_ONE_ITEM = 1;
-
 export const CARS_COUNT = 100;
-
+export const MS_IS_SECOND = 1000;
 export const SYMBOLS = {
-  // line: "\n",
-  // comma: ",",
-  // dash: "-",
   hash: "#",
 };
 
@@ -58,9 +48,29 @@ export const CAR_KEYS = {
   ID: "id",
 } as const;
 
+export const RACE_KEYS = {
+  VELOCITY: "velocity",
+  DISTANCE: "distance",
+} as const;
+
 export const RESPONSE_DATA_KEYS = {
   DATA: "data",
   COUNT: "count",
 } as const;
 
+export const WINNER_KEYS = {
+  ID: "id",
+  WINS: "wins",
+  TIME: "time",
+} as const;
+
 export const ELEMENTS_PER_PAGE = 7;
+
+export const RESPONSE_STATUS = {
+  OK: 200,
+  CREATED: 201,
+  NO_CONTENT: 204,
+  BAD_REQUEST: 400,
+  NOT_FOUND: 404,
+  INTERNAL_SERVER_ERROR: 500,
+};

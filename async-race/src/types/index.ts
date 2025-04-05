@@ -53,11 +53,16 @@ export interface Car extends CarProperties {
 }
 
 export interface ResponseData {
+  data: unknown;
+  count: number;
+}
+
+export interface ResponseCarData extends ResponseData {
   data: Car[];
   count: number;
 }
 
-export enum ControllsButtonConfig {
+export enum ControlsButtonConfig {
   EDIT = "EDIT",
   DELETE = "DELETE",
   START_ENGINE = "START_ENGINE",
@@ -82,8 +87,41 @@ export enum RaceButtonConfig {
   GENERATE_CARS = "GENERATE_CARS",
 }
 
+export enum EngineStatus {
+  STARTED = "started",
+  STOPPED = "stopped",
+  DRIVE = "drive",
+}
+
+export enum REQUEST_METHOD {
+  POST = "POST",
+  PUT = "PUT",
+  DELETE = "DELETE",
+  PATCH = "PATCH",
+}
+
+export interface driveStatus {
+  success: boolean;
+}
+
+export type RequestEngine = (
+  status: EngineStatus,
+  carId: number,
+) => Promise<unknown>;
+
+export interface RaceData {
+  velocity: number;
+  distance: number;
+}
+
+export interface WinnerData {
+  id: number;
+  wins: number;
+  time: number;
+}
+
 export type GetCarsHandler = (
   page: number,
   limit: number,
-) => Promise<ResponseData>;
+) => Promise<ResponseCarData>;
 export type AddCarsList = (list: Car[]) => void;

@@ -11,6 +11,7 @@ import { CARS_COUNT, ZERO } from "@/constants/constants.ts";
 import { getRandomCarName, getRandomHEX } from "@/utilities/utilities.ts";
 import { Pagination } from "@/components/pagination/pagination.ts";
 import { IconButton } from "@/components/buttons/icon-button.ts";
+import { RaceService } from "@/services/race-servies.ts";
 
 export class Home extends BaseComponent<"main"> {
   private static instance: Home | undefined;
@@ -21,53 +22,44 @@ export class Home extends BaseComponent<"main"> {
     {
       title: RaceButtonConfig.START_RACE,
       callback: (): void => {
-        throw new Error("NOT IMPLEMENTED");
+        void this.raceService.startRace();
       },
     },
     {
       title: RaceButtonConfig.RESET,
       callback: (): void => {
-        throw new Error("NOT IMPLEMENTED");
+        void this.raceService.stopRace();
       },
     },
     {
       title: RaceButtonConfig.GENERATE_CARS,
       callback: (): void => {
-        const requests: Promise<void>[] = [];
-        for (let index = ZERO; index < CARS_COUNT; index++) {
-          const name = getRandomCarName();
-          const color = getRandomHEX();
-          const request = ApiHandler.getInstance()
-            .createCar({
-              name,
-              color,
-            })
-            .catch(console.error);
-          requests.push(request);
-        }
-        Promise.all(requests).then(() => {
-          this.pagination.setPage(null, true).catch(console.error);
-        });
+        this.generateCars();
       },
     },
   ];
-  private carsList: CarsList;
   private readonly pagination: Pagination;
+  private readonly raceService: RaceService;
   private constructor() {
     super();
-    this.carsList = new CarsList();
+    const carsList = new CarsList();
+    const carsListElement = carsList.getElement();
+
+    this.raceService = new RaceService(carsListElement);
+
     this.pagination = new Pagination(
       "Garage",
       ApiHandler.getInstance().getCars,
-      this.carsList.addCarsList,
+      carsList.addCarsList,
     );
-    this.carsList.addDeleteCallback(
+    carsList.init(
       this.pagination.setPage.bind(this.pagination),
+      this.raceService,
     );
     this.appendElement(
       this.pagination.getElement(),
       this.createUIPanel(),
-      this.carsList.getElement(),
+      carsListElement,
     );
   }
 
@@ -135,5 +127,23 @@ export class Home extends BaseComponent<"main"> {
     });
     this.addButtons(buttonWrapper);
     return buttonWrapper;
+  }
+
+  private generateCars(): void {
+    const requests: Promise<void>[] = [];
+    for (let index = ZERO; index < CARS_COUNT; index++) {
+      const name = getRandomCarName();
+      const color = getRandomHEX();
+      const request = ApiHandler.getInstance()
+        .createCar({
+          name,
+          color,
+        })
+        .catch(console.error);
+      requests.push(request);
+    }
+    Promise.all(requests).then(() => {
+      this.pagination.setPage(null, true).catch(console.error);
+    });
   }
 }

@@ -4,18 +4,22 @@ import type {
   CarProperties,
   CarUpdateCallback,
   GetCarsHandler,
+  ResponseData,
+  RequestEngine,
+  WinnerData,
 } from "@/types";
-import { API_URLS, ZERO } from "@/constants/constants.ts";
-import { isResponseData } from "@/services/validator.ts";
+import { REQUEST_METHOD } from "@/types";
+import { API_URLS, RESPONSE_STATUS, ZERO } from "@/constants/constants.ts";
+import { isResponseCarData, isWinnerData } from "@/services/validator.ts";
 
 export class ApiHandler {
   private static instance: ApiHandler | undefined;
-  private url = "http://127.0.0.1:3000";
+  private url = "http://192.168.88.124:3000";
   private headers = {
     "Content-Type": "application/json",
   };
   private garage = API_URLS.GARAGE;
-  // private engine = API_URLS.ENGINE;
+  private engine = API_URLS.ENGINE;
   private winners = API_URLS.WINNERS;
 
   public static getInstance(): ApiHandler {
@@ -43,18 +47,59 @@ export class ApiHandler {
     return response;
   }
 
-  private static async getResponseData(url: string): Promise<unknown> {
-    const response = await this.getResponse(url);
+  private static async getResponseData(
+    url: string,
+    init?: RequestInit,
+  ): Promise<ResponseData> {
+    const response = await this.getResponse(url, init);
     let totalCount;
     if (!response.ok) {
-      throw new Error(response.statusText);
+      throw response;
     }
     totalCount = ApiHandler.getTotalCountCars(response);
+    if (totalCount < ZERO) {
+      throw new Error("Invalid data");
+    }
     return {
       data: await response.json(),
       count: totalCount,
     };
   }
+
+  private static async getEngineData(
+    url: string,
+    init?: RequestInit,
+  ): Promise<unknown> {
+    const response = await this.getResponse(url, init);
+    if (!response.ok) {
+      throw response;
+    }
+    return await response.json();
+  }
+
+  public requestEngine: RequestEngine = async (status, id) => {
+    const query = new URLSearchParams({
+      id: String(id),
+      status: status,
+    });
+    const url = `${this.url}${this.engine}?${query}`;
+    let data;
+    try {
+      data = await ApiHandler.getEngineData(url, {
+        method: REQUEST_METHOD.PATCH,
+      });
+      return data;
+    } catch (error) {
+      if (!(error instanceof Response)) {
+        console.error(`Error while fetching data: ${error}`);
+        return;
+      }
+      if (error.status === RESPONSE_STATUS.INTERNAL_SERVER_ERROR) {
+        throw error;
+      }
+      console.error(error.statusText);
+    }
+  };
 
   public getCars: GetCarsHandler = async (page, limit) => {
     const query = new URLSearchParams({
@@ -68,18 +113,59 @@ export class ApiHandler {
     } catch (error) {
       throw new Error(`Error while fetching data: ${error}`);
     }
-    if (!isResponseData(data)) {
+    if (!isResponseCarData(data)) {
       throw new Error("Invalid data");
     }
+
     return data;
   };
+
+  public async addWinner(data: WinnerData): Promise<void> {
+    let url = `${this.url}${this.winners}`;
+    let method;
+    let initData = {};
+    try {
+      const responseData = await ApiHandler.getResponseData(
+        `${url}/${data.id}`,
+      );
+      const winner = responseData.data;
+
+      if (isWinnerData(winner)) {
+        url += `/${data.id}`;
+        initData = {
+          wins: data.wins + winner.wins,
+          time: Math.min(data.time, winner.time),
+        };
+        method = REQUEST_METHOD.PUT;
+      } else {
+        console.error("Invalid data");
+      }
+    } catch (error) {
+      if (
+        error instanceof Response &&
+        error.status === RESPONSE_STATUS.NOT_FOUND
+      ) {
+        method = REQUEST_METHOD.POST;
+        initData = data;
+      } else {
+        console.error(error);
+      }
+    } finally {
+      const init = {
+        headers: this.headers,
+        method: method,
+        body: JSON.stringify(initData),
+      };
+      void ApiHandler.getResponse(url, init);
+    }
+  }
 
   public async deleteCar(id: number, callback: SetPageCallback): Promise<void> {
     const url = `${this.url}${this.garage}/${id}`;
 
     try {
       await ApiHandler.getResponse(url, {
-        method: "DELETE",
+        method: REQUEST_METHOD.DELETE,
       });
       void Promise.allSettled([this.deleteWinner(id), callback(null)]);
     } catch (error) {
@@ -93,7 +179,7 @@ export class ApiHandler {
   ): Promise<void> {
     const url = `${this.url}${this.garage}/${id}`;
     const init = {
-      method: "PUT",
+      method: REQUEST_METHOD.PUT,
       headers: this.headers,
       body: JSON.stringify(properties),
     };
@@ -116,12 +202,16 @@ export class ApiHandler {
   ): Promise<void> {
     const url = `${this.url}${this.garage}`;
     const init = {
-      method: "POST",
+      method: REQUEST_METHOD.POST,
       headers: this.headers,
       body: JSON.stringify(properties),
     };
     try {
-      await ApiHandler.getResponse(url, init);
+      const response = await ApiHandler.getResponse(url, init);
+      if (!response.ok) {
+        console.error(response.statusText);
+        return;
+      }
       callback?.(null, true);
     } catch (error) {
       console.error(error);
@@ -133,7 +223,7 @@ export class ApiHandler {
 
     try {
       await ApiHandler.getResponse(url, {
-        method: "DELETE",
+        method: REQUEST_METHOD.DELETE,
       });
     } catch (error) {
       console.error(error);
