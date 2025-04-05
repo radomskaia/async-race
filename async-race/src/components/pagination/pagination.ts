@@ -4,13 +4,13 @@ import type { BaseButton } from "@/components/buttons/base-button.ts";
 import {
   type AddCarsList,
   type Callback,
-  type GetCarsHandler,
   PaginationButtonConfig,
 } from "@/types";
 import { IconButton } from "@/components/buttons/icon-button.ts";
 import { BUTTON_TEXT, ICON_PATH } from "@/constants/buttons-constants.ts";
 import styles from "@/components/options/cars-list.module.css";
 import { ELEMENTS_PER_PAGE, ONE, ZERO } from "@/constants/constants.ts";
+import type { GetCarsHandler } from "@/types/api-service-types.ts";
 
 export class Pagination extends BaseComponent<"div"> {
   private buttons: Record<string, BaseButton> = {};

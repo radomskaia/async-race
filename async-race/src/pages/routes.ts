@@ -1,7 +1,7 @@
 import { PAGE_PATH } from "@/constants/constants.ts";
 import { Home } from "@/pages/home/home.ts";
 import { NotFound } from "@/pages/not-found.ts";
-import type { Route } from "@/types";
+import type { Route } from "@/types/router-type.ts";
 
 export const appRoutes: Route[] = [
   {

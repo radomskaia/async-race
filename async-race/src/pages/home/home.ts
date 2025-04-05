@@ -5,7 +5,7 @@ import { RaceButtonConfig } from "@/types";
 import { BUTTON_TEXT, ICON_PATH } from "@/constants/buttons-constants.ts";
 import styles from "@/pages/home/home.module.css";
 import { CarsList } from "@/components/options/car-list/cars-list.ts";
-import { ApiHandler } from "@/services/api-handler.ts";
+import { ApiService } from "@/services/api-service.ts";
 import { CreateForm } from "@/components/car-form/create-form.ts";
 import { CARS_COUNT, ZERO } from "@/constants/constants.ts";
 import { getRandomCarName, getRandomHEX } from "@/utilities/utilities.ts";
@@ -49,7 +49,7 @@ export class Home extends BaseComponent<"main"> {
 
     this.pagination = new Pagination(
       "Garage",
-      ApiHandler.getInstance().getCars,
+      ApiService.getInstance().getCars,
       carsList.addCarsList,
     );
     carsList.init(
@@ -134,7 +134,7 @@ export class Home extends BaseComponent<"main"> {
     for (let index = ZERO; index < CARS_COUNT; index++) {
       const name = getRandomCarName();
       const color = getRandomHEX();
-      const request = ApiHandler.getInstance()
+      const request = ApiService.getInstance()
         .createCar({
           name,
           color,

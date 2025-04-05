@@ -1,4 +1,4 @@
-import { ApiHandler } from "@/services/api-handler.ts";
+import { ApiService } from "@/services/api-service.ts";
 import type { SetPageCallback } from "@/types";
 import { FormButtonsConfig } from "@/types";
 import { BaseForm } from "@/components/car-form/base-form.ts";
@@ -21,7 +21,7 @@ export class CreateForm extends BaseForm {
       return;
     }
 
-    ApiHandler.getInstance()
+    ApiService.getInstance()
       .createCar(formData, this.callback)
       .catch((error) => {
         console.error(error);

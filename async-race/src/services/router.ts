@@ -1,25 +1,17 @@
-import type { Route } from "src/types";
 import {
   EMPTY_STRING,
   MESSAGES,
   PAGE_PATH,
   SYMBOLS,
 } from "@/constants/constants.ts";
-export class Router {
-  private static instance: Router | undefined;
+import type { Route, RouterInterface } from "@/types/router-type.ts";
+export class Router implements RouterInterface {
   private routes: Route[] = [];
   private currentPath = EMPTY_STRING;
-  private constructor() {
+  constructor() {
     globalThis.addEventListener("hashchange", () => {
       this.routerChange();
     });
-  }
-
-  public static getInstance(): Router {
-    if (!Router.instance) {
-      Router.instance = new Router();
-    }
-    return Router.instance;
   }
 
   public addRoutes(routes: Route[]): void {

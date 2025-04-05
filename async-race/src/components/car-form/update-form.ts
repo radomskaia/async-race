@@ -1,4 +1,4 @@
-import { ApiHandler } from "@/services/api-handler.ts";
+import { ApiService } from "@/services/api-service.ts";
 import { BUTTON_TYPES } from "@/constants/buttons-constants.ts";
 import type { Car, CarUpdateCallback } from "@/types";
 import { FormButtonsConfig } from "@/types";
@@ -37,7 +37,7 @@ export class UpdateForm extends BaseForm {
       return;
     }
     this.toggleUpdateState();
-    ApiHandler.getInstance()
+    ApiService.getInstance()
       .updateCar({ id, ...formData }, this.callback)
       .catch((error) => {
         console.error(error);

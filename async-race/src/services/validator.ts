@@ -5,13 +5,13 @@ import {
   WINNER_KEYS,
   ZERO,
 } from "@/constants/constants.ts";
+import type { Car } from "@/types";
 import type {
-  Car,
-  RaceData,
   ResponseCarData,
   ResponseData,
   WinnerData,
-} from "@/types";
+} from "@/types/api-service-types.ts";
+import type { RaceData } from "@/types/race-service-types.ts";
 
 export function isBoolean(value: unknown): value is boolean {
   return typeof value === "boolean";

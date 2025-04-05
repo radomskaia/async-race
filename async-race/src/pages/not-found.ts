@@ -2,8 +2,9 @@ import { BaseComponent } from "@/components/base-component.ts";
 import utilitiesStyles from "@/styles/utilities.module.css";
 import { TextButton } from "@/components/buttons/text-button.ts";
 import { MESSAGES, PAGE_PATH } from "@/constants/constants.ts";
-import { Router } from "@/services/router.ts";
 import { BUTTON_TEXT } from "@/constants/buttons-constants.ts";
+import { ServiceName } from "@/types/di-container-types.ts";
+import { DIContainer } from "@/services/di-container.ts";
 
 export class NotFound extends BaseComponent<"main"> {
   private static instance: NotFound | undefined;
@@ -11,7 +12,9 @@ export class NotFound extends BaseComponent<"main"> {
   private constructor() {
     super();
     this.homeButton = new TextButton(BUTTON_TEXT.GARAGE, () =>
-      Router.getInstance().navigateTo(PAGE_PATH.HOME),
+      DIContainer.getInstance()
+        .getService<ServiceName.ROUTER>(ServiceName.ROUTER)
+        .navigateTo(PAGE_PATH.HOME),
     );
     this.appendElement(this.homeButton.getElement());
   }

@@ -3,17 +3,20 @@ import type {
   SetPageCallback,
   CarProperties,
   CarUpdateCallback,
-  GetCarsHandler,
-  ResponseData,
-  RequestEngine,
-  WinnerData,
 } from "@/types";
-import { REQUEST_METHOD } from "@/types";
 import { API_URLS, RESPONSE_STATUS, ZERO } from "@/constants/constants.ts";
 import { isResponseCarData, isWinnerData } from "@/services/validator.ts";
+import type {
+  GetCarsHandler,
+  ApiServiceInterface,
+  WinnerData,
+  RequestEngine,
+  ResponseData,
+} from "@/types/api-service-types.ts";
+import { REQUEST_METHOD } from "@/types/api-service-types.ts";
 
-export class ApiHandler {
-  private static instance: ApiHandler | undefined;
+export class ApiService implements ApiServiceInterface {
+  private static instance: ApiServiceInterface | undefined;
   private url = "http://192.168.88.124:3000";
   private headers = {
     "Content-Type": "application/json",
@@ -22,14 +25,14 @@ export class ApiHandler {
   private engine = API_URLS.ENGINE;
   private winners = API_URLS.WINNERS;
 
-  public static getInstance(): ApiHandler {
-    if (!ApiHandler.instance) {
-      ApiHandler.instance = new ApiHandler();
+  public static getInstance(): ApiServiceInterface {
+    if (!ApiService.instance) {
+      ApiService.instance = new ApiService();
     }
-    return ApiHandler.instance;
+    return ApiService.instance;
   }
 
-  public static getTotalCountCars(response: Response): number {
+  private static getTotalCountCars(response: Response): number {
     const total = response.headers.get("X-Total-Count");
     return total ? Number(total) : ZERO;
   }
@@ -56,7 +59,7 @@ export class ApiHandler {
     if (!response.ok) {
       throw response;
     }
-    totalCount = ApiHandler.getTotalCountCars(response);
+    totalCount = ApiService.getTotalCountCars(response);
     if (totalCount < ZERO) {
       throw new Error("Invalid data");
     }
@@ -85,7 +88,7 @@ export class ApiHandler {
     const url = `${this.url}${this.engine}?${query}`;
     let data;
     try {
-      data = await ApiHandler.getEngineData(url, {
+      data = await ApiService.getEngineData(url, {
         method: REQUEST_METHOD.PATCH,
       });
       return data;
@@ -109,7 +112,7 @@ export class ApiHandler {
     const url = `${this.url}${this.garage}?${query}`;
     let data;
     try {
-      data = await ApiHandler.getResponseData(url);
+      data = await ApiService.getResponseData(url);
     } catch (error) {
       throw new Error(`Error while fetching data: ${error}`);
     }
@@ -125,7 +128,7 @@ export class ApiHandler {
     let method;
     let initData = {};
     try {
-      const responseData = await ApiHandler.getResponseData(
+      const responseData = await ApiService.getResponseData(
         `${url}/${data.id}`,
       );
       const winner = responseData.data;
@@ -156,7 +159,7 @@ export class ApiHandler {
         method: method,
         body: JSON.stringify(initData),
       };
-      void ApiHandler.getResponse(url, init);
+      void ApiService.getResponse(url, init);
     }
   }
 
@@ -164,7 +167,7 @@ export class ApiHandler {
     const url = `${this.url}${this.garage}/${id}`;
 
     try {
-      await ApiHandler.getResponse(url, {
+      await ApiService.getResponse(url, {
         method: REQUEST_METHOD.DELETE,
       });
       void Promise.allSettled([this.deleteWinner(id), callback(null)]);
@@ -183,7 +186,7 @@ export class ApiHandler {
       headers: this.headers,
       body: JSON.stringify(properties),
     };
-    ApiHandler.getResponse(url, init)
+    ApiService.getResponse(url, init)
       .then((response) => {
         if (!response.ok) {
           throw new Error(response.statusText);
@@ -207,7 +210,7 @@ export class ApiHandler {
       body: JSON.stringify(properties),
     };
     try {
-      const response = await ApiHandler.getResponse(url, init);
+      const response = await ApiService.getResponse(url, init);
       if (!response.ok) {
         console.error(response.statusText);
         return;
@@ -222,7 +225,7 @@ export class ApiHandler {
     const url = `${this.url}${this.winners}/${id}`;
 
     try {
-      await ApiHandler.getResponse(url, {
+      await ApiService.getResponse(url, {
         method: REQUEST_METHOD.DELETE,
       });
     } catch (error) {

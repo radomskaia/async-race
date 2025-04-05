@@ -32,15 +32,6 @@ export enum StorageKeys {
   soundSettings = "soundSettings",
 }
 
-export interface Route {
-  path: string;
-  component: {
-    getInstance(): {
-      getElement(): HTMLElement;
-    };
-  };
-}
-
 export interface CarProperties {
   name: string;
   color: string;
@@ -50,16 +41,6 @@ export interface Car extends CarProperties {
   name: string;
   color: string;
   id: number;
-}
-
-export interface ResponseData {
-  data: unknown;
-  count: number;
-}
-
-export interface ResponseCarData extends ResponseData {
-  data: Car[];
-  count: number;
 }
 
 export enum ControlsButtonConfig {
@@ -87,41 +68,4 @@ export enum RaceButtonConfig {
   GENERATE_CARS = "GENERATE_CARS",
 }
 
-export enum EngineStatus {
-  STARTED = "started",
-  STOPPED = "stopped",
-  DRIVE = "drive",
-}
-
-export enum REQUEST_METHOD {
-  POST = "POST",
-  PUT = "PUT",
-  DELETE = "DELETE",
-  PATCH = "PATCH",
-}
-
-export interface driveStatus {
-  success: boolean;
-}
-
-export type RequestEngine = (
-  status: EngineStatus,
-  carId: number,
-) => Promise<unknown>;
-
-export interface RaceData {
-  velocity: number;
-  distance: number;
-}
-
-export interface WinnerData {
-  id: number;
-  wins: number;
-  time: number;
-}
-
-export type GetCarsHandler = (
-  page: number,
-  limit: number,
-) => Promise<ResponseCarData>;
 export type AddCarsList = (list: Car[]) => void;

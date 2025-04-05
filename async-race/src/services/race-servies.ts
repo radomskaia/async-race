@@ -1,26 +1,26 @@
-import { ApiHandler } from "@/services/api-handler.ts";
+import { ApiService } from "@/services/api-service.ts";
 import { AnimateCar } from "@/components/options/animate-car.ts";
 import { MS_IS_SECOND, ONE, ZERO } from "@/constants/constants.ts";
-import type { RaceData } from "@/types";
-import { EngineStatus } from "@/types";
 import { isRaceData } from "@/services/validator.ts";
+import { EngineStatus } from "@/types/api-service-types.ts";
+import type {
+  AnimationData,
+  RaceData,
+  RaceServiceInterface,
+} from "@/types/race-service-types.ts";
 
-export class RaceService {
-  private requestEngine = ApiHandler.getInstance().requestEngine;
-  private cars: Record<
-    number,
-    {
-      id: number;
-      element: SVGElement;
-      duration: number;
-      animation?: AnimateCar;
-    }
-  > = {};
+export class RaceService implements RaceServiceInterface {
+  private requestEngine = ApiService.getInstance().requestEngine;
+  private cars: Record<number, AnimationData> = {};
   private distance = ZERO;
-  constructor(private container: HTMLElement) {}
+  private container: HTMLElement | null = null;
 
   private static calculateDuration(data: RaceData): number {
     return data.velocity > ZERO ? data.distance / data.velocity : ZERO;
+  }
+
+  public init(container: HTMLElement): void {
+    this.container = container;
   }
 
   public addCar(id: number, element: SVGElement): void {
@@ -60,8 +60,7 @@ export class RaceService {
     }
 
     const winnerId = await Promise.any(drivePromises);
-    console.log("Winner:", winnerId);
-    void ApiHandler.getInstance().addWinner({
+    void ApiService.getInstance().addWinner({
       id: winnerId,
       wins: ONE,
       time: this.cars[winnerId].duration / MS_IS_SECOND,
@@ -80,7 +79,7 @@ export class RaceService {
       throw new Error(`Invalid data: ${data}`);
     }
     this.cars[id].duration = RaceService.calculateDuration(data);
-    if (this.distance === ZERO) {
+    if (this.distance === ZERO && this.container) {
       this.distance =
         this.container.clientWidth - this.cars[id].element.clientWidth;
     }
