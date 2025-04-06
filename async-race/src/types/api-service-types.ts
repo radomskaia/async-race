@@ -12,13 +12,9 @@ export interface ApiServiceInterface extends Injectable {
   updateCar: UpdateCar;
   createCar: CreateCar;
   getCars: GetCarsHandler;
-  addWinner(data: WinnerData): Promise<void>;
 }
 
-export type DeleteCar = (
-  id: number,
-  callback: SetPageCallback,
-) => Promise<void>;
+export type DeleteCar = (id: number) => Promise<void>;
 
 export type UpdateCar = (
   { id, ...properties }: Car,

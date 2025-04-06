@@ -66,11 +66,11 @@ export function isWinnerData(value: unknown): value is WinnerData {
   );
 }
 
-export function isResponseWinnerData(value: unknown): value is WinnerData {
-  if (!isResponseData(value)) {
+export function isWinnerArray(value: unknown): value is WinnerData[] {
+  if (!Array.isArray(value)) {
     return false;
   }
-  return isCar(value.data) && isString(value.data.name);
+  return value.every((winner) => isWinnerData(winner));
 }
 
 function isCar(value: unknown): value is Car {

@@ -77,9 +77,7 @@ export class RaceService implements RaceServiceInterface {
   }
 
   public async startRace(): Promise<void> {
-    DIContainer.getInstance()
-      .getService(ServiceName.EVENT_EMITTER)
-      .notify({ type: ActionType.raceStarted });
+    this.eventEmitter.notify({ type: ActionType.raceStarted });
 
     const startPromises = [];
     for (const id in this.cars) {
@@ -94,13 +92,11 @@ export class RaceService implements RaceServiceInterface {
     }
     const winnerId = await Promise.any(drivePromises);
 
-    void DIContainer.getInstance()
-      .getService(ServiceName.API)
-      .addWinner({
-        id: winnerId,
-        wins: ONE,
-        time: this.cars[winnerId].duration / MS_IS_SECOND,
-      });
+    void this.diContainer.getService(ServiceName.WINNER).create({
+      id: winnerId,
+      wins: ONE,
+      time: this.cars[winnerId].duration / MS_IS_SECOND,
+    });
   }
 
   public async stopRace(): Promise<void> {
@@ -138,12 +134,12 @@ export class RaceService implements RaceServiceInterface {
     } catch (error) {
       this.cars[id].animation?.pause();
       if (
-        !(
-          error instanceof Response &&
-          error.status === RESPONSE_STATUS.INTERNAL_SERVER_ERROR
-        )
+        error instanceof Response &&
+        error.status === RESPONSE_STATUS.INTERNAL_SERVER_ERROR
       ) {
-        console.error(error);
+        throw error;
+      } else {
+        console.error("Something went wrong");
       }
     }
     return id;

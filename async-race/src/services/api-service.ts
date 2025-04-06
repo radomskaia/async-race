@@ -1,9 +1,15 @@
-import { API_URLS, RESPONSE_STATUS, ZERO } from "@/constants/constants.ts";
-import { isResponseCarData, isWinnerData } from "@/services/validator.ts";
+import {
+  API_HEADER,
+  API_URL,
+  API_URLS,
+  COUNT_HEADER,
+  RESPONSE_STATUS,
+  ZERO,
+} from "@/constants/constants.ts";
+import { isResponseCarData } from "@/services/validator.ts";
 import type {
   GetCarsHandler,
   ApiServiceInterface,
-  WinnerData,
   RequestEngine,
   ResponseData,
   DeleteCar,
@@ -13,23 +19,21 @@ import type {
 } from "@/types/api-service-types.ts";
 import { REQUEST_METHOD } from "@/types/api-service-types.ts";
 import { ServiceName } from "@/types/di-container-types";
+import { DIContainer } from "@/services/di-container.ts";
 
 export class ApiService implements ApiServiceInterface {
   public name: ServiceName = ServiceName.API;
-  private url = "http://192.168.88.124:3000";
-  private headers = {
-    "Content-Type": "application/json",
-  };
+  private url = API_URL;
+  private headers = API_HEADER;
   private garage = API_URLS.GARAGE;
   private engine = API_URLS.ENGINE;
-  private winners = API_URLS.WINNERS;
-
-  private static getTotalCountCars(response: Response): number {
-    const total = response.headers.get("X-Total-Count");
-    return total ? Number(total) : ZERO;
+  private winnerServer;
+  public constructor() {
+    const diContainer = DIContainer.getInstance();
+    this.winnerServer = diContainer.getService(ServiceName.WINNER);
   }
 
-  private static getResponse: CombinedResponse<Response> = async (
+  public static getResponse: CombinedResponse<Response> = async (
     url,
     init?,
   ) => {
@@ -42,7 +46,7 @@ export class ApiService implements ApiServiceInterface {
     return response;
   };
 
-  private static getResponseData: CombinedResponse<ResponseData> = async (
+  public static getResponseData: CombinedResponse<ResponseData> = async (
     url,
     init?,
   ) => {
@@ -60,6 +64,11 @@ export class ApiService implements ApiServiceInterface {
       count: totalCount,
     };
   };
+
+  private static getTotalCountCars(response: Response): number {
+    const total = response.headers.get(COUNT_HEADER);
+    return total ? Number(total) : ZERO;
+  }
 
   private static getEngineData: CombinedResponse<unknown> = async (
     url,
@@ -115,54 +124,14 @@ export class ApiService implements ApiServiceInterface {
     return data;
   };
 
-  public async addWinner(data: WinnerData): Promise<void> {
-    let url = `${this.url}${this.winners}`;
-    let method;
-    let initData = {};
-    try {
-      const responseData = await ApiService.getResponseData(
-        `${url}/${data.id}`,
-      );
-      const winner = responseData.data;
-
-      if (isWinnerData(winner)) {
-        url += `/${data.id}`;
-        initData = {
-          wins: data.wins + winner.wins,
-          time: Math.min(data.time, winner.time),
-        };
-        method = REQUEST_METHOD.PUT;
-      } else {
-        console.error("Invalid data");
-      }
-    } catch (error) {
-      if (
-        error instanceof Response &&
-        error.status === RESPONSE_STATUS.NOT_FOUND
-      ) {
-        method = REQUEST_METHOD.POST;
-        initData = data;
-      } else {
-        console.error(error);
-      }
-    } finally {
-      const init = {
-        headers: this.headers,
-        method: method,
-        body: JSON.stringify(initData),
-      };
-      void ApiService.getResponse(url, init);
-    }
-  }
-
-  public deleteCar: DeleteCar = async (id, callback) => {
+  public deleteCar: DeleteCar = async (id) => {
     const url = `${this.url}${this.garage}/${id}`;
 
     try {
       await ApiService.getResponse(url, {
         method: REQUEST_METHOD.DELETE,
       });
-      void Promise.allSettled([this.deleteWinner(id), callback(null)]);
+      await this.winnerServer.delete(id);
     } catch (error) {
       console.error(error);
     }
@@ -188,7 +157,7 @@ export class ApiService implements ApiServiceInterface {
       });
   };
 
-  public createCar: CreateCar = async (properties, callback?) => {
+  public createCar: CreateCar = async (properties) => {
     const url = `${this.url}${this.garage}`;
     const init = {
       method: REQUEST_METHOD.POST,
@@ -201,21 +170,8 @@ export class ApiService implements ApiServiceInterface {
         console.error(response.statusText);
         return;
       }
-      callback?.(null, true);
     } catch (error) {
       console.error(error);
     }
   };
-
-  private async deleteWinner(id: number): Promise<void> {
-    const url = `${this.url}${this.winners}/${id}`;
-
-    try {
-      await ApiService.getResponse(url, {
-        method: REQUEST_METHOD.DELETE,
-      });
-    } catch (error) {
-      console.error(error);
-    }
-  }
 }
