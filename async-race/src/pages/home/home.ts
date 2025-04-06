@@ -1,7 +1,6 @@
 import { BaseComponent } from "@/components/base-component.ts";
 import utilitiesStyles from "@/styles/utilities.module.css";
 import type { Callback } from "@/types";
-import { RaceButtonConfig } from "@/types";
 import { BUTTON_TEXT, ICON_PATH } from "@/constants/buttons-constants.ts";
 import styles from "@/pages/home/home.module.css";
 import { CarsList } from "@/components/options/car-list/cars-list.ts";
@@ -14,6 +13,7 @@ import { DIContainer } from "@/services/di-container.ts";
 import { ServiceName } from "@/types/di-container-types.ts";
 import type { RaceServiceInterface } from "@/types/race-service-types.ts";
 import type { ApiServiceInterface } from "@/types/api-service-types.ts";
+import { RaceButtonConfig } from "@/types/button-types.ts";
 
 export class Home extends BaseComponent<"main"> {
   private static instance: Home | undefined;

@@ -1,8 +1,8 @@
 import { BUTTON_TYPES } from "@/constants/buttons-constants.ts";
 import type { Car, CarUpdateCallback } from "@/types";
-import { FormButtonsConfig } from "@/types";
 import type { BaseButton } from "@/components/buttons/base-button.ts";
 import { BaseForm } from "@/components/car-form/base-form.ts";
+import { FormButtonsConfig } from "@/types/button-types.ts";
 
 export class UpdateForm extends BaseForm {
   private formButtons: BaseButton[] = [];

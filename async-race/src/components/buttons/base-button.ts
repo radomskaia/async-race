@@ -1,7 +1,7 @@
 import styles from "./button.module.css";
 
-import type { ButtonOptions, Callback } from "@/types";
 import { BaseComponent } from "@/components/base-component.ts";
+import type { ButtonOptions, Callback } from "@/types/button-types.ts";
 
 export class BaseButton extends BaseComponent<"button", ButtonOptions> {
   constructor(callback?: Callback) {

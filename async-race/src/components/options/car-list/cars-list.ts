@@ -1,5 +1,4 @@
 import type { AddCarsList, Car, SetPageCallback } from "@/types";
-import { ControlsButtonConfig } from "@/types";
 import { BaseComponent } from "@/components/base-component.ts";
 import styles from "@/components/options/cars-list.module.css";
 import { CarItem } from "@/components/options/car-item/car-item.ts";
@@ -7,6 +6,7 @@ import utilitiesStyles from "@/styles/utilities.module.css";
 import { DIContainer } from "@/services/di-container.ts";
 import { ServiceName } from "@/types/di-container-types.ts";
 import type { RaceServiceInterface } from "@/types/race-service-types.ts";
+import { ControlsButtonConfig } from "@/types/button-types.ts";
 
 export class CarsList extends BaseComponent<"ul"> {
   private deleteCallback: SetPageCallback | null = null;

@@ -1,3 +1,5 @@
+import type { ButtonOptions } from "@/types/button-types.ts";
+
 export type Callback = () => void;
 export type CarUpdateCallback = (data: CarProperties) => void;
 export type SetPageCallback = (
@@ -15,12 +17,6 @@ interface Options {
 export interface ElementOptions<T> extends Options {
   tagName: T;
   textContent?: string;
-}
-
-export interface ButtonOptions {
-  title: string;
-  path?: string;
-  classList?: string[];
 }
 
 export interface CreateSVGIconOptions
@@ -41,31 +37,6 @@ export interface Car extends CarProperties {
   name: string;
   color: string;
   id: number;
-}
-
-export enum ControlsButtonConfig {
-  EDIT = "EDIT",
-  DELETE = "DELETE",
-  START_ENGINE = "START_ENGINE",
-  STOP_ENGINE = "STOP_ENGINE",
-}
-
-export enum PaginationButtonConfig {
-  NEXT = "NEXT",
-  PREVIOUS = "PREVIOUS",
-  FIRST = "FIRST",
-  LAST = "LAST",
-}
-
-export enum FormButtonsConfig {
-  CROSS = "CROSS",
-  CONFIRM = "CONFIRM",
-}
-
-export enum RaceButtonConfig {
-  START_RACE = "START_RACE",
-  RESET = "RESET",
-  GENERATE_CARS = "GENERATE_CARS",
 }
 
 export type AddCarsList = (list: Car[]) => void;

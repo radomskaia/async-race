@@ -1,7 +1,7 @@
 import type { SetPageCallback } from "@/types";
-import { FormButtonsConfig } from "@/types";
 import { BaseForm } from "@/components/car-form/base-form.ts";
 import { getRandomHEX } from "@/utilities/utilities.ts";
+import { FormButtonsConfig } from "@/types/button-types.ts";
 
 export class CreateForm extends BaseForm {
   constructor(private callback: SetPageCallback) {

@@ -4,7 +4,6 @@ import utilitiesStyles from "@/styles/utilities.module.css";
 import { IconButton } from "@/components/buttons/icon-button.ts";
 import { BUTTON_TEXT, ICON_PATH } from "@/constants/buttons-constants.ts";
 import type { Car, CarProperties } from "@/types";
-import type { FormButtonsConfig } from "@/types";
 import { CarNameInput } from "@/components/input/car-name-input.ts";
 import { CarColorInput } from "@/components/input/car-color-input.ts";
 import { INPUT_NAMES } from "@/constants/input-constants.ts";
@@ -13,6 +12,7 @@ import { getRandomHEX } from "@/utilities/utilities.ts";
 import { ServiceName } from "@/types/di-container-types.ts";
 import { DIContainer } from "@/services/di-container.ts";
 import type { ApiServiceInterface } from "@/types/api-service-types.ts";
+import type { FormButtonsConfig } from "@/types/button-types.ts";
 
 export abstract class BaseForm extends BaseComponent<"form", number> {
   protected readonly nameElement: CarNameInput;

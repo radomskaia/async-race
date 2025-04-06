@@ -4,9 +4,9 @@ import { BUTTON_TEXT, ICON_PATH } from "@/constants/buttons-constants.ts";
 import { IconButton } from "@/components/buttons/icon-button.ts";
 import styles from "@/components/options/cars-list.module.css";
 import type { Callback, Car, CarProperties } from "@/types";
-import { ControlsButtonConfig } from "@/types";
 import utilitiesStyles from "@/styles/utilities.module.css";
 import { UpdateForm } from "@/components/car-form/update-form.ts";
+import { ControlsButtonConfig } from "@/types/button-types.ts";
 
 export class CarItem extends BaseComponent<"li"> {
   private controlsButtons: Record<string, BaseButton> = {};
