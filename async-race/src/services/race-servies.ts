@@ -1,5 +1,10 @@
 import { AnimateCar } from "@/components/options/animate-car.ts";
-import { MS_IS_SECOND, ONE, ZERO } from "@/constants/constants.ts";
+import {
+  MS_IS_SECOND,
+  ONE,
+  RESPONSE_STATUS,
+  ZERO,
+} from "@/constants/constants.ts";
 import { isRaceData } from "@/services/validator.ts";
 import { EngineStatus } from "@/types/api-service-types.ts";
 import type {
@@ -101,7 +106,14 @@ export class RaceService implements RaceServiceInterface {
       await this.drive(id);
     } catch (error) {
       this.cars[id].animation?.pause();
-      throw error;
+      if (
+        !(
+          error instanceof Response &&
+          error.status === RESPONSE_STATUS.INTERNAL_SERVER_ERROR
+        )
+      ) {
+        console.error(error);
+      }
     }
     return id;
   }
