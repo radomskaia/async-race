@@ -5,13 +5,15 @@ import { RaceButtonConfig } from "@/types";
 import { BUTTON_TEXT, ICON_PATH } from "@/constants/buttons-constants.ts";
 import styles from "@/pages/home/home.module.css";
 import { CarsList } from "@/components/options/car-list/cars-list.ts";
-import { ApiService } from "@/services/api-service.ts";
 import { CreateForm } from "@/components/car-form/create-form.ts";
 import { CARS_COUNT, ZERO } from "@/constants/constants.ts";
 import { getRandomCarName, getRandomHEX } from "@/utilities/utilities.ts";
 import { Pagination } from "@/components/pagination/pagination.ts";
 import { IconButton } from "@/components/buttons/icon-button.ts";
-import { RaceService } from "@/services/race-servies.ts";
+import { DIContainer } from "@/services/di-container.ts";
+import { ServiceName } from "@/types/di-container-types.ts";
+import type { RaceServiceInterface } from "@/types/race-service-types.ts";
+import type { ApiServiceInterface } from "@/types/api-service-types.ts";
 
 export class Home extends BaseComponent<"main"> {
   private static instance: Home | undefined;
@@ -38,24 +40,22 @@ export class Home extends BaseComponent<"main"> {
       },
     },
   ];
+  private readonly apiService: ApiServiceInterface;
   private readonly pagination: Pagination;
-  private readonly raceService: RaceService;
+  private readonly raceService: RaceServiceInterface;
   private constructor() {
     super();
     const carsList = new CarsList();
     const carsListElement = carsList.getElement();
-
-    this.raceService = new RaceService(carsListElement);
-
+    const diContainer = DIContainer.getInstance();
+    this.raceService = diContainer.getService(ServiceName.RACE);
+    this.apiService = diContainer.getService(ServiceName.API);
     this.pagination = new Pagination(
       "Garage",
-      ApiService.getInstance().getCars,
+      this.apiService.getCars,
       carsList.addCarsList,
     );
-    carsList.init(
-      this.pagination.setPage.bind(this.pagination),
-      this.raceService,
-    );
+    carsList.init(this.pagination.setPage.bind(this.pagination));
     this.appendElement(
       this.pagination.getElement(),
       this.createUIPanel(),
@@ -134,7 +134,7 @@ export class Home extends BaseComponent<"main"> {
     for (let index = ZERO; index < CARS_COUNT; index++) {
       const name = getRandomCarName();
       const color = getRandomHEX();
-      const request = ApiService.getInstance()
+      const request = this.apiService
         .createCar({
           name,
           color,

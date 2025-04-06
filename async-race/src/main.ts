@@ -1,16 +1,11 @@
 import { Header } from "@/components/header/header.ts";
-import { Router } from "@/services/router.ts";
 import { appRoutes } from "@/pages/routes.ts";
 import { BUTTON_TEXT } from "@/constants/buttons-constants.ts";
-import { DIContainer } from "@/services/di-container.ts";
 import { ServiceName } from "@/types/di-container-types.ts";
-import { RaceService } from "@/services/race-servies.ts";
-import { ApiService } from "@/services/api-service.ts";
+import { registerServices } from "@/services/services.ts";
+import { DIContainer } from "@/services/di-container.ts";
 
-const diContainer = DIContainer.getInstance();
-diContainer.register(ServiceName.ROUTER, Router);
-diContainer.register(ServiceName.API, ApiService);
-diContainer.register(ServiceName.RACE, RaceService);
+registerServices();
 
 const body = document.body;
 const header = new Header()
@@ -22,6 +17,4 @@ const header = new Header()
 
 body.append(header);
 
-diContainer
-  .getService<ServiceName.ROUTER>(ServiceName.ROUTER)
-  .addRoutes(appRoutes);
+DIContainer.getInstance().getService(ServiceName.ROUTER).addRoutes(appRoutes);

@@ -10,10 +10,15 @@ import { CarColorInput } from "@/components/input/car-color-input.ts";
 import { INPUT_NAMES } from "@/constants/input-constants.ts";
 import { MESSAGES } from "@/constants/constants.ts";
 import { getRandomHEX } from "@/utilities/utilities.ts";
+import { ServiceName } from "@/types/di-container-types.ts";
+import { DIContainer } from "@/services/di-container.ts";
+import type { ApiServiceInterface } from "@/types/api-service-types.ts";
 
 export abstract class BaseForm extends BaseComponent<"form", number> {
   protected readonly nameElement: CarNameInput;
   protected colorElement: CarColorInput;
+  protected apiService: ApiServiceInterface =
+    DIContainer.getInstance().getService(ServiceName.API);
   protected constructor(value?: Car) {
     super(value?.id);
     this.nameElement = this.addCarName(value?.name);

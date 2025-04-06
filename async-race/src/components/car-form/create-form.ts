@@ -1,4 +1,3 @@
-import { ApiService } from "@/services/api-service.ts";
 import type { SetPageCallback } from "@/types";
 import { FormButtonsConfig } from "@/types";
 import { BaseForm } from "@/components/car-form/base-form.ts";
@@ -21,7 +20,7 @@ export class CreateForm extends BaseForm {
       return;
     }
 
-    ApiService.getInstance()
+    this.apiService
       .createCar(formData, this.callback)
       .catch((error) => {
         console.error(error);

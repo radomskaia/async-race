@@ -1,4 +1,3 @@
-import { ApiService } from "@/services/api-service.ts";
 import { AnimateCar } from "@/components/options/animate-car.ts";
 import { MS_IS_SECOND, ONE, ZERO } from "@/constants/constants.ts";
 import { isRaceData } from "@/services/validator.ts";
@@ -8,9 +7,13 @@ import type {
   RaceData,
   RaceServiceInterface,
 } from "@/types/race-service-types.ts";
+import { DIContainer } from "@/services/di-container.ts";
+import { ServiceName } from "@/types/di-container-types.ts";
 
 export class RaceService implements RaceServiceInterface {
-  private requestEngine = ApiService.getInstance().requestEngine;
+  public name: ServiceName = ServiceName.RACE;
+  private requestEngine = DIContainer.getInstance().getService(ServiceName.API)
+    .requestEngine;
   private cars: Record<number, AnimationData> = {};
   private distance = ZERO;
   private container: HTMLElement | null = null;
@@ -60,11 +63,13 @@ export class RaceService implements RaceServiceInterface {
     }
 
     const winnerId = await Promise.any(drivePromises);
-    void ApiService.getInstance().addWinner({
-      id: winnerId,
-      wins: ONE,
-      time: this.cars[winnerId].duration / MS_IS_SECOND,
-    });
+    void DIContainer.getInstance()
+      .getService(ServiceName.API)
+      .addWinner({
+        id: winnerId,
+        wins: ONE,
+        time: this.cars[winnerId].duration / MS_IS_SECOND,
+      });
   }
 
   public async stopRace(): Promise<void> {

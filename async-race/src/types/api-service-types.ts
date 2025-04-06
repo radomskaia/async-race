@@ -1,18 +1,34 @@
-import type { Car } from "@/types/index.ts";
+import type {
+  Car,
+  CarProperties,
+  CarUpdateCallback,
+  SetPageCallback,
+} from "@/types/index.ts";
+import type { Injectable } from "@/types/di-container-types.ts";
 
-export interface ApiServiceInterface {
+export interface ApiServiceInterface extends Injectable {
   requestEngine: RequestEngine;
-
-  getCars(
-    page: number,
-    limit: number,
-  ): Promise<{
-    data: Car[];
-    count: number;
-  }>;
-
+  deleteCar: DeleteCar;
+  updateCar: UpdateCar;
+  createCar: CreateCar;
+  getCars: GetCarsHandler;
   addWinner(data: WinnerData): Promise<void>;
 }
+
+export type DeleteCar = (
+  id: number,
+  callback: SetPageCallback,
+) => Promise<void>;
+
+export type UpdateCar = (
+  { id, ...properties }: Car,
+  callback: CarUpdateCallback,
+) => Promise<void>;
+
+export type CreateCar = (
+  properties: CarProperties,
+  callback?: SetPageCallback,
+) => Promise<void>;
 
 export interface WinnerData {
   id: number;
@@ -36,6 +52,11 @@ export interface ResponseData {
   data: unknown;
   count: number;
 }
+
+export type CombinedResponse<T> = (
+  url: string,
+  init?: RequestInit,
+) => Promise<T>;
 
 export interface ResponseCarData extends ResponseData {
   data: Car[];

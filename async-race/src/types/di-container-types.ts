@@ -3,12 +3,13 @@ import type { RaceServiceInterface } from "@/types/race-service-types.ts";
 import type { RouterInterface } from "@/types/router-type.ts";
 
 export interface DIContainerInterface {
-  register<T extends keyof ServiceMap>(
-    name: ServiceName,
-    service: new () => ServiceMap[T],
-  ): void;
+  register(name: ServiceName, service: new () => Injectable): void;
 
-  getService<T extends keyof ServiceMap>(name: ServiceName): ServiceMap[T];
+  getService(name: ServiceName): Injectable;
+}
+
+export interface Injectable {
+  name: ServiceName;
 }
 
 export enum ServiceName {
@@ -17,14 +18,7 @@ export enum ServiceName {
   ROUTER = "router",
 }
 
-export type ServiceTypes =
-  | ApiServiceInterface
-  | RaceServiceInterface
-  | RouterInterface;
-
 export interface ServiceMap {
-  [key: string]: ServiceTypes;
-
   [ServiceName.API]: ApiServiceInterface;
   [ServiceName.RACE]: RaceServiceInterface;
   [ServiceName.ROUTER]: RouterInterface;

@@ -1,3 +1,5 @@
+import type { Injectable } from "@/types/di-container-types.ts";
+
 export interface Route {
   path: string;
   component: {
@@ -7,7 +9,7 @@ export interface Route {
   };
 }
 
-export interface RouterInterface {
+export interface RouterInterface extends Injectable {
   addRoutes(routes: Route[]): void;
   navigateTo(path: string): void;
   getCurrentRoute(): string;

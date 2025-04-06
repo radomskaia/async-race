@@ -3,26 +3,34 @@ import { ControlsButtonConfig } from "@/types";
 import { BaseComponent } from "@/components/base-component.ts";
 import styles from "@/components/options/cars-list.module.css";
 import { CarItem } from "@/components/options/car-item/car-item.ts";
-import { ApiService } from "@/services/api-service.ts";
 import utilitiesStyles from "@/styles/utilities.module.css";
-import type { RaceService } from "@/services/race-servies.ts";
+import { DIContainer } from "@/services/di-container.ts";
+import { ServiceName } from "@/types/di-container-types.ts";
+import type { RaceServiceInterface } from "@/types/race-service-types.ts";
 
 export class CarsList extends BaseComponent<"ul"> {
   private deleteCallback: SetPageCallback | null = null;
-  private raceService: RaceService | null = null;
-  private readonly apiService = ApiService.getInstance();
+  private readonly raceService: RaceServiceInterface;
+  private readonly apiService;
+  constructor() {
+    super();
+    const diContainer = DIContainer.getInstance();
+    this.raceService = diContainer.getService(ServiceName.RACE);
+    this.raceService.init(this.element);
+    this.apiService = diContainer.getService(ServiceName.API);
+  }
   public addCar(carData: Car): void {
     const carItem = new CarItem(carData);
     this.appendElement(carItem.getElement());
-    this.raceService?.addCar(carData.id, carItem.getCarElement());
+    this.raceService.addCar(carData.id, carItem.getCarElement());
     carItem.addControlsListener(() => {
       this.deleteOption(carData.id);
     }, ControlsButtonConfig.DELETE);
     carItem.addControlsListener(async () => {
-      this.raceService?.startSingleRace(carData.id);
+      void this.raceService.startSingleRace(carData.id);
     }, ControlsButtonConfig.START_ENGINE);
     carItem.addControlsListener(async () => {
-      this.raceService?.stopSingleRace(carData.id);
+      this.raceService.stopSingleRace(carData.id);
     }, ControlsButtonConfig.STOP_ENGINE);
   }
 
@@ -34,9 +42,8 @@ export class CarsList extends BaseComponent<"ul"> {
     }
   };
 
-  public init(callback: SetPageCallback, raceService: RaceService): void {
+  public init(callback: SetPageCallback): void {
     this.deleteCallback = callback;
-    this.raceService = raceService;
   }
 
   protected createElement(): HTMLElementTagNameMap["ul"] {

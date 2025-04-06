@@ -4,10 +4,15 @@ import {
   PAGE_PATH,
   SYMBOLS,
 } from "@/constants/constants.ts";
+import { ServiceName } from "@/types/di-container-types";
 import type { Route, RouterInterface } from "@/types/router-type.ts";
+
 export class Router implements RouterInterface {
+  public name: ServiceName = ServiceName.ROUTER;
   private routes: Route[] = [];
+
   private currentPath = EMPTY_STRING;
+
   constructor() {
     globalThis.addEventListener("hashchange", () => {
       this.routerChange();

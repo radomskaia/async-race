@@ -1,6 +1,7 @@
 import type { AnimateCar } from "@/components/options/animate-car.ts";
+import type { Injectable } from "@/types/di-container-types.ts";
 
-export interface RaceServiceInterface {
+export interface RaceServiceInterface extends Injectable {
   init(container: HTMLElement): void;
   addCar(id: number, element: SVGElement): void;
   resetCars(): void;

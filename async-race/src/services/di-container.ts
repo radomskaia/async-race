@@ -1,14 +1,14 @@
 import type {
   DIContainerInterface,
+  Injectable,
   ServiceMap,
   ServiceName,
-  ServiceTypes,
 } from "@/types/di-container-types.ts";
 
 export class DIContainer implements DIContainerInterface {
   private static instance: DIContainer | undefined;
-  private services: Map<string, ServiceTypes>;
-  private factory: Map<string, new () => ServiceTypes>;
+  private services: Map<string, Injectable>;
+  private factory: Map<string, new () => Injectable>;
   private constructor() {
     this.services = new Map();
     this.factory = new Map();
@@ -20,27 +20,30 @@ export class DIContainer implements DIContainerInterface {
     return DIContainer.instance;
   }
 
-  public register<T extends keyof ServiceMap>(
-    name: ServiceName,
-    service: new () => ServiceMap[T],
-  ): void {
+  private static isServiceType<T extends ServiceName>(
+    name: T,
+    service: Injectable,
+  ): service is ServiceMap[T] {
+    return service.name === name;
+  }
+
+  public register(name: ServiceName, service: new () => Injectable): void {
     this.factory.set(name, service);
   }
 
-  public getService<T extends keyof ServiceMap>(
-    name: ServiceName,
-  ): ServiceMap[T] {
+  public getService<T extends ServiceName>(name: T): ServiceMap[T] {
     let service = this.services.get(name);
-    if (service) {
-      return service;
-    } else {
+    if (!service) {
       const factoryService = this.factory.get(name);
       if (!factoryService) {
         throw new Error(`Service ${name} not found`);
       }
       service = new factoryService();
       this.services.set(name, service);
-      return service;
     }
+    if (!DIContainer.isServiceType(name, service)) {
+      throw new Error(`Service ${name} is not a service`);
+    }
+    return service;
   }
 }

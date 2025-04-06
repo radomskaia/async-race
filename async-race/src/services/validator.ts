@@ -17,13 +17,6 @@ export function isBoolean(value: unknown): value is boolean {
   return typeof value === "boolean";
 }
 
-function isResponseData(value: unknown): value is ResponseData {
-  if (!isObject(value)) {
-    return false;
-  }
-  return RESPONSE_DATA_KEYS.DATA in value && RESPONSE_DATA_KEYS.COUNT in value;
-}
-
 export function isResponseCarData(value: unknown): value is ResponseCarData {
   if (!isResponseData(value)) {
     return false;
@@ -92,6 +85,13 @@ function isCar(value: unknown): value is Car {
   }
 
   return isString(value.name) && isString(value.color) && isNumber(value.id);
+}
+
+function isResponseData(value: unknown): value is ResponseData {
+  if (!isObject(value)) {
+    return false;
+  }
+  return RESPONSE_DATA_KEYS.DATA in value && RESPONSE_DATA_KEYS.COUNT in value;
 }
 
 function isObject(value: unknown): value is object {
