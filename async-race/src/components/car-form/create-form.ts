@@ -34,5 +34,6 @@ export class CreateForm extends BaseForm {
   private addFormButton(): void {
     const confirmButton = BaseForm.createButton(FormButtonsConfig.CONFIRM);
     this.appendElement(confirmButton.getElement());
+    confirmButton.addRaceListeners();
   }
 }

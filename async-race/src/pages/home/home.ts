@@ -14,6 +14,7 @@ import { ServiceName } from "@/types/di-container-types.ts";
 import type { RaceServiceInterface } from "@/types/race-service-types.ts";
 import type { ApiServiceInterface } from "@/types/api-service-types.ts";
 import { RaceButtonConfig } from "@/types/button-types.ts";
+import { ActionType } from "@/types/event-emitter-types.ts";
 
 export class Home extends BaseComponent<"main"> {
   private static instance: Home | undefined;
@@ -94,6 +95,21 @@ export class Home extends BaseComponent<"main"> {
         },
         callback,
       );
+      if (title === RaceButtonConfig.RESET) {
+        button.registerEvent(ActionType.raceStarted, () => {
+          button.disabledElement(false);
+        });
+        button.registerEvent(ActionType.singleRaceStarted, () => {
+          button.disabledElement(false);
+        });
+        button.registerEvent(ActionType.raceEnded, () => {
+          button.disabledElement(true);
+        });
+        button.disabledElement(true);
+      } else {
+        button.addRaceListeners();
+      }
+
       buttonWrapper.append(button.getElement());
     }
   }

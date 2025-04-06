@@ -146,7 +146,7 @@ export class Pagination extends BaseComponent<"div"> {
 
   private createPaginationButtons(): void {
     for (const config of this.buttonsConfig) {
-      this.buttons[config.name] = new IconButton(
+      const button = new IconButton(
         {
           title: BUTTON_TEXT[config.name],
           path: ICON_PATH[config.name],
@@ -154,6 +154,8 @@ export class Pagination extends BaseComponent<"div"> {
         },
         config.callback,
       );
+      this.buttons[config.name] = button;
+      button.addRaceListeners();
     }
   }
 

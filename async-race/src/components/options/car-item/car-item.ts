@@ -7,6 +7,7 @@ import type { Callback, Car, CarProperties } from "@/types";
 import utilitiesStyles from "@/styles/utilities.module.css";
 import { UpdateForm } from "@/components/car-form/update-form.ts";
 import { ControlsButtonConfig } from "@/types/button-types.ts";
+import { ActionType } from "@/types/event-emitter-types.ts";
 
 export class CarItem extends BaseComponent<"li"> {
   private controlsButtons: Record<string, BaseButton> = {};
@@ -18,7 +19,7 @@ export class CarItem extends BaseComponent<"li"> {
   constructor(value: Car) {
     super();
     this.form = new UpdateForm(value, this.updateCarView.bind(this));
-    this.element.append(this.createCarPanel());
+    this.element.append(this.createCarPanel(value.id));
     const { use, svg } = this.createSVG({
       classList: [styles.carIcon],
       path: ICON_PATH.CAR,
@@ -64,7 +65,7 @@ export class CarItem extends BaseComponent<"li"> {
     });
   }
 
-  private createCarPanel(): HTMLDivElement {
+  private createCarPanel(id: number): HTMLDivElement {
     const carPanel = this.createDOMElement({
       tagName: "div",
       classList: [
@@ -73,11 +74,11 @@ export class CarItem extends BaseComponent<"li"> {
         utilitiesStyles.alignCenter,
       ],
     });
-    carPanel.append(this.form.getElement(), this.addControlsButtons());
+    carPanel.append(this.form.getElement(), this.addControlsButtons(id));
     return carPanel;
   }
 
-  private addControlsButtons(): HTMLDivElement {
+  private addControlsButtons(id: number): HTMLDivElement {
     const buttonWrapper = this.createDOMElement({
       tagName: "div",
       classList: [
@@ -95,6 +96,23 @@ export class CarItem extends BaseComponent<"li"> {
       this.appendElement(button.getElement());
       this.controlsButtons[buttonText] = button;
       buttonWrapper.append(button.getElement());
+      if (buttonText === ControlsButtonConfig.STOP_ENGINE) {
+        button.registerEvent(ActionType.raceStarted, () => {
+          button.disabledElement(false);
+        });
+        button.registerEvent(ActionType.singleRaceStarted, (eventID) => {
+          if (eventID === id) {
+            button.disabledElement(false);
+          }
+        });
+        button.registerEvent(ActionType.raceEnded, () => {
+          button.disabledElement(true);
+        });
+        button.disabledElement(true);
+      } else {
+        const isSingle = buttonText === ControlsButtonConfig.START_ENGINE;
+        button.addRaceListeners(id, isSingle);
+      }
     }
     return buttonWrapper;
   }

@@ -22,7 +22,7 @@ export abstract class BaseComponent<
 > implements BaseComponentInterface<T>
 {
   protected element: HTMLElementTagNameMap[T];
-  private listeners = new Map<ActionType, Callback[]>();
+  protected listeners = new Map<ActionType, Callback[]>();
 
   protected constructor(options?: O) {
     this.element = this.createElement(options);

@@ -5,7 +5,7 @@ import { SoundButton } from "@/components/buttons/settings/sound-button.ts";
 import { AudioService } from "@/services/settings/audio-service.ts";
 import { ThemeButton } from "@/components/buttons/settings/theme-button.ts";
 import { ThemeService } from "@/services/settings/theme-service.ts";
-import { APP_NAME, ONE } from "@/constants/constants.ts";
+import { APP_NAME } from "@/constants/constants.ts";
 import { TextButton } from "@/components/buttons/text-button.ts";
 import { BUTTON_TEXT } from "@/constants/buttons-constants.ts";
 
@@ -49,13 +49,11 @@ export class Header extends BaseComponent<"header"> {
 
     if (buttonName === BUTTON_TEXT.GARAGE) {
       button.disabledElement(true);
+    } else {
+      button.addRaceListeners();
     }
     this.pagesWrapper.append(button.getElement());
     return this;
-  }
-
-  public toggleWinnersButtonDisabled(): void {
-    this.pagesButtons[ONE].toggleDisabled();
   }
 
   protected createElement(): HTMLElement {

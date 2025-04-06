@@ -3,6 +3,7 @@ import {
   MS_IS_SECOND,
   ONE,
   RESPONSE_STATUS,
+  TWO,
   ZERO,
 } from "@/constants/constants.ts";
 import { isRaceData } from "@/services/validator.ts";
@@ -14,14 +15,18 @@ import type {
 } from "@/types/race-service-types.ts";
 import { DIContainer } from "@/services/di-container.ts";
 import { ServiceName } from "@/types/di-container-types.ts";
+import { ActionType } from "@/types/event-emitter-types.ts";
 
 export class RaceService implements RaceServiceInterface {
   public name: ServiceName = ServiceName.RACE;
-  private requestEngine = DIContainer.getInstance().getService(ServiceName.API)
+  private diContainer = DIContainer.getInstance();
+  private requestEngine = this.diContainer.getService(ServiceName.API)
     .requestEngine;
+  private eventEmitter = this.diContainer.getService(ServiceName.EVENT_EMITTER);
   private cars: Record<number, AnimationData> = {};
   private distance = ZERO;
   private container: HTMLElement | null = null;
+  private raceStack: number[] = [];
 
   private static calculateDuration(data: RaceData): number {
     return data.velocity > ZERO ? data.distance / data.velocity : ZERO;
@@ -45,29 +50,50 @@ export class RaceService implements RaceServiceInterface {
   }
 
   public async startSingleRace(id: number): Promise<void> {
+    if (this.raceStack.length === ZERO) {
+      this.eventEmitter.notify({
+        type: ActionType.singleRaceStarted,
+        data: id,
+      });
+    }
+    this.raceStack.push(id);
     await this.startEngine(id);
-    void this.startAnimation(id);
+    await this.startAnimation(id);
   }
 
-  public stopSingleRace(id: number): void {
-    this.cars[id].animation?.stop();
+  public async stopSingleRace(id: number, isRace = false): Promise<void> {
+    const car = this.cars[id];
+    const index = this.raceStack.indexOf(id);
+    if (index >= ZERO) {
+      this.raceStack.splice(index, ONE);
+    }
+    const rate = (car.duration * TWO) / MS_IS_SECOND;
+    car.animation?.reverse(rate);
     this.distance = ZERO;
     void this.requestEngine(EngineStatus.STOPPED, id);
+    if (this.raceStack.length === ZERO && !isRace) {
+      this.eventEmitter.notify({ type: ActionType.raceEnded });
+    }
   }
 
   public async startRace(): Promise<void> {
+    DIContainer.getInstance()
+      .getService(ServiceName.EVENT_EMITTER)
+      .notify({ type: ActionType.raceStarted });
+
     const startPromises = [];
     for (const id in this.cars) {
       startPromises.push(this.startEngine(Number(id)));
+      this.raceStack.push(Number(id));
     }
-    await Promise.allSettled(startPromises);
 
+    await Promise.allSettled(startPromises);
     const drivePromises = [];
     for (const id in this.cars) {
       drivePromises.push(this.startAnimation(Number(id)));
     }
-
     const winnerId = await Promise.any(drivePromises);
+
     void DIContainer.getInstance()
       .getService(ServiceName.API)
       .addWinner({
@@ -78,9 +104,14 @@ export class RaceService implements RaceServiceInterface {
   }
 
   public async stopRace(): Promise<void> {
-    for (const id in this.cars) {
-      this.stopSingleRace(Number(id));
+    const stopPromises = [];
+    const raceStack = [...this.raceStack];
+    for (const id of raceStack) {
+      stopPromises.push(this.stopSingleRace(id, true));
     }
+
+    await Promise.allSettled(stopPromises);
+    this.eventEmitter.notify({ type: ActionType.raceEnded });
   }
 
   private async startEngine(id: number): Promise<void> {

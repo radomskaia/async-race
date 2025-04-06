@@ -6,7 +6,7 @@ export interface RaceServiceInterface extends Injectable {
   addCar(id: number, element: SVGElement): void;
   resetCars(): void;
   startSingleRace(id: number): Promise<void>;
-  stopSingleRace(id: number): void;
+  stopSingleRace(id: number): Promise<void>;
   startRace(): Promise<void>;
   stopRace(): Promise<void>;
 }
