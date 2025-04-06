@@ -1,9 +1,8 @@
 import styles from "./button.module.css";
 
-import type { Callback } from "src/types";
 import { BaseButton } from "@/components/buttons/base-button.ts";
 import { ATTRIBUTES } from "@/constants/buttons-constants.ts";
-import type { ButtonOptions } from "@/types/button-types.ts";
+import type { ButtonOptions, Callback } from "@/types/button-types.ts";
 
 export class IconButton extends BaseButton {
   protected useSVGIcon: SVGUseElement;

@@ -8,6 +8,7 @@ import styles from "@/components/options/cars-list.module.css";
 import { ELEMENTS_PER_PAGE, ONE, ZERO } from "@/constants/constants.ts";
 import type { GetCarsHandler } from "@/types/api-service-types.ts";
 import { PaginationButtonConfig } from "@/types/button-types.ts";
+import { ActionType } from "@/types/event-emitter-types.ts";
 
 export class Pagination extends BaseComponent<"div"> {
   private buttons: Record<string, BaseButton> = {};
@@ -64,12 +65,25 @@ export class Pagination extends BaseComponent<"div"> {
     this.addPagination();
     this.addPageName(pageName);
     this.setPage(ONE).catch(console.error);
+    this.registerEvent(ActionType.listUpdated, (data) => {
+      if (!Array.isArray(data)) {
+        return;
+      }
+      const [newPage, isCreate] = data;
+      if (
+        (typeof newPage === "number" || newPage === null) &&
+        (typeof isCreate === "boolean" || isCreate === undefined)
+      ) {
+        this.setPage(newPage, isCreate).catch(console.error);
+      }
+    });
   }
 
   public async setPage(
     newPage: number | null,
     isCreate?: boolean,
   ): Promise<void> {
+    console.log("suka");
     if (newPage === this.currentPage) {
       return;
     }
@@ -97,7 +111,6 @@ export class Pagination extends BaseComponent<"div"> {
         utilitiesStyles.flex,
         utilitiesStyles.gap30,
         utilitiesStyles.alignCenter,
-        // utilitiesStyles.widthFull,
       ],
     });
   }

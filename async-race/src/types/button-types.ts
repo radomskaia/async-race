@@ -1,4 +1,4 @@
-export type Callback = (data?: unknown) => void;
+export type Callback = (data?: unknown) => void | Promise<void>;
 
 export interface ButtonOptions {
   title: string;

@@ -75,3 +75,9 @@ export const RESPONSE_STATUS = {
   NOT_FOUND: 404,
   INTERNAL_SERVER_ERROR: 500,
 };
+
+export const API_URL = "http://192.168.88.124:3000";
+export const API_HEADER = {
+  "Content-Type": "application/json",
+} as const;
+export const COUNT_HEADER = "X-Total-Count";

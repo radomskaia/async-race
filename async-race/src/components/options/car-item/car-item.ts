@@ -3,23 +3,73 @@ import type { BaseButton } from "@/components/buttons/base-button.ts";
 import { BUTTON_TEXT, ICON_PATH } from "@/constants/buttons-constants.ts";
 import { IconButton } from "@/components/buttons/icon-button.ts";
 import styles from "@/components/options/cars-list.module.css";
-import type { Callback, Car, CarProperties } from "@/types";
+import type { Car, CarProperties } from "@/types";
 import utilitiesStyles from "@/styles/utilities.module.css";
 import { UpdateForm } from "@/components/car-form/update-form.ts";
+import type { Callback } from "@/types/button-types.ts";
 import { ControlsButtonConfig } from "@/types/button-types.ts";
 import { ActionType } from "@/types/event-emitter-types.ts";
+import { DIContainer } from "@/services/di-container.ts";
+import { ServiceName } from "@/types/di-container-types.ts";
 
 export class CarItem extends BaseComponent<"li"> {
   private controlsButtons: Record<string, BaseButton> = {};
-  private controlsButtonConfig = ControlsButtonConfig;
-  private readonly form: UpdateForm;
-  private readonly useElement: SVGUseElement;
-  private readonly carElement: SVGElement;
+  private readonly buttonsConfig: {
+    title: ControlsButtonConfig;
+    callback: Callback;
+    action: (button: IconButton) => void;
+  }[] = [
+    {
+      title: ControlsButtonConfig.DELETE,
+      callback: async (): Promise<void> => {
+        await this.apiService.deleteCar(this.id).catch(console.error);
+        this.eventEmitter.notify({
+          type: ActionType.listUpdated,
+          data: [null],
+        });
+      },
+      action: (button: IconButton): void => button.addRaceListeners(this.id),
+    },
+    {
+      title: ControlsButtonConfig.EDIT,
+      callback: (): void => {
+        this.form.editHandler();
+      },
+      action: (button: IconButton): void => button.addRaceListeners(this.id),
+    },
+    {
+      title: ControlsButtonConfig.START_ENGINE,
+      callback: (): void => {
+        void this.raceService.startSingleRace(this.id);
+      },
+      action: (button: IconButton): void =>
+        button.addRaceListeners(this.id, true),
+    },
+    {
+      title: ControlsButtonConfig.STOP_ENGINE,
+      callback: (): void => {
+        void this.raceService.stopSingleRace(this.id);
+      },
+      action: (button: IconButton): void => this.registerStopButton(button),
+    },
+  ];
+  private readonly form;
+  private readonly useElement;
+  private readonly carElement;
+  private readonly apiService;
+  private readonly raceService;
+  private readonly eventEmitter;
+  private readonly id;
 
   constructor(value: Car) {
     super();
+    const diContainer = DIContainer.getInstance();
+    this.raceService = diContainer.getService(ServiceName.RACE);
+    this.apiService = diContainer.getService(ServiceName.API);
+    this.eventEmitter = diContainer.getService(ServiceName.EVENT_EMITTER);
     this.form = new UpdateForm(value, this.updateCarView.bind(this));
-    this.element.append(this.createCarPanel(value.id));
+    this.id = value.id;
+    this.element.append(this.createCarPanel());
     const { use, svg } = this.createSVG({
       classList: [styles.carIcon],
       path: ICON_PATH.CAR,
@@ -29,21 +79,10 @@ export class CarItem extends BaseComponent<"li"> {
     this.appendElement(this.carElement);
 
     this.updateCarView(value);
-    this.addControlsListener(
-      () => this.form.editHandler(),
-      ControlsButtonConfig.EDIT,
-    );
   }
 
   public getCarElement(): SVGElement {
     return this.carElement;
-  }
-
-  public addControlsListener(
-    callback: Callback,
-    buttonName: ControlsButtonConfig,
-  ): void {
-    this.controlsButtons[buttonName].addListener(callback);
   }
 
   public updateCarView(value: CarProperties): void {
@@ -65,7 +104,7 @@ export class CarItem extends BaseComponent<"li"> {
     });
   }
 
-  private createCarPanel(id: number): HTMLDivElement {
+  private createCarPanel(): HTMLDivElement {
     const carPanel = this.createDOMElement({
       tagName: "div",
       classList: [
@@ -74,12 +113,12 @@ export class CarItem extends BaseComponent<"li"> {
         utilitiesStyles.alignCenter,
       ],
     });
-    carPanel.append(this.form.getElement(), this.addControlsButtons(id));
+    carPanel.append(this.form.getElement(), this.addControlsButtons());
     return carPanel;
   }
 
-  private addControlsButtons(id: number): HTMLDivElement {
-    const buttonWrapper = this.createDOMElement({
+  private createButtonWrapper(): HTMLDivElement {
+    return this.createDOMElement({
       tagName: "div",
       classList: [
         utilitiesStyles.flex,
@@ -87,33 +126,39 @@ export class CarItem extends BaseComponent<"li"> {
         utilitiesStyles.gap10,
       ],
     });
-    for (const buttonText of Object.values(this.controlsButtonConfig)) {
-      const button = new IconButton({
-        title: BUTTON_TEXT[buttonText],
-        path: ICON_PATH[buttonText],
-        classList: [styles.icon],
-      });
+  }
+
+  private addControlsButtons(): HTMLDivElement {
+    const buttonWrapper = this.createButtonWrapper();
+    for (const { title, callback, action } of this.buttonsConfig) {
+      const button = new IconButton(
+        {
+          title: BUTTON_TEXT[title],
+          path: ICON_PATH[title],
+          classList: [styles.icon],
+        },
+        callback,
+      );
       this.appendElement(button.getElement());
-      this.controlsButtons[buttonText] = button;
+      this.controlsButtons[title] = button;
       buttonWrapper.append(button.getElement());
-      if (buttonText === ControlsButtonConfig.STOP_ENGINE) {
-        button.registerEvent(ActionType.raceStarted, () => {
-          button.disabledElement(false);
-        });
-        button.registerEvent(ActionType.singleRaceStarted, (eventID) => {
-          if (eventID === id) {
-            button.disabledElement(false);
-          }
-        });
-        button.registerEvent(ActionType.raceEnded, () => {
-          button.disabledElement(true);
-        });
-        button.disabledElement(true);
-      } else {
-        const isSingle = buttonText === ControlsButtonConfig.START_ENGINE;
-        button.addRaceListeners(id, isSingle);
-      }
+      action(button);
     }
     return buttonWrapper;
+  }
+
+  private registerStopButton(button: IconButton): void {
+    button.registerEvent(ActionType.raceStarted, () => {
+      button.disabledElement(false);
+    });
+    button.registerEvent(ActionType.singleRaceStarted, (eventID) => {
+      if (eventID === this.id) {
+        button.disabledElement(false);
+      }
+    });
+    button.registerEvent(ActionType.raceEnded, () => {
+      button.disabledElement(true);
+    });
+    button.disabledElement(true);
   }
 }

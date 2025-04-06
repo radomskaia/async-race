@@ -47,7 +47,6 @@ export class Home extends BaseComponent<"main"> {
   private constructor() {
     super();
     const carsList = new CarsList();
-    const carsListElement = carsList.getElement();
     const diContainer = DIContainer.getInstance();
     this.raceService = diContainer.getService(ServiceName.RACE);
     this.apiService = diContainer.getService(ServiceName.API);
@@ -56,11 +55,10 @@ export class Home extends BaseComponent<"main"> {
       this.apiService.getCars,
       carsList.addCarsList,
     );
-    carsList.init(this.pagination.setPage.bind(this.pagination));
     this.appendElement(
       this.pagination.getElement(),
       this.createUIPanel(),
-      carsListElement,
+      carsList.getElement(),
     );
   }
 
@@ -124,9 +122,7 @@ export class Home extends BaseComponent<"main"> {
         utilitiesStyles.widthFull,
       ],
     });
-    const createForm = new CreateForm(
-      this.pagination.setPage.bind(this.pagination),
-    );
+    const createForm = new CreateForm();
     uiPanel.append(createForm.getElement(), this.createButtonWrapper());
     return uiPanel;
   }
