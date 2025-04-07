@@ -1,7 +1,7 @@
 // Buttons
 export const BUTTON_TEXT = {
-  GARAGE: "To garage",
-  WINNERS: "To winners",
+  TO_GARAGE: "To garage",
+  TO_WINNERS: "To winners",
   PREVIOUS: "Previous page",
   NEXT: "Next page",
   FIRST: "First page",

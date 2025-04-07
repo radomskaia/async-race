@@ -12,11 +12,15 @@ const body = document.body;
 const header = new Header()
   .addSettingsButton("theme")
   .addSettingsButton("sound")
-  .addPageButton(BUTTON_TEXT.GARAGE)
-  .addPageButton(BUTTON_TEXT.WINNERS)
+  .addPageButton(BUTTON_TEXT.TO_GARAGE)
+  .addPageButton(BUTTON_TEXT.TO_WINNERS)
   .getElement();
 
-body.append(header);
+const main = document.createElement("main");
+body.append(header, main);
 
-DIContainer.getInstance().getService(ServiceName.ROUTER).addRoutes(appRoutes);
+DIContainer.getInstance()
+  .getService(ServiceName.ROUTER)
+  .setContainer(main)
+  .addRoutes(appRoutes);
 WinnerModal.getInstance();

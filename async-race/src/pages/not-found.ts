@@ -6,28 +6,21 @@ import { BUTTON_TEXT } from "@/constants/buttons-constants.ts";
 import { ServiceName } from "@/types/di-container-types.ts";
 import { DIContainer } from "@/services/di-container.ts";
 
-export class NotFound extends BaseComponent<"main"> {
-  private static instance: NotFound | undefined;
+export class NotFound extends BaseComponent<"div"> {
   private homeButton: TextButton;
-  private constructor() {
+  constructor() {
     super();
-    this.homeButton = new TextButton(BUTTON_TEXT.GARAGE, () =>
+    this.homeButton = new TextButton(BUTTON_TEXT.TO_GARAGE, () =>
       DIContainer.getInstance()
         .getService<ServiceName.ROUTER>(ServiceName.ROUTER)
         .navigateTo(PAGE_PATH.HOME),
     );
     this.appendElement(this.homeButton.getElement());
   }
-  public static getInstance(): NotFound {
-    if (!NotFound.instance) {
-      NotFound.instance = new NotFound();
-    }
-    return NotFound.instance;
-  }
 
-  protected createElement(): HTMLElementTagNameMap["main"] {
+  protected createElement(): HTMLElementTagNameMap["div"] {
     const main = this.createDOMElement({
-      tagName: "main",
+      tagName: "div",
       classList: [
         utilitiesStyles.flex,
         utilitiesStyles.container,

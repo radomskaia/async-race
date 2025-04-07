@@ -5,9 +5,11 @@ import { SoundButton } from "@/components/buttons/settings/sound-button.ts";
 import { AudioService } from "@/services/settings/audio-service.ts";
 import { ThemeButton } from "@/components/buttons/settings/theme-button.ts";
 import { ThemeService } from "@/services/settings/theme-service.ts";
-import { APP_NAME } from "@/constants/constants.ts";
+import { APP_NAME, PAGE_PATH } from "@/constants/constants.ts";
 import { TextButton } from "@/components/buttons/text-button.ts";
 import { BUTTON_TEXT } from "@/constants/buttons-constants.ts";
+import { DIContainer } from "@/services/di-container.ts";
+import { ServiceName } from "@/types/di-container-types.ts";
 
 export class Header extends BaseComponent<"header"> {
   private readonly settingsButton = {
@@ -39,19 +41,33 @@ export class Header extends BaseComponent<"header"> {
   }
 
   public addPageButton(buttonName: string): this {
+    const router = DIContainer.getInstance().getService(ServiceName.ROUTER);
     const button = new TextButton(buttonName);
+    const isCurrentPath =
+      router.getCurrentRoute() === PAGE_PATH.HOME
+        ? BUTTON_TEXT.TO_WINNERS
+        : BUTTON_TEXT.TO_GARAGE;
+    const isToHome = buttonName === BUTTON_TEXT.TO_GARAGE;
+
     this.pagesButtons.push(button);
+
     button.addListener(() => {
       for (const element of this.pagesButtons) {
         element.toggleDisabled();
       }
     });
 
-    if (buttonName === BUTTON_TEXT.GARAGE) {
-      button.disabledElement(true);
-    } else {
+    const targetPath = isToHome ? PAGE_PATH.HOME : PAGE_PATH.WINNERS;
+    button.addListener(() => {
+      router.navigateTo(targetPath);
+    });
+
+    if (!isToHome) {
       button.addRaceListeners();
     }
+
+    const isDisabled = buttonName === isCurrentPath;
+    button.disabledElement(isDisabled);
     this.pagesWrapper.append(button.getElement());
     return this;
   }

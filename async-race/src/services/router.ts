@@ -9,7 +9,8 @@ import type { Route, RouterInterface } from "@/types/router-type.ts";
 
 export class Router implements RouterInterface {
   public name: ServiceName = ServiceName.ROUTER;
-  private routes: Route[] = [];
+  private routes: Route = new Map();
+  private container: HTMLElement | null = null;
 
   private currentPath = EMPTY_STRING;
 
@@ -19,7 +20,12 @@ export class Router implements RouterInterface {
     });
   }
 
-  public addRoutes(routes: Route[]): void {
+  public setContainer(container: HTMLElement): this {
+    this.container = container;
+    return this;
+  }
+
+  public addRoutes(routes: Route): void {
     this.routes = routes;
     this.routerChange();
   }
@@ -27,35 +33,26 @@ export class Router implements RouterInterface {
   public navigateTo(path: string): void {
     this.currentPath = path;
     this.clearPage();
-    let route = this.findValidRoute(path);
+    let route = this.routes.get(path) ?? this.routes.get(PAGE_PATH.NOT_FOUND);
     if (!route) {
       throw new Error(MESSAGES.ROUTE_NOT_FOUND);
     }
-    globalThis.location.hash = route.path;
-    document.body.append(route.component.getInstance().getElement());
+    globalThis.location.hash = path;
+    if (!this.container) {
+      throw new Error("Container is not set");
+    }
+    this.container.append(new route().getElement());
   }
 
   public getCurrentRoute(): string {
     return this.currentPath;
   }
 
-  private findValidRoute(path: string): Route | undefined {
-    return (
-      this.routes.find((route) => route.path === path) ||
-      this.routes.find((route) => route.path === PAGE_PATH.NOT_FOUND)
-    );
-  }
-
   private clearPage(): void {
-    if (!this.routes) {
+    if (!this.container) {
       throw new Error(MESSAGES.ROUTE_NOT_FOUND);
     }
-    for (const route of this.routes) {
-      const element = route.component.getInstance().getElement();
-      if (element.parentNode) {
-        element.remove();
-      }
-    }
+    this.container.replaceChildren();
   }
 
   private routerChange(): void {

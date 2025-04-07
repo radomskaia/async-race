@@ -14,8 +14,7 @@ import { ServiceName } from "@/types/di-container-types.ts";
 import { RaceButtonConfig } from "@/types/button-types.ts";
 import { ActionType } from "@/types/event-emitter-types.ts";
 
-export class Home extends BaseComponent<"main"> {
-  private static instance: Home | undefined;
+export class Home extends BaseComponent<"div"> {
   private readonly buttonsConfig: {
     title: RaceButtonConfig;
     callback: Callback;
@@ -42,7 +41,7 @@ export class Home extends BaseComponent<"main"> {
   private readonly garageService;
   private readonly pagination;
   private readonly raceService;
-  private constructor() {
+  constructor() {
     super();
     const carsList = new CarsList();
     const diContainer = DIContainer.getInstance();
@@ -60,16 +59,9 @@ export class Home extends BaseComponent<"main"> {
     );
   }
 
-  public static getInstance(): Home {
-    if (!Home.instance) {
-      Home.instance = new Home();
-    }
-    return Home.instance;
-  }
-
-  protected createElement(): HTMLElement {
+  protected createElement(): HTMLDivElement {
     return this.createDOMElement({
-      tagName: "main",
+      tagName: "div",
       classList: [
         utilitiesStyles.container,
         utilitiesStyles.flex,
