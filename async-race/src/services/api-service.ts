@@ -3,7 +3,6 @@ import {
   API_URL,
   API_URLS,
   COUNT_HEADER,
-  RESPONSE_STATUS,
   ZERO,
 } from "@/constants/constants.ts";
 import { isResponseCarData } from "@/services/validator.ts";
@@ -37,11 +36,9 @@ export class ApiService implements ApiServiceInterface {
     url,
     init?,
   ) => {
-    let response;
-    try {
-      response = await fetch(url, init);
-    } catch (error) {
-      throw new Error(`Error while fetching data: ${error}`);
+    const response = await fetch(url, init);
+    if (init?.signal?.aborted) {
+      throw new Error("Aborted");
     }
     return response;
   };
@@ -81,28 +78,18 @@ export class ApiService implements ApiServiceInterface {
     return await response.json();
   };
 
-  public requestEngine: RequestEngine = async (status, id) => {
+  public requestEngine: RequestEngine = async (status, id, signal?) => {
     const query = new URLSearchParams({
       id: String(id),
       status: status,
     });
     const url = `${this.url}${this.engine}?${query}`;
     let data;
-    try {
-      data = await ApiService.getEngineData(url, {
-        method: REQUEST_METHOD.PATCH,
-      });
-      return data;
-    } catch (error) {
-      if (!(error instanceof Response)) {
-        console.error(`Error while fetching data: ${error}`);
-        return;
-      }
-      if (error.status === RESPONSE_STATUS.INTERNAL_SERVER_ERROR) {
-        throw error;
-      }
-      console.error(error.statusText);
-    }
+    data = await ApiService.getEngineData(url, {
+      method: REQUEST_METHOD.PATCH,
+      signal,
+    });
+    return data;
   };
 
   public getCars: GetCarsHandler = async (page, limit) => {

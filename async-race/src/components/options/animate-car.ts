@@ -1,8 +1,8 @@
 import { ZERO } from "@/constants/constants.ts";
+import type { Callback } from "@/types";
 
 export class AnimateCar {
   private animation: Animation | null = null;
-  private isReversed = false;
   private isAnimating = false;
   constructor(private car: SVGElement) {}
 
@@ -32,20 +32,22 @@ export class AnimateCar {
     this.animation?.cancel();
   }
 
-  public reverse(rate: number): void {
-    if (!this.animation || this.isReversed) {
+  public async reverse(rate: number, callback?: Callback): Promise<void> {
+    if (!this.animation || !this.isAnimating) {
       return;
     }
-    if (!this.isReversed && !this.isAnimating) {
-      return;
-    }
-    this.isReversed = true;
     this.animation.updatePlaybackRate(rate);
     this.animation.reverse();
     this.animation.onfinish = (): void => {
-      this.isReversed = false;
-      this.animation?.reverse();
-      this.stop();
+      this.onfinish(callback);
     };
+  }
+
+  private onfinish(callback?: Callback): void {
+    this.animation?.reverse();
+    this.stop();
+    if (callback) {
+      callback();
+    }
   }
 }

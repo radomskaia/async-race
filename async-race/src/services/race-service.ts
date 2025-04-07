@@ -1,11 +1,5 @@
 import { AnimateCar } from "@/components/options/animate-car.ts";
-import {
-  MS_IS_SECOND,
-  ONE,
-  RESPONSE_STATUS,
-  TWO,
-  ZERO,
-} from "@/constants/constants.ts";
+import { MS_IS_SECOND, ONE, TWO, ZERO } from "@/constants/constants.ts";
 import { isRaceData } from "@/services/validator.ts";
 import { EngineStatus } from "@/types/api-service-types.ts";
 import type {
@@ -16,6 +10,7 @@ import type {
 import { DIContainer } from "@/services/di-container.ts";
 import { ServiceName } from "@/types/di-container-types.ts";
 import { ActionType } from "@/types/event-emitter-types.ts";
+import type { Callback } from "@/types";
 
 export class RaceService implements RaceServiceInterface {
   public name: ServiceName = ServiceName.RACE;
@@ -27,6 +22,8 @@ export class RaceService implements RaceServiceInterface {
   private distance = ZERO;
   private container: HTMLElement | null = null;
   private raceStack: number[] = [];
+  private isAnimating = false;
+  private abortControllers = new Map<number, AbortController>();
 
   private static calculateDuration(data: RaceData): number {
     return data.velocity > ZERO ? data.distance / data.velocity : ZERO;
@@ -62,21 +59,31 @@ export class RaceService implements RaceServiceInterface {
   }
 
   public async stopSingleRace(id: number, isRace = false): Promise<void> {
+    void this.requestEngine(EngineStatus.STOPPED, id);
     const car = this.cars[id];
     const index = this.raceStack.indexOf(id);
     if (index >= ZERO) {
       this.raceStack.splice(index, ONE);
     }
     const rate = (car.duration * TWO) / MS_IS_SECOND;
-    car.animation?.reverse(rate);
+    let callback: Callback | undefined;
+    if (this.isAnimating) {
+      callback = (): void => {
+        this.abortControllers.get(id)?.abort("Race stopped by user");
+      };
+    }
+
     this.distance = ZERO;
-    void this.requestEngine(EngineStatus.STOPPED, id);
+    car.animation?.reverse(rate, callback);
     if (this.raceStack.length === ZERO && !isRace) {
       this.eventEmitter.notify({ type: ActionType.raceEnded });
+      this.isAnimating = false;
     }
   }
 
   public async startRace(): Promise<void> {
+    this.isAnimating = true;
+    this.abortControllers.clear();
     this.eventEmitter.notify({ type: ActionType.raceStarted });
 
     const startPromises = [];
@@ -90,23 +97,39 @@ export class RaceService implements RaceServiceInterface {
     for (const id in this.cars) {
       drivePromises.push(this.startAnimation(Number(id)));
     }
-    const winnerId = await Promise.any(drivePromises);
+    let winnerId;
+    try {
+      winnerId = await Promise.any(drivePromises);
+    } catch {
+      return;
+    }
+    if (!winnerId) {
+      return;
+    }
+    this.isAnimating = false;
 
-    void this.diContainer.getService(ServiceName.WINNER).create({
-      id: winnerId,
-      wins: ONE,
-      time: this.cars[winnerId].duration / MS_IS_SECOND,
-    });
+    if (this.raceStack.length > ONE) {
+      void this.diContainer.getService(ServiceName.WINNER).create({
+        id: winnerId,
+        wins: ONE,
+        time: this.cars[winnerId].duration / MS_IS_SECOND,
+      });
+    }
   }
 
   public async stopRace(): Promise<void> {
     const stopPromises = [];
     const raceStack = [...this.raceStack];
+
     for (const id of raceStack) {
       stopPromises.push(this.stopSingleRace(id, true));
     }
 
-    await Promise.allSettled(stopPromises);
+    try {
+      await Promise.allSettled(stopPromises);
+    } catch (error) {
+      console.info(error);
+    }
     this.eventEmitter.notify({ type: ActionType.raceEnded });
   }
 
@@ -131,29 +154,16 @@ export class RaceService implements RaceServiceInterface {
 
     try {
       await this.drive(id);
+      return id;
     } catch (error) {
       this.cars[id].animation?.pause();
-      if (
-        error instanceof Response &&
-        error.status === RESPONSE_STATUS.INTERNAL_SERVER_ERROR
-      ) {
-        throw error;
-      } else {
-        console.error("Something went wrong");
-      }
+      throw error;
     }
-    return id;
   }
 
   private async drive(id: number): Promise<void> {
-    try {
-      await this.requestEngine(EngineStatus.DRIVE, id);
-    } catch (error) {
-      if (error instanceof Response) {
-        throw error;
-      } else {
-        console.error("Something went wrong");
-      }
-    }
+    const controller = new AbortController();
+    this.abortControllers.set(id, controller);
+    await this.requestEngine(EngineStatus.DRIVE, id, controller.signal);
   }
 }

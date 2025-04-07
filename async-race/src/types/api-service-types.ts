@@ -42,6 +42,7 @@ export enum REQUEST_METHOD {
 export type RequestEngine = (
   status: EngineStatus,
   carId: number,
+  signal?: AbortSignal,
 ) => Promise<unknown>;
 
 export interface ResponseData {

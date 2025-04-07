@@ -83,7 +83,6 @@ export class Pagination extends BaseComponent<"div"> {
     newPage: number | null,
     isCreate?: boolean,
   ): Promise<void> {
-    console.log("suka");
     if (newPage === this.currentPage) {
       return;
     }
