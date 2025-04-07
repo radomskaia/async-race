@@ -85,21 +85,21 @@ export class RaceService implements RaceServiceInterface {
 
     const startPromises = [];
     for (const id in this.cars) {
-      startPromises.push(this.startEngine(Number(id)));
+      startPromises.push(
+        this.startEngine(Number(id)).then(
+          this.startAnimation.bind(this, Number(id)),
+        ),
+      );
       this.raceStack.push(Number(id));
     }
 
-    await Promise.allSettled(startPromises);
-    const drivePromises = [];
-    for (const id in this.cars) {
-      drivePromises.push(this.startAnimation(Number(id)));
-    }
     let winnerId;
     try {
-      winnerId = await Promise.any(drivePromises);
-    } catch {
-      return;
+      winnerId = await Promise.any(startPromises);
+    } catch (error) {
+      console.info(error);
     }
+
     if (!winnerId) {
       return;
     }
@@ -145,7 +145,6 @@ export class RaceService implements RaceServiceInterface {
       car.animation = new AnimateCar(car.element);
     }
     car.animation?.animate(this.distance, car.duration);
-
     try {
       await this.drive(id);
       return id;

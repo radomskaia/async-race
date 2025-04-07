@@ -1,12 +1,12 @@
 import { DIContainer } from "@/services/di-container.ts";
 import { ServiceName } from "@/types/di-container-types.ts";
 import { Router } from "@/services/router.ts";
-import { ApiService } from "@/services/api-service.ts";
+import { ApiService } from "@/services/api/api-service.ts";
 import { RaceService } from "@/services/race-service.ts";
 import { EventEmitter } from "@/services/event-emitter.ts";
-import { WinnerService } from "@/services/winner-service.ts";
-import { GarageService } from "@/services/garage-service.ts";
-import { EngineService } from "@/services/engine-service.ts";
+import { WinnerService } from "@/services/api/winner-service.ts";
+import { GarageService } from "@/services/api/garage-service.ts";
+import { EngineService } from "@/services/api/engine-service.ts";
 
 export function registerServices(): void {
   const diContainer = DIContainer.getInstance();

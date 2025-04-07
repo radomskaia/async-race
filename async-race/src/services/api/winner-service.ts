@@ -9,7 +9,7 @@ import {
 } from "@/services/validator.ts";
 import { API_URLS } from "@/constants/constants.ts";
 import type { WinnerServiceInterface } from "@/types/winner-service.ts";
-import { ServiceName } from "@/types/di-container-types";
+import { ServiceName } from "@/types/di-container-types.ts";
 import { DIContainer } from "@/services/di-container.ts";
 import { ActionType } from "@/types/event-emitter-types.ts";
 
@@ -62,12 +62,13 @@ export class WinnerService implements WinnerServiceInterface {
   }
 
   public async notify(winnerData: WinnerData): Promise<void> {
+    const id = winnerData.id;
     const data = await this.diContainer
       .getService(ServiceName.GARAGE)
-      .getCar(winnerData.id);
+      .getCar(id);
     this.diContainer.getService(ServiceName.EVENT_EMITTER).notify({
       type: ActionType.winnerDetected,
-      data: { ...data, ...winnerData },
+      data: { name: data.name, id, time: winnerData.time },
     });
   }
 

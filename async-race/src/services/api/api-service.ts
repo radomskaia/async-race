@@ -14,7 +14,7 @@ import type {
   SendData,
 } from "@/types/api-service-types.ts";
 import { REQUEST_METHOD } from "@/types/api-service-types.ts";
-import { ServiceName } from "@/types/di-container-types";
+import { ServiceName } from "@/types/di-container-types.ts";
 import { isResponseData } from "@/services/validator.ts";
 
 export class ApiService implements ApiServiceInterface {
@@ -84,15 +84,15 @@ export class ApiService implements ApiServiceInterface {
   };
 
   public updateData: CreateOrUpdateHandler = async (url, data, signal?) => {
-    void this.sendData(url, data, REQUEST_METHOD.PUT, signal);
+    return await this.sendData(url, data, REQUEST_METHOD.PUT, signal);
   };
 
   public createData: CreateOrUpdateHandler = async (url, data, signal?) => {
-    void this.sendData(url, data, REQUEST_METHOD.POST, signal);
+    return await this.sendData(url, data, REQUEST_METHOD.POST, signal);
   };
 
   public patchData: CreateOrUpdateHandler = async (url, data, signal?) => {
-    void this.sendData(url, data, REQUEST_METHOD.PATCH, signal);
+    return await this.sendData(url, data, REQUEST_METHOD.PATCH, signal);
   };
 
   private sendData: SendData = async (url, data, method, signal?) => {
@@ -103,15 +103,10 @@ export class ApiService implements ApiServiceInterface {
       init.headers = this.headers;
       init.body = JSON.stringify(data);
     }
-
-    try {
-      const response = await ApiService.getResponse(baseUrl, init);
-      if (!response.ok) {
-        console.error(response.statusText);
-        return;
-      }
-    } catch (error) {
-      console.error(error);
+    const response = await ApiService.getResponse(baseUrl, init);
+    if (!response.ok) {
+      throw response;
     }
+    return await response.json();
   };
 }

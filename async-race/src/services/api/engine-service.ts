@@ -20,17 +20,21 @@ export class EngineService implements EngineServiceInterface {
   }
 
   public async start(id: number): Promise<RaceData> {
-    const data = await this.requestEngine(EngineStatus.STOPPED, id);
-    if (!isRaceData(data)) {
-      throw new Error(`Invalid data`);
+    return await this.requestEngine(EngineStatus.STARTED, id);
+  }
+  public async stop(id: number): Promise<RaceData> {
+    return await this.requestEngine(EngineStatus.STOPPED, id);
+  }
+  public async drive(id: number, signal?: AbortSignal): Promise<number> {
+    try {
+      await this.requestEngine(EngineStatus.DRIVE, id, signal);
+    } catch (error) {
+      if (error instanceof Error && error.message === "Invalid data") {
+        return id;
+      }
+      throw error;
     }
-    return data;
-  }
-  public async stop(id: number): Promise<void> {
-    await this.requestEngine(EngineStatus.STOPPED, id);
-  }
-  public async drive(id: number, signal?: AbortSignal): Promise<void> {
-    await this.requestEngine(EngineStatus.STOPPED, id, signal);
+    return id;
   }
 
   private requestEngine: RequestEngine = async (status, id, signal?) => {
@@ -39,11 +43,14 @@ export class EngineService implements EngineServiceInterface {
       status: status,
     });
     const url = `${this.url}?${query}`;
-    let data;
+    let data: unknown;
     data = await this.apiService.patchData(url, {
       method: REQUEST_METHOD.PATCH,
       signal,
     });
+    if (!isRaceData(data)) {
+      throw new Error(`Invalid data`);
+    }
     return data;
   };
 }

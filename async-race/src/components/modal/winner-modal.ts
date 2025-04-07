@@ -12,6 +12,7 @@ export class WinnerModal extends BaseModal {
     super();
     this.modalWrapper.append(this.addContent());
     this.registerEvent(ActionType.winnerDetected, (winner) => {
+      console.log(winner);
       if (isWinnerData(winner)) {
         this.showWinnerModal(winner);
       }

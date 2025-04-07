@@ -1,5 +1,6 @@
 import type { Car, CarProperties, SetPageCallback } from "@/types/index.ts";
 import type { Injectable } from "@/types/di-container-types.ts";
+import type { RaceData } from "@/types/race-service-types.ts";
 
 export interface ApiServiceInterface extends Injectable {
   deleteData: DeleteData;
@@ -35,7 +36,7 @@ export type RequestEngine = (
   status: EngineStatus,
   carId: number,
   signal?: AbortSignal,
-) => Promise<unknown>;
+) => Promise<RaceData>;
 
 export interface ResponseData {
   data: unknown;
@@ -90,11 +91,11 @@ export type CreateOrUpdateHandler = (
   url: string,
   data: unknown,
   signal?: AbortSignal,
-) => Promise<void>;
+) => Promise<unknown>;
 
 export type SendData = (
   url: string,
   data: unknown,
   method: REQUEST_METHOD,
   signal?: AbortSignal,
-) => Promise<void>;
+) => Promise<unknown>;
