@@ -10,6 +10,7 @@ import { TextButton } from "@/components/buttons/text-button.ts";
 import { BUTTON_TEXT } from "@/constants/buttons-constants.ts";
 import { DIContainer } from "@/services/di-container.ts";
 import { ServiceName } from "@/types/di-container-types.ts";
+import { ActionType } from "@/types/event-emitter-types.ts";
 
 export class Header extends BaseComponent<"header"> {
   private readonly settingsButton = {
@@ -25,6 +26,10 @@ export class Header extends BaseComponent<"header"> {
   private readonly settingsWrapper: HTMLDivElement;
   private readonly pagesWrapper: HTMLDivElement;
   private pagesButtons: TextButton[] = [];
+  private disabledConfig: Record<string, string> = {
+    [BUTTON_TEXT.TO_WINNERS]: PAGE_PATH.WINNERS,
+    [BUTTON_TEXT.TO_GARAGE]: PAGE_PATH.HOME,
+  };
   constructor() {
     super();
     this.settingsWrapper = this.createSettingsWrapper();
@@ -43,31 +48,22 @@ export class Header extends BaseComponent<"header"> {
   public addPageButton(buttonName: string): this {
     const router = DIContainer.getInstance().getService(ServiceName.ROUTER);
     const button = new TextButton(buttonName);
-    const isCurrentPath =
-      router.getCurrentRoute() === PAGE_PATH.HOME
-        ? BUTTON_TEXT.TO_WINNERS
-        : BUTTON_TEXT.TO_GARAGE;
-    const isToHome = buttonName === BUTTON_TEXT.TO_GARAGE;
 
     this.pagesButtons.push(button);
 
-    button.addListener(() => {
-      for (const element of this.pagesButtons) {
-        element.toggleDisabled();
-      }
+    button.registerEvent(ActionType.changeRoute, (data: unknown) => {
+      const isDisabled = this.disabledConfig[buttonName] === data;
+      button.disabledElement(isDisabled);
     });
 
-    const targetPath = isToHome ? PAGE_PATH.HOME : PAGE_PATH.WINNERS;
     button.addListener(() => {
-      router.navigateTo(targetPath);
+      router.navigateTo(this.disabledConfig[buttonName]);
     });
 
-    if (!isToHome) {
+    if (buttonName !== BUTTON_TEXT.TO_GARAGE) {
       button.addRaceListeners();
     }
 
-    const isDisabled = buttonName === isCurrentPath;
-    button.disabledElement(isDisabled);
     this.pagesWrapper.append(button.getElement());
     return this;
   }

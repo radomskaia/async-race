@@ -6,6 +6,8 @@ import {
 } from "@/constants/constants.ts";
 import { ServiceName } from "@/types/di-container-types";
 import type { Route, RouterInterface } from "@/types/router-type.ts";
+import { DIContainer } from "@/services/di-container.ts";
+import { ActionType } from "@/types/event-emitter-types.ts";
 
 export class Router implements RouterInterface {
   public name: ServiceName = ServiceName.ROUTER;
@@ -41,6 +43,9 @@ export class Router implements RouterInterface {
     if (!this.container) {
       throw new Error("Container is not set");
     }
+    DIContainer.getInstance()
+      .getService(ServiceName.EVENT_EMITTER)
+      .notify({ type: ActionType.changeRoute, data: path });
     this.container.append(new route().getElement());
   }
 
