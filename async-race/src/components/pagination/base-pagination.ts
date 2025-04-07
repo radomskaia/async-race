@@ -74,7 +74,7 @@ export abstract class BasePagination<
 
     this.counterElement = this.createDOMElement({
       tagName: "span",
-      textContent: String(ZERO),
+      textContent: String(ONE),
     });
     this.currentPageElement = this.createDOMElement({
       tagName: "p",

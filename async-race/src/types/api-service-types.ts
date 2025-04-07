@@ -63,10 +63,14 @@ export interface PaginationParameters {
   limit: number;
 }
 
-export interface SortedPaginationParameters extends PaginationParameters {
+export interface SortedParameters {
   sort: Sort;
   order: Order;
 }
+
+export interface SortedPaginationParameters
+  extends PaginationParameters,
+    SortedParameters {}
 
 export type GetCarsHandler = (
   parameters: PaginationParameters,
