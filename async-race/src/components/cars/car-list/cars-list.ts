@@ -5,13 +5,22 @@ import { CarItem } from "@/components/cars/car-item/car-item.ts";
 import utilitiesStyles from "@/styles/utilities.module.css";
 import { DIContainer } from "@/services/di-container.ts";
 import { ServiceName } from "@/types/di-container-types.ts";
+import { ActionType } from "@/types/event-emitter-types.ts";
+import { isCarArray } from "@/services/validator.ts";
 
 export class CarsList extends BaseComponent<"ul"> {
   private readonly raceService;
   constructor() {
     super();
-    this.raceService = DIContainer.getInstance().getService(ServiceName.RACE);
+    const diContainer = DIContainer.getInstance();
+    this.raceService = diContainer.getService(ServiceName.RACE);
     this.raceService.init(this.element);
+
+    this.registerEvent(ActionType.paginationUpdated, (data: unknown) => {
+      if (isCarArray(data)) {
+        this.addCarsList(data);
+      }
+    });
   }
 
   public addCar(carData: Car): void {

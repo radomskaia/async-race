@@ -65,7 +65,8 @@ export const WINNER_KEYS = {
   TIME: "time",
 } as const;
 
-export const ELEMENTS_PER_PAGE = 7;
+export const CARS_PER_PAGE = 7;
+export const WINNERS_PER_PAGE = 10;
 
 export const RESPONSE_STATUS = {
   OK: 200,

@@ -41,7 +41,7 @@ export class CarItem extends BaseComponent<"li"> {
     {
       title: ControlsButtonConfig.START_ENGINE,
       callback: (): void => {
-        void this.raceService.startSingleRace(this.id);
+        this.raceService.startSingleRace(this.id).catch(console.error);
       },
       action: (button: IconButton): void =>
         button.addRaceListeners(this.id, true),
@@ -49,7 +49,7 @@ export class CarItem extends BaseComponent<"li"> {
     {
       title: ControlsButtonConfig.STOP_ENGINE,
       callback: (): void => {
-        void this.raceService.stopSingleRace(this.id);
+        this.raceService.stopSingleRace(this.id).catch(console.error);
       },
       action: (button: IconButton): void => this.registerStopButton(button),
     },

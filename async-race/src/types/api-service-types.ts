@@ -17,7 +17,7 @@ export type UpdateCar = ({ id, ...properties }: Car) => Promise<void>;
 export type CreateCar = (
   properties: CarProperties,
   callback?: SetPageCallback,
-) => Promise<void>;
+) => Promise<unknown>;
 
 export interface WinnerData {
   id: number;
@@ -58,16 +58,22 @@ export interface ResponseWinnerData extends ResponseData {
 
 export type GetDataHandler = (url: string) => Promise<ResponseData>;
 
+export interface PaginationParameters {
+  page: number;
+  limit: number;
+}
+
+export interface SortedPaginationParameters extends PaginationParameters {
+  sort: Sort;
+  order: Order;
+}
+
 export type GetCarsHandler = (
-  page: number,
-  limit: number,
+  parameters: PaginationParameters,
 ) => Promise<ResponseCarData>;
 
 export type GetWinnersHandler = (
-  page: number,
-  limit: number,
-  sort: Sort,
-  order: Order,
+  parameters: SortedPaginationParameters,
 ) => Promise<ResponseWinnerData>;
 
 export enum Order {

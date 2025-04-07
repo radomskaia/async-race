@@ -7,12 +7,12 @@ import { CarsList } from "@/components/cars/car-list/cars-list.ts";
 import { CreateForm } from "@/components/car-form/create-form.ts";
 import { CARS_COUNT, ZERO } from "@/constants/constants.ts";
 import { getRandomCarName, getRandomHEX } from "@/utilities/utilities.ts";
-import { Pagination } from "@/components/pagination/pagination.ts";
 import { IconButton } from "@/components/buttons/icon-button.ts";
 import { DIContainer } from "@/services/di-container.ts";
 import { ServiceName } from "@/types/di-container-types.ts";
 import { RaceButtonConfig } from "@/types/button-types.ts";
 import { ActionType } from "@/types/event-emitter-types.ts";
+import { GaragePagination } from "@/components/pagination/garage-pagination.ts";
 
 export class Home extends BaseComponent<"div"> {
   private readonly buttonsConfig: {
@@ -47,11 +47,7 @@ export class Home extends BaseComponent<"div"> {
     const diContainer = DIContainer.getInstance();
     this.raceService = diContainer.getService(ServiceName.RACE);
     this.garageService = diContainer.getService(ServiceName.GARAGE);
-    this.pagination = new Pagination(
-      "Garage",
-      this.garageService.getPage,
-      carsList.addCarsList,
-    );
+    this.pagination = new GaragePagination();
     this.appendElement(
       this.pagination.getElement(),
       this.createUIPanel(),
@@ -131,8 +127,8 @@ export class Home extends BaseComponent<"div"> {
     return buttonWrapper;
   }
 
-  private generateCars(): void {
-    const requests: Promise<void>[] = [];
+  private async generateCars(): Promise<void> {
+    const requests: Promise<unknown>[] = [];
     for (let index = ZERO; index < CARS_COUNT; index++) {
       const name = getRandomCarName();
       const color = getRandomHEX();
@@ -144,8 +140,7 @@ export class Home extends BaseComponent<"div"> {
         .catch(console.error);
       requests.push(request);
     }
-    Promise.all(requests).then(() => {
-      this.pagination.setPage(null, true).catch(console.error);
-    });
+    await Promise.all(requests);
+    void this.pagination.setPage(null, true);
   }
 }

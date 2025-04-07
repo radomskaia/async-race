@@ -3,20 +3,15 @@ import { BaseComponent } from "@/components/base-component.js";
 // import { Pagination } from "@/components/pagination/pagination.js";
 // import { ServiceName } from "@/types/di-container-types.ts";
 import utilitiesStyles from "@/styles/utilities.module.css";
+import { WinnerPagination } from "@/components/pagination/winner-pagination.ts";
 
 export class Winners extends BaseComponent<"div"> {
-  // private pagination;
-  // private winnerService;
+  private pagination;
 
   constructor() {
     super();
-    console.log("Winners");
-    // const diContainer = DIContainer.getInstance();
-    // this.winnerService = diContainer.getService(ServiceName.WINNER);
-    // this.pagination = new Pagination("Garage", this.winnerService.getPage, () =>
-    //   console.log("Winners"),
-    // );
-    // this.appendElement(this.pagination.getElement());
+    this.pagination = new WinnerPagination();
+    this.appendElement(this.pagination.getElement());
   }
 
   protected createElement(): HTMLDivElement {

@@ -48,8 +48,7 @@ export class WinnerService implements WinnerServiceInterface {
     let isCreate = false;
     try {
       initData = await this.getWinner(data.id);
-    } catch (error) {
-      console.warn(error);
+    } catch {
       isCreate = true;
     } finally {
       const newData = WinnerService.createData(data, initData);
@@ -84,12 +83,12 @@ export class WinnerService implements WinnerServiceInterface {
     return data.data;
   }
 
-  public getPage: GetWinnersHandler = async (page, limit, sort, order) => {
+  public getPage: GetWinnersHandler = async (parameters) => {
     const query = new URLSearchParams({
-      _page: String(page),
-      _limit: String(limit),
-      _sort: sort,
-      _order: order,
+      _page: String(parameters.page),
+      _limit: String(parameters.limit),
+      _sort: parameters.sort,
+      _order: parameters.order,
     });
     const url = `${this.url}?${query}`;
     let data: unknown;

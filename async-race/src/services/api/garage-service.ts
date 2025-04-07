@@ -34,10 +34,10 @@ export class GarageService implements GarageServiceInterface {
     void this.winnerService.deleteWinner(id);
   }
 
-  public getPage: GetCarsHandler = async (page, limit) => {
+  public getPage: GetCarsHandler = async (parameters) => {
     const query = new URLSearchParams({
-      _page: String(page),
-      _limit: String(limit),
+      _page: String(parameters.page),
+      _limit: String(parameters.limit),
     });
     const url = `${this.url}?${query}`;
     let data: unknown;
@@ -50,7 +50,7 @@ export class GarageService implements GarageServiceInterface {
   };
 
   public createCar: CreateCar = async (properties) => {
-    void this.apiService.createData(this.url, properties);
+    return await this.apiService.createData(this.url, properties);
   };
 
   public updateCar: UpdateCar = async ({ id, ...properties }) => {

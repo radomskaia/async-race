@@ -1,16 +1,26 @@
 import { BaseComponent } from "@/components/base-component.ts";
 import utilitiesStyles from "@/styles/utilities.module.css";
 import type { BaseButton } from "@/components/buttons/base-button.ts";
-import { type AddCarsList, type Callback } from "@/types";
+import { type Callback } from "@/types";
 import { IconButton } from "@/components/buttons/icon-button.ts";
 import { BUTTON_TEXT, ICON_PATH } from "@/constants/buttons-constants.ts";
 import styles from "@/components/cars/cars-list.module.css";
-import { ELEMENTS_PER_PAGE, ONE, ZERO } from "@/constants/constants.ts";
-import type { GetCarsHandler } from "@/types/api-service-types.ts";
+import { ONE, ZERO } from "@/constants/constants.ts";
 import { PaginationButtonConfig } from "@/types/button-types.ts";
+import type { EventEmitterInterface } from "@/types/event-emitter-types.ts";
 import { ActionType } from "@/types/event-emitter-types.ts";
+import type {
+  ResponseCarData,
+  ResponseWinnerData,
+} from "@/types/api-service-types.ts";
+import type { WinnerServiceInterface } from "@/types/winner-service.ts";
+import type { GarageServiceInterface } from "@/types/garage-service-types.ts";
 
-export class Pagination extends BaseComponent<"div"> {
+export abstract class BasePagination<
+  T extends WinnerServiceInterface | GarageServiceInterface,
+  D extends ResponseWinnerData | ResponseCarData,
+> extends BaseComponent<"div"> {
+  protected currentPage: number;
   private buttons: Record<string, BaseButton> = {};
   private buttonsConfig: {
     name: PaginationButtonConfig;
@@ -42,20 +52,17 @@ export class Pagination extends BaseComponent<"div"> {
     },
   ];
   private readonly currentPageElement: HTMLParagraphElement;
-  private readonly elementsCountElement: HTMLSpanElement;
-  private currentPage: number;
+  private readonly counterElement: HTMLSpanElement;
   private lastPage: number;
-  private limit = ELEMENTS_PER_PAGE;
+  protected abstract limit: number;
+  protected abstract eventEmitter: EventEmitterInterface;
+  protected abstract apiHandler: T;
 
-  constructor(
-    pageName: string,
-    private readonly apiHandler: GetCarsHandler,
-    private callback: AddCarsList,
-  ) {
+  protected constructor(pageName: string) {
     super();
     this.currentPage = ZERO;
     this.lastPage = ONE;
-    this.elementsCountElement = this.createDOMElement({
+    this.counterElement = this.createDOMElement({
       tagName: "span",
       textContent: String(ZERO),
     });
@@ -64,19 +71,6 @@ export class Pagination extends BaseComponent<"div"> {
     });
     this.addPagination();
     this.addPageName(pageName);
-    this.setPage(ONE).catch(console.error);
-    this.registerEvent(ActionType.listUpdated, (data) => {
-      if (!Array.isArray(data)) {
-        return;
-      }
-      const [newPage, isCreate] = data;
-      if (
-        (typeof newPage === "number" || newPage === null) &&
-        (typeof isCreate === "boolean" || isCreate === undefined)
-      ) {
-        this.setPage(newPage, isCreate).catch(console.error);
-      }
-    });
   }
 
   public async setPage(
@@ -88,19 +82,22 @@ export class Pagination extends BaseComponent<"div"> {
     }
     this.currentPage = newPage ?? this.currentPage;
     this.setPageNumber();
-    const carsData = await this.apiHandler(this.currentPage, this.limit);
-    this.setElementsCount(carsData.count);
-    if (carsData.data.length === ZERO && this.currentPage !== ONE) {
+    const data = await this.getPaginationData();
+    this.setElementsCount(data.count);
+    if (data.data.length === ZERO && this.currentPage !== ONE) {
       await this.setPage(this.currentPage - ONE);
       return;
     }
     const oldLastPage = this.lastPage;
-    this.setLastPage(carsData.count);
+    this.setLastPage(data.count);
     this.updateButtonsState();
     if (isCreate && this.currentPage !== oldLastPage) {
       return;
     }
-    this.callback(carsData.data);
+    this.eventEmitter.notify({
+      type: ActionType.paginationUpdated,
+      data: data.data,
+    });
   }
 
   protected createElement(): HTMLElementTagNameMap["div"] {
@@ -133,7 +130,7 @@ export class Pagination extends BaseComponent<"div"> {
   }
 
   private setElementsCount(elementsCount: number): void {
-    this.elementsCountElement.textContent = String(elementsCount);
+    this.counterElement.textContent = String(elementsCount);
   }
 
   private addPagination(): void {
@@ -178,11 +175,9 @@ export class Pagination extends BaseComponent<"div"> {
     });
     const openBracket = document.createTextNode("(");
     const closeBracket = document.createTextNode(")");
-    pageNameElement.append(
-      openBracket,
-      this.elementsCountElement,
-      closeBracket,
-    );
+    pageNameElement.append(openBracket, this.counterElement, closeBracket);
     this.appendElement(pageNameElement);
   }
+
+  protected abstract getPaginationData(): Promise<D>;
 }
