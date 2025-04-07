@@ -1,5 +1,5 @@
 import type { ResponseWinnerData } from "@/types/api-service-types.ts";
-import { Order, Sort } from "@/types/api-service-types.ts";
+import type { Order, Sort } from "@/types/api-service-types.ts";
 import { BasePagination } from "@/components/pagination/base-pagination.ts";
 import { ServiceName } from "@/types/di-container-types.ts";
 import { DIContainer } from "@/services/di-container.ts";
@@ -11,15 +11,28 @@ export class WinnerPagination extends BasePagination<
   ResponseWinnerData
 > {
   protected limit;
+  protected order;
+  protected sort;
   protected eventEmitter;
   protected apiHandler;
-  constructor() {
+  constructor(order: Order, sort: Sort) {
     super("Winner");
     const diContainer = DIContainer.getInstance();
     this.eventEmitter = diContainer.getService(ServiceName.EVENT_EMITTER);
     this.apiHandler = diContainer.getService(ServiceName.WINNER);
     this.limit = WINNERS_PER_PAGE;
+    this.order = order;
+    this.sort = sort;
+    this.setPage(null).catch(console.error);
+  }
 
+  public setOrder(order: Order): void {
+    this.order = order;
+    this.setPage(null).catch(console.error);
+  }
+
+  public setSort(sort: Sort): void {
+    this.sort = sort;
     this.setPage(null).catch(console.error);
   }
 
@@ -27,8 +40,8 @@ export class WinnerPagination extends BasePagination<
     return this.apiHandler.getPage({
       page: this.currentPage,
       limit: this.limit,
-      order: Order.ASC,
-      sort: Sort.ID,
+      order: this.order,
+      sort: this.sort,
     });
   }
 }

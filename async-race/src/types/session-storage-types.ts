@@ -3,9 +3,11 @@ import type { Injectable } from "@/types/di-container-types.ts";
 export type TypeGuard<T> = (value: unknown) => value is T;
 
 export enum StorageKeys {
-  carProperties = "carProperties",
+  sort = "sort",
+  isASC = "isASC",
   garage = "Garage",
   winners = "Winners",
+  carProperties = "CarProperties",
 }
 
 export interface SessionStorageInterface extends Injectable {

@@ -9,7 +9,6 @@ export enum ActionType {
   singleRaceStarted = "singleRaceStarted",
   updateCar = "updateCar",
   paginationUpdated = "paginationUpdated",
-  filterUpdated = "filterUpdated",
   changeRoute = "changeRoute",
 }
 

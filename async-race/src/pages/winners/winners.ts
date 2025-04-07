@@ -1,31 +1,36 @@
 import { BaseComponent } from "@/components/base-component.js";
-import { DIContainer } from "@/services/di-container.js";
-import { ServiceName } from "@/types/di-container-types.ts";
 import utilitiesStyles from "@/styles/utilities.module.css";
 import { WinnerPagination } from "@/components/pagination/winner-pagination.ts";
 import styles from "@/pages/winners/winners.module.css";
 import { Order, Sort } from "@/types/api-service-types.ts";
-import { ActionType } from "@/types/event-emitter-types.ts";
 import { IconButton } from "@/components/buttons/icon-button.ts";
 import { BUTTON_TEXT, ICON_PATH } from "@/constants/buttons-constants.ts";
+import { isBoolean, isSort } from "@/services/validator.ts";
+import { DIContainer } from "@/services/di-container.ts";
+import { ServiceName } from "@/types/di-container-types.ts";
+import { StorageKeys } from "@/types/session-storage-types.ts";
 
 export class Winners extends BaseComponent<"div"> {
   private pagination;
-  private eventEmitter;
-  private options = {
-    order: Order.DESC,
-    sort: Sort.ID,
-  };
   private isASC = false;
+  private order;
+  private sort;
 
   constructor() {
     super();
-    this.pagination = new WinnerPagination();
+    const storage = DIContainer.getInstance().getService(ServiceName.STORAGE);
+    this.isASC = storage.load(StorageKeys.isASC, isBoolean) || false;
+    this.order = this.isASC ? Order.ASC : Order.DESC;
+    this.sort = storage.load(StorageKeys.sort, isSort) || Sort.ID;
+
+    this.pagination = new WinnerPagination(this.order, this.sort);
     this.appendElement(this.pagination.getElement());
-    this.eventEmitter = DIContainer.getInstance().getService(
-      ServiceName.EVENT_EMITTER,
-    );
     this.appendElement(this.createUIPanel());
+
+    window.addEventListener("beforeunload", () => {
+      storage.save(StorageKeys.isASC, this.isASC);
+      storage.save(StorageKeys.sort, this.sort);
+    });
   }
 
   protected createElement(): HTMLDivElement {
@@ -50,15 +55,14 @@ export class Winners extends BaseComponent<"div"> {
       },
       () => {
         this.isASC = !this.isASC;
-        this.options.order = this.isASC ? Order.ASC : Order.DESC;
-        this.notify({
-          order: this.options.order,
-        });
+        const order = this.isASC ? Order.ASC : Order.DESC;
+        this.pagination.setOrder(order);
         button
           .getElement()
           .classList.toggle(styles.orderIconRotate, this.isASC);
       },
     );
+    button.getElement().classList.toggle(styles.orderIconRotate, this.isASC);
     return button;
   }
 
@@ -88,11 +92,11 @@ export class Winners extends BaseComponent<"div"> {
         id: "filter",
       },
     });
-
     selectElement.addEventListener("change", () => {
-      this.notify({
-        sort: selectElement.value,
-      });
+      if (isSort(selectElement.value)) {
+        this.sort = selectElement.value;
+        this.pagination.setSort(this.sort);
+      }
     });
 
     for (const value of Object.values(Sort)) {
@@ -103,16 +107,12 @@ export class Winners extends BaseComponent<"div"> {
           value: value,
         },
       });
+      if (value === this.sort) {
+        optionElement.selected = true;
+      }
       selectElement.append(optionElement);
     }
 
     return selectElement;
-  }
-
-  private notify(data: unknown): void {
-    this.eventEmitter.notify({
-      type: ActionType.filterUpdated,
-      data: data,
-    });
   }
 }

@@ -12,6 +12,7 @@ import type {
   ResponseWinnerData,
   WinnerData,
 } from "@/types/api-service-types.ts";
+import { Sort } from "@/types/api-service-types.ts";
 import type { RaceData } from "@/types/race-service-types.ts";
 
 export function isResponseCarData(value: unknown): value is ResponseCarData {
@@ -120,6 +121,10 @@ export function isModelData(value: unknown): value is ModalData {
   );
 }
 
+export function isSort(value: unknown): value is Sort {
+  return value === Sort.ID || value === Sort.TIME || value === Sort.WINS;
+}
+
 export function isResponseData(value: unknown): value is ResponseData {
   if (!isObject(value)) {
     return false;
@@ -137,4 +142,8 @@ export function isString(value: unknown): value is string {
 
 function isNumber(value: unknown): value is number {
   return typeof value === "number";
+}
+
+export function isBoolean(value: unknown): value is boolean {
+  return typeof value === "boolean";
 }
