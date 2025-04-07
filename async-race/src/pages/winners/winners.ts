@@ -54,7 +54,6 @@ export class Winners extends BaseComponent<"div"> {
         this.notify({
           order: this.options.order,
         });
-        console.log(this.isASC);
         button
           .getElement()
           .classList.toggle(styles.orderIconRotate, this.isASC);

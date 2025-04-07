@@ -38,13 +38,17 @@ export abstract class BasePagination<
     {
       name: PaginationButtonConfig.PREVIOUS,
       callback: (): void => {
-        this.setPage(this.currentPage - ONE).catch(console.error);
+        let newPage = this.currentPage - ONE;
+        newPage = newPage <= ZERO ? ONE : newPage;
+        this.setPage(newPage).catch(console.error);
       },
     },
     {
       name: PaginationButtonConfig.NEXT,
       callback: (): void => {
-        this.setPage(this.currentPage + ONE).catch(console.error);
+        let newPage = this.currentPage + ONE;
+        newPage = Math.min(newPage, this.lastPage);
+        this.setPage(newPage).catch(console.error);
       },
     },
     {
@@ -66,7 +70,7 @@ export abstract class BasePagination<
     const storage = DIContainer.getInstance().getService(ServiceName.STORAGE);
 
     const currentPage = Number(storage.load(pageName, isPositiveNumber));
-    this.currentPage = currentPage ?? ONE;
+    this.currentPage = currentPage || ONE;
 
     window.addEventListener("beforeunload", () => {
       storage.save(pageName, this.currentPage);
@@ -91,11 +95,11 @@ export abstract class BasePagination<
     if (newPage === this.currentPage) {
       return;
     }
-    this.currentPage = newPage ?? this.currentPage;
+    this.currentPage = newPage || this.currentPage;
     this.setPageNumber();
     const data = await this.getPaginationData();
     this.setElementsCount(data.count);
-    if (data.data.length === ZERO && this.currentPage !== ONE) {
+    if (data.data.length === ZERO && this.currentPage > ONE) {
       await this.setPage(this.currentPage - ONE);
       return;
     }
