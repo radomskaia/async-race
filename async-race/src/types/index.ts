@@ -1,7 +1,6 @@
 import type { ButtonOptions } from "@/types/button-types.ts";
 
 export type Callback = () => void;
-export type CarUpdateCallback = (data: CarProperties) => void;
 export type SetPageCallback = (
   newPage: number | null,
   isCreate?: boolean,

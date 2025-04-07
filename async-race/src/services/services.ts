@@ -2,7 +2,7 @@ import { DIContainer } from "@/services/di-container.ts";
 import { ServiceName } from "@/types/di-container-types.ts";
 import { Router } from "@/services/router.ts";
 import { ApiService } from "@/services/api/api-service.ts";
-import { RaceService } from "@/services/race-service.ts";
+import { RaceService } from "@/services/race/race-service.ts";
 import { EventEmitter } from "@/services/event-emitter.ts";
 import { WinnerService } from "@/services/api/winner-service.ts";
 import { GarageService } from "@/services/api/garage-service.ts";

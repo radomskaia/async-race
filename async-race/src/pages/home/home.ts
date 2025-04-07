@@ -3,7 +3,7 @@ import utilitiesStyles from "@/styles/utilities.module.css";
 import type { Callback } from "@/types";
 import { BUTTON_TEXT, ICON_PATH } from "@/constants/buttons-constants.ts";
 import styles from "@/pages/home/home.module.css";
-import { CarsList } from "@/components/cars/car-list/cars-list.ts";
+import { CarsList } from "@/components/cars/cars-list.ts";
 import { CreateForm } from "@/components/car-form/create-form.ts";
 import { CARS_COUNT, ZERO } from "@/constants/constants.ts";
 import { getRandomCarName, getRandomHEX } from "@/utilities/utilities.ts";

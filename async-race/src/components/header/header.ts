@@ -1,8 +1,6 @@
 import utilitiesStyles from "@/styles/utilities.module.css";
 import styles from "@/components/header/header.module.css";
 import { BaseComponent } from "@/components/base-component.ts";
-import { SoundButton } from "@/components/buttons/settings/sound-button.ts";
-import { AudioService } from "@/services/settings/audio-service.ts";
 import { ThemeButton } from "@/components/buttons/settings/theme-button.ts";
 import { ThemeService } from "@/services/settings/theme-service.ts";
 import { APP_NAME, PAGE_PATH } from "@/constants/constants.ts";
@@ -14,10 +12,6 @@ import { ActionType } from "@/types/event-emitter-types.ts";
 
 export class Header extends BaseComponent<"header"> {
   private readonly settingsButton = {
-    sound: {
-      button: SoundButton,
-      action: AudioService,
-    },
     theme: {
       button: ThemeButton,
       action: ThemeService,

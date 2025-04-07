@@ -35,8 +35,6 @@ export const MESSAGES = {
   INVALID_DATA: "Invalid data",
 } as const;
 
-export const DELAY_TIME = 300;
-
 export enum API_URLS {
   WINNERS = "/winners",
   GARAGE = "/garage",
@@ -68,16 +66,7 @@ export const WINNER_KEYS = {
 export const CARS_PER_PAGE = 7;
 export const WINNERS_PER_PAGE = 10;
 
-export const RESPONSE_STATUS = {
-  OK: 200,
-  CREATED: 201,
-  NO_CONTENT: 204,
-  BAD_REQUEST: 400,
-  NOT_FOUND: 404,
-  INTERNAL_SERVER_ERROR: 500,
-};
-
-export const API_URL = "http://192.168.88.124:3000";
+export const API_URL = "http://localhost:3000";
 export const API_HEADER = {
   "Content-Type": "application/json",
 } as const;

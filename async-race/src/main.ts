@@ -11,7 +11,6 @@ registerServices();
 const body = document.body;
 const header = new Header()
   .addSettingsButton("theme")
-  .addSettingsButton("sound")
   .addPageButton(BUTTON_TEXT.TO_GARAGE)
   .addPageButton(BUTTON_TEXT.TO_WINNERS)
   .getElement();
