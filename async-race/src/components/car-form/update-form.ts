@@ -1,5 +1,5 @@
 import { BUTTON_TYPES } from "@/constants/buttons-constants.ts";
-import type { Car, CarUpdateCallback } from "@/types";
+import type { Car } from "@/types";
 import type { BaseButton } from "@/components/buttons/base-button.ts";
 import { BaseForm } from "@/components/car-form/base-form.ts";
 import { FormButtonsConfig } from "@/types/button-types.ts";
@@ -7,12 +7,8 @@ import { FormButtonsConfig } from "@/types/button-types.ts";
 export class UpdateForm extends BaseForm {
   private formButtons: BaseButton[] = [];
   private formButtonsConfig = FormButtonsConfig;
-  constructor(
-    value: Car,
-    private callback: CarUpdateCallback,
-  ) {
+  constructor(value: Car) {
     super(value);
-    this.callback = callback;
     this.addFormButtons();
   }
 
@@ -36,12 +32,10 @@ export class UpdateForm extends BaseForm {
       return;
     }
     this.toggleUpdateState();
-    this.apiService
-      .updateCar({ id, ...formData }, this.callback)
-      .catch((error) => {
-        console.error(error);
-        this.resetForm();
-      });
+    this.apiService.updateCar({ id, ...formData }).catch((error) => {
+      console.error(error);
+      this.resetForm();
+    });
   }
 
   private getUpdateState(): boolean {

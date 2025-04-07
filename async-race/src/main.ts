@@ -4,6 +4,7 @@ import { BUTTON_TEXT } from "@/constants/buttons-constants.ts";
 import { ServiceName } from "@/types/di-container-types.ts";
 import { registerServices } from "@/services/services.ts";
 import { DIContainer } from "@/services/di-container.ts";
+import { WinnerModal } from "@/components/modal/winner-modal.ts";
 
 registerServices();
 
@@ -18,3 +19,4 @@ const header = new Header()
 body.append(header);
 
 DIContainer.getInstance().getService(ServiceName.ROUTER).addRoutes(appRoutes);
+WinnerModal.getInstance();

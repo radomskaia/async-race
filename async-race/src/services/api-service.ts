@@ -5,32 +5,25 @@ import {
   COUNT_HEADER,
   ZERO,
 } from "@/constants/constants.ts";
-import { isResponseCarData } from "@/services/validator.ts";
 import type {
-  GetCarsHandler,
   ApiServiceInterface,
   RequestEngine,
   ResponseData,
-  DeleteCar,
-  UpdateCar,
-  CreateCar,
+  DeleteData,
   CombinedResponse,
+  GetDataHandler,
+  CreateOrUpdateHandler,
+  SendData,
 } from "@/types/api-service-types.ts";
 import { REQUEST_METHOD } from "@/types/api-service-types.ts";
 import { ServiceName } from "@/types/di-container-types";
-import { DIContainer } from "@/services/di-container.ts";
+import { isResponseData } from "@/services/validator.ts";
 
 export class ApiService implements ApiServiceInterface {
   public name: ServiceName = ServiceName.API;
-  private url = API_URL;
+  private baseUrl = API_URL;
   private headers = API_HEADER;
-  private garage = API_URLS.GARAGE;
   private engine = API_URLS.ENGINE;
-  private winnerServer;
-  public constructor() {
-    const diContainer = DIContainer.getInstance();
-    this.winnerServer = diContainer.getService(ServiceName.WINNER);
-  }
 
   public static getResponse: CombinedResponse<Response> = async (
     url,
@@ -83,7 +76,7 @@ export class ApiService implements ApiServiceInterface {
       id: String(id),
       status: status,
     });
-    const url = `${this.url}${this.engine}?${query}`;
+    const url = `${this.baseUrl}${this.engine}?${query}`;
     let data;
     data = await ApiService.getEngineData(url, {
       method: REQUEST_METHOD.PATCH,
@@ -92,67 +85,50 @@ export class ApiService implements ApiServiceInterface {
     return data;
   };
 
-  public getCars: GetCarsHandler = async (page, limit) => {
-    const query = new URLSearchParams({
-      _page: String(page),
-      _limit: String(limit),
-    });
-    const url = `${this.url}${this.garage}?${query}`;
+  public getData: GetDataHandler = async (url) => {
+    const baseUrl = `${this.baseUrl}${url}`;
     let data;
     try {
-      data = await ApiService.getResponseData(url);
+      data = await ApiService.getResponseData(baseUrl);
     } catch (error) {
       throw new Error(`Error while fetching data: ${error}`);
     }
-    if (!isResponseCarData(data)) {
+    if (!isResponseData(data)) {
       throw new Error("Invalid data");
     }
-
     return data;
   };
 
-  public deleteCar: DeleteCar = async (id) => {
-    const url = `${this.url}${this.garage}/${id}`;
+  public deleteData: DeleteData = async (url) => {
+    const baseUrl = `${this.baseUrl}${url}`;
 
     try {
-      await ApiService.getResponse(url, {
+      await ApiService.getResponse(baseUrl, {
         method: REQUEST_METHOD.DELETE,
       });
-      await this.winnerServer.delete(id);
     } catch (error) {
       console.error(error);
     }
   };
 
-  public updateCar: UpdateCar = async ({ id, ...properties }, callback) => {
-    const url = `${this.url}${this.garage}/${id}`;
-    const init = {
-      method: REQUEST_METHOD.PUT,
-      headers: this.headers,
-      body: JSON.stringify(properties),
-    };
-    ApiService.getResponse(url, init)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(response.statusText);
-        }
-        return response.json();
-      })
-      .then(callback)
-      .catch((error) => {
-        console.error(error);
-      });
+  public updateData: CreateOrUpdateHandler = async (url, data) => {
+    void this.sendData(url, data, REQUEST_METHOD.PUT);
   };
 
-  public createCar: CreateCar = async (properties) => {
-    const url = `${this.url}${this.garage}`;
+  public createData: CreateOrUpdateHandler = async (url, data) => {
+    void this.sendData(url, data, REQUEST_METHOD.POST);
+  };
+
+  private sendData: SendData = async (url, data, method) => {
+    const baseUrl = `${this.baseUrl}${url}`;
     const init = {
-      method: REQUEST_METHOD.POST,
+      method,
       headers: this.headers,
-      body: JSON.stringify(properties),
+      body: JSON.stringify(data),
     };
+
     try {
-      const response = await ApiService.getResponse(url, init);
+      const response = await ApiService.getResponse(baseUrl, init);
       if (!response.ok) {
         console.error(response.statusText);
         return;

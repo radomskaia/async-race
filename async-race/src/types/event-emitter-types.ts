@@ -7,6 +7,7 @@ export enum ActionType {
   raceStarted = "raceStarted",
   raceEnded = "raceEnded",
   singleRaceStarted = "singleRaceStarted",
+  updateCar = "updateCar",
 }
 
 export interface EventEmitterInterface extends Injectable {

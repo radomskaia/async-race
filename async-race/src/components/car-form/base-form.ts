@@ -11,14 +11,14 @@ import { MESSAGES } from "@/constants/constants.ts";
 import { getRandomHEX } from "@/utilities/utilities.ts";
 import { ServiceName } from "@/types/di-container-types.ts";
 import { DIContainer } from "@/services/di-container.ts";
-import type { ApiServiceInterface } from "@/types/api-service-types.ts";
 import type { FormButtonsConfig } from "@/types/button-types.ts";
 
 export abstract class BaseForm extends BaseComponent<"form", number> {
-  protected readonly nameElement: CarNameInput;
-  protected colorElement: CarColorInput;
-  protected apiService: ApiServiceInterface =
-    DIContainer.getInstance().getService(ServiceName.API);
+  protected readonly nameElement;
+  protected colorElement;
+  protected apiService = DIContainer.getInstance().getService(
+    ServiceName.GARAGE,
+  );
   protected constructor(value?: Car) {
     super(value?.id);
     this.nameElement = this.addCarName(value?.name);

@@ -11,6 +11,7 @@ import { ControlsButtonConfig } from "@/types/button-types.ts";
 import { ActionType } from "@/types/event-emitter-types.ts";
 import { DIContainer } from "@/services/di-container.ts";
 import { ServiceName } from "@/types/di-container-types.ts";
+import { isCarProperties } from "@/services/validator.ts";
 
 export class CarItem extends BaseComponent<"li"> {
   private controlsButtons: Record<string, BaseButton> = {};
@@ -22,7 +23,7 @@ export class CarItem extends BaseComponent<"li"> {
     {
       title: ControlsButtonConfig.DELETE,
       callback: async (): Promise<void> => {
-        await this.apiService.deleteCar(this.id).catch(console.error);
+        await this.garageService.deleteCar(this.id).catch(console.error);
         this.eventEmitter.notify({
           type: ActionType.listUpdated,
           data: [null],
@@ -56,18 +57,24 @@ export class CarItem extends BaseComponent<"li"> {
   private readonly form;
   private readonly useElement;
   private readonly carElement;
-  private readonly apiService;
+  private readonly garageService;
   private readonly raceService;
   private readonly eventEmitter;
   private readonly id;
 
   constructor(value: Car) {
     super();
+    this.registerEvent(ActionType.updateCar, (data) => {
+      if (!isCarProperties(data)) {
+        throw new Error("Invalid data");
+      }
+      this.updateCarView(data);
+    });
     const diContainer = DIContainer.getInstance();
     this.raceService = diContainer.getService(ServiceName.RACE);
-    this.apiService = diContainer.getService(ServiceName.API);
+    this.garageService = diContainer.getService(ServiceName.GARAGE);
     this.eventEmitter = diContainer.getService(ServiceName.EVENT_EMITTER);
-    this.form = new UpdateForm(value, this.updateCarView.bind(this));
+    this.form = new UpdateForm(value);
     this.id = value.id;
     this.element.append(this.createCarPanel());
     const { use, svg } = this.createSVG({

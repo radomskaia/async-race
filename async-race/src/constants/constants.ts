@@ -37,11 +37,11 @@ export const MESSAGES = {
 
 export const DELAY_TIME = 300;
 
-export const API_URLS = {
-  WINNERS: "/winners",
-  GARAGE: "/garage",
-  ENGINE: "/engine",
-};
+export enum API_URLS {
+  WINNERS = "/winners",
+  GARAGE = "/garage",
+  ENGINE = "/engine",
+}
 
 export const CAR_KEYS = {
   NAME: "name",

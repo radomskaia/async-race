@@ -5,10 +5,11 @@ import {
   WINNER_KEYS,
   ZERO,
 } from "@/constants/constants.ts";
-import type { Car } from "@/types";
+import type { Car, CarProperties } from "@/types";
 import type {
   ResponseCarData,
   ResponseData,
+  ResponseWinnerData,
   WinnerData,
 } from "@/types/api-service-types.ts";
 import type { RaceData } from "@/types/race-service-types.ts";
@@ -22,6 +23,15 @@ export function isResponseCarData(value: unknown): value is ResponseCarData {
     return false;
   }
   return isCarArray(value.data);
+}
+
+export function isResponseWinnerData(
+  value: unknown,
+): value is ResponseWinnerData {
+  if (!isResponseData(value)) {
+    return false;
+  }
+  return isWinnerArray(value.data);
 }
 
 export function isRaceData(value: unknown): value is RaceData {
@@ -73,28 +83,41 @@ export function isWinnerArray(value: unknown): value is WinnerData[] {
   return value.every((winner) => isWinnerData(winner));
 }
 
-function isCar(value: unknown): value is Car {
+function checkCarProperties(value: unknown): boolean {
+  if (!isObject(value)) {
+    return false;
+  }
+  if (!(CAR_KEYS.NAME in value && CAR_KEYS.COLOR in value)) {
+    return false;
+  }
+
+  return isString(value.name) && isString(value.color);
+}
+
+export function isCarProperties(value: unknown): value is CarProperties {
+  return checkCarProperties(value);
+}
+
+export function isCar(value: unknown): value is Car {
   if (!isObject(value)) {
     return false;
   }
 
-  if (
-    !(CAR_KEYS.NAME in value && CAR_KEYS.COLOR in value && CAR_KEYS.ID in value)
-  ) {
-    return false;
-  }
-
-  return isString(value.name) && isString(value.color) && isNumber(value.id);
+  return (
+    checkCarProperties(value) &&
+    CAR_KEYS.ID in value &&
+    isPositiveNumber(value.id)
+  );
 }
 
-function isResponseData(value: unknown): value is ResponseData {
+export function isResponseData(value: unknown): value is ResponseData {
   if (!isObject(value)) {
     return false;
   }
   return RESPONSE_DATA_KEYS.DATA in value && RESPONSE_DATA_KEYS.COUNT in value;
 }
 
-function isObject(value: unknown): value is object {
+export function isObject(value: unknown): value is object {
   return typeof value === "object" && value !== null;
 }
 

@@ -1,25 +1,17 @@
-import type {
-  Car,
-  CarProperties,
-  CarUpdateCallback,
-  SetPageCallback,
-} from "@/types/index.ts";
+import type { Car, CarProperties, SetPageCallback } from "@/types/index.ts";
 import type { Injectable } from "@/types/di-container-types.ts";
 
 export interface ApiServiceInterface extends Injectable {
   requestEngine: RequestEngine;
-  deleteCar: DeleteCar;
-  updateCar: UpdateCar;
-  createCar: CreateCar;
-  getCars: GetCarsHandler;
+  deleteData: DeleteData;
+  updateData: CreateOrUpdateHandler;
+  createData: CreateOrUpdateHandler;
+  getData: GetDataHandler;
 }
 
-export type DeleteCar = (id: number) => Promise<void>;
+export type DeleteData = (url: string) => Promise<void>;
 
-export type UpdateCar = (
-  { id, ...properties }: Car,
-  callback: CarUpdateCallback,
-) => Promise<void>;
+export type UpdateCar = ({ id, ...properties }: Car) => Promise<void>;
 
 export type CreateCar = (
   properties: CarProperties,
@@ -57,16 +49,50 @@ export type CombinedResponse<T> = (
 
 export interface ResponseCarData extends ResponseData {
   data: Car[];
-  count: number;
 }
+
+export interface ResponseWinnerData extends ResponseData {
+  data: WinnerData[];
+}
+
+export type GetDataHandler = (url: string) => Promise<ResponseData>;
 
 export type GetCarsHandler = (
   page: number,
   limit: number,
 ) => Promise<ResponseCarData>;
 
+export type GetWinnersHandler = (
+  page: number,
+  limit: number,
+  sort: Sort,
+  order: Order,
+) => Promise<ResponseWinnerData>;
+
+export enum Order {
+  ASC = "ASC",
+  DESC = "DESC",
+}
+
+export enum Sort {
+  ID = "id",
+  WINS = "wins",
+  TIME = "time",
+}
+
 export enum EngineStatus {
   STARTED = "started",
   STOPPED = "stopped",
   DRIVE = "drive",
 }
+
+export type CreateOrUpdateHandler = (
+  url: string,
+  data: unknown,
+) => Promise<void>;
+
+export type SendData = (
+  url: string,
+  data: unknown,
+  method: REQUEST_METHOD,
+) => Promise<void>;

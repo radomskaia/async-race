@@ -1,8 +1,13 @@
-import type { WinnerData } from "@/types/api-service-types.ts";
-import { REQUEST_METHOD } from "@/types/api-service-types.ts";
-import { isWinnerArray, isWinnerData } from "@/services/validator.ts";
-import { API_URL, API_URLS, RESPONSE_STATUS } from "@/constants/constants.ts";
-import { ApiService } from "@/services/api-service.ts";
+import type {
+  GetWinnersHandler,
+  WinnerData,
+} from "@/types/api-service-types.ts";
+import {
+  isResponseData,
+  isResponseWinnerData,
+  isWinnerData,
+} from "@/services/validator.ts";
+import { API_URLS } from "@/constants/constants.ts";
 import type { WinnerServiceInterface } from "@/types/winner-service.ts";
 import { ServiceName } from "@/types/di-container-types";
 import { DIContainer } from "@/services/di-container.ts";
@@ -10,14 +15,18 @@ import { ActionType } from "@/types/event-emitter-types.ts";
 
 export class WinnerService implements WinnerServiceInterface {
   public name = ServiceName.WINNER;
-  private url = `${API_URL}${API_URLS.WINNERS}`;
-  private headers = {
-    "Content-Type": `application/json`,
-  };
+  private url = API_URLS.WINNERS;
+  private apiService;
+  private diContainer;
+
+  constructor() {
+    this.diContainer = DIContainer.getInstance();
+    this.apiService = this.diContainer.getService(ServiceName.API);
+  }
 
   private static createData(
     newData: WinnerData,
-    oldData: WinnerData | null,
+    oldData?: WinnerData,
   ): WinnerData {
     if (!oldData) {
       return newData;
@@ -29,66 +38,65 @@ export class WinnerService implements WinnerServiceInterface {
     };
   }
 
-  public async delete(id: number): Promise<void> {
+  public async deleteWinner(id: number): Promise<void> {
     const url = `${this.url}/${id}`;
-
-    try {
-      await ApiService.getResponse(url, {
-        method: REQUEST_METHOD.DELETE,
-      });
-    } catch (error) {
-      console.error(error);
-    }
+    void this.apiService.deleteData(url);
   }
 
   public async create(data: WinnerData): Promise<void> {
+    let initData: WinnerData | undefined;
+    let isCreate = false;
     try {
-      const initData = await this.getWinner(data.id);
-      const isUpdated = !!initData;
-      const url = isUpdated ? `${this.url}/${data.id}` : this.url;
-      const method = isUpdated ? REQUEST_METHOD.PUT : REQUEST_METHOD.POST;
-      const winnerData = WinnerService.createData(data, initData);
-      DIContainer.getInstance()
-        .getService(ServiceName.EVENT_EMITTER)
-        .notify({ type: ActionType.winnerDetected, data: winnerData });
-      const init = {
-        headers: this.headers,
-        method: method,
-        body: JSON.stringify(winnerData),
-      };
-      await ApiService.getResponse(url, init);
+      initData = await this.getWinner(data.id);
     } catch (error) {
-      console.error(error);
+      console.warn(error);
+      isCreate = true;
+    } finally {
+      const newData = WinnerService.createData(data, initData);
+      const url = isCreate ? this.url : `${this.url}/${data.id}`;
+      await (isCreate
+        ? this.apiService.createData(url, newData)
+        : this.apiService.updateData(url, newData));
+      void this.notify(newData);
     }
   }
 
-  public async getWinner(id: number): Promise<WinnerData | null> {
-    try {
-      const response = await ApiService.getResponseData(`${this.url}/${id}`);
-      return isWinnerData(response.data) ? response.data : null;
-    } catch (error) {
-      if (
-        error instanceof Response &&
-        error.status === RESPONSE_STATUS.NOT_FOUND
-      ) {
-        return null;
-      }
-      throw error;
-    }
+  public async notify(winnerData: WinnerData): Promise<void> {
+    const data = await this.diContainer
+      .getService(ServiceName.GARAGE)
+      .getCar(winnerData.id);
+    this.diContainer.getService(ServiceName.EVENT_EMITTER).notify({
+      type: ActionType.winnerDetected,
+      data: { ...data, ...winnerData },
+    });
   }
 
-  public async getWinners(): Promise<WinnerData[]> {
-    try {
-      const response = await ApiService.getResponseData(this.url);
-      if (!isWinnerArray(response.data)) {
-        throw new Error("Invalid data");
-      }
-      return response.data;
-    } catch (error) {
-      if (error instanceof Response) {
-        console.error(error.statusText);
-      }
-      throw error;
+  public async getWinner(id: number): Promise<WinnerData> {
+    const url = `${this.url}/${id}`;
+    let data: unknown;
+
+    data = await this.apiService.getData(url);
+    if (!isResponseData(data) || !isWinnerData(data.data)) {
+      console.log(data);
+      throw new Error("Invalid data");
     }
+    return data.data;
   }
+
+  public getPage: GetWinnersHandler = async (page, limit, sort, order) => {
+    const query = new URLSearchParams({
+      _page: String(page),
+      _limit: String(limit),
+      _sort: sort,
+      _order: order,
+    });
+    const url = `${this.url}?${query}`;
+    let data: unknown;
+
+    data = await this.apiService.getData(url);
+    if (!isResponseWinnerData(data)) {
+      throw new Error("Invalid data");
+    }
+    return data;
+  };
 }

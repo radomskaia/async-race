@@ -1,0 +1,96 @@
+.modal {
+  border: none;
+  border-radius: var(--border-radius);
+  color: inherit;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+.modal::backdrop {
+  padding: 8px;
+  background: var(--overlay);
+  transition: all 0.3s ease-in-out;
+}
+
+.wrapper {
+  padding: 30px;
+  max-width: 1000px;
+  color: inherit;
+  background: var(--content-background);
+}
+
+.modalText {
+  border-radius: var(--border-radius);
+  padding: 20px;
+  background-color: var(--static-white);
+}
+
+.validText {
+  white-space: pre-line;
+}
+
+.form {
+  display: grid;
+  grid-template: "input input" "cancel confirm" / 1fr 1fr;
+}
+
+.input {
+  grid-area: input;
+  padding: 1rem;
+  resize: none;
+}
+
+.modal[open] {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.modalButton {
+  padding: 10px;
+  font-weight: 700;
+  color: var(--static-white);
+}
+
+.closeButton {
+  position: absolute;
+  right: 10px;
+  top: 5px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+html:has(.modal[open]) {
+  overflow-y: hidden;
+}
+
+@keyframes modalOpen {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes backdropOpen {
+  from {
+    background: transparent;
+  }
+
+  to {
+    background: var(--overlay);
+  }
+}
+
+.modal[open] {
+  animation: modalOpen 0.2s ease-in-out;
+}
+
+.modal[open]::backdrop {
+  animation: backdropOpen 0.3s ease-in-out;
+}

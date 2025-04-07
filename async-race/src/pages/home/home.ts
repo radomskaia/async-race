@@ -11,8 +11,6 @@ import { Pagination } from "@/components/pagination/pagination.ts";
 import { IconButton } from "@/components/buttons/icon-button.ts";
 import { DIContainer } from "@/services/di-container.ts";
 import { ServiceName } from "@/types/di-container-types.ts";
-import type { RaceServiceInterface } from "@/types/race-service-types.ts";
-import type { ApiServiceInterface } from "@/types/api-service-types.ts";
 import { RaceButtonConfig } from "@/types/button-types.ts";
 import { ActionType } from "@/types/event-emitter-types.ts";
 
@@ -41,18 +39,18 @@ export class Home extends BaseComponent<"main"> {
       },
     },
   ];
-  private readonly apiService: ApiServiceInterface;
-  private readonly pagination: Pagination;
-  private readonly raceService: RaceServiceInterface;
+  private readonly garageService;
+  private readonly pagination;
+  private readonly raceService;
   private constructor() {
     super();
     const carsList = new CarsList();
     const diContainer = DIContainer.getInstance();
     this.raceService = diContainer.getService(ServiceName.RACE);
-    this.apiService = diContainer.getService(ServiceName.API);
+    this.garageService = diContainer.getService(ServiceName.GARAGE);
     this.pagination = new Pagination(
       "Garage",
-      this.apiService.getCars,
+      this.garageService.getPage,
       carsList.addCarsList,
     );
     this.appendElement(
@@ -146,7 +144,7 @@ export class Home extends BaseComponent<"main"> {
     for (let index = ZERO; index < CARS_COUNT; index++) {
       const name = getRandomCarName();
       const color = getRandomHEX();
-      const request = this.apiService
+      const request = this.garageService
         .createCar({
           name,
           color,

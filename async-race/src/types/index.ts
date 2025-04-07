@@ -34,8 +34,6 @@ export interface CarProperties {
 }
 
 export interface Car extends CarProperties {
-  name: string;
-  color: string;
   id: number;
 }
 
