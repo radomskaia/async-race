@@ -52,3 +52,13 @@ input {
   padding-block: 5px;
   padding-inline: 15px;
 }
+
+@media screen and (max-width: 47rem) {
+  html {
+    font-size: 56.25%;
+  }
+
+  body {
+    font-size: 1.6rem;
+  }
+}

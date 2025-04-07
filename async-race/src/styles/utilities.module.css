@@ -80,3 +80,13 @@
 .positionRelative {
   position: relative;
 }
+
+.marginInline10 {
+  margin-inline: 10px;
+}
+
+@media screen and (max-width: 47rem) {
+  .gap30 {
+    gap: 20px;
+  }
+}

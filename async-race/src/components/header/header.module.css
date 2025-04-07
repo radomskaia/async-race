@@ -7,3 +7,9 @@
 .header {
   margin-block: 2rem;
 }
+
+@media screen and (max-width: 47rem) {
+  .headerPrimary {
+    font-size: 2.4rem;
+  }
+}

@@ -92,6 +92,7 @@ export class Header extends BaseComponent<"header"> {
         utilitiesStyles.flex,
         utilitiesStyles.center,
         utilitiesStyles.gap30,
+        utilitiesStyles.marginInline10,
       ],
     });
   }

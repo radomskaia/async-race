@@ -18,5 +18,6 @@ declare const utilitiesStyles: {
   centerMargin: string;
   width80: string;
   positionRelative: string;
+  marginInline10: string;
 };
 export default utilitiesStyles;
