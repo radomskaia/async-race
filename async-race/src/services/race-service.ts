@@ -1,4 +1,4 @@
-import { AnimateCar } from "@/components/options/animate-car.ts";
+import { AnimateCar } from "@/components/cars/animate-car.ts";
 import { MS_IS_SECOND, ONE, TWO, ZERO } from "@/constants/constants.ts";
 import type {
   AnimationData,

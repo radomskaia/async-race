@@ -23,7 +23,7 @@ export const COLOR = {
 
 export const PAGE_PATH = {
   HOME: "/",
-  DECISION_PICKER: "/winners",
+  WINNERS: "/winners",
   NOT_FOUND: "404",
 } as const;
 
@@ -32,7 +32,7 @@ export const MESSAGES = {
   ROUTE_NOT_FOUND: "Route not found",
   NOT_INITIALIZED: "Class is not initialized",
   PAGE_NOT_FOUND: "Sorry, page not found",
-  INVALID_FORM_DATA: "Invalid form data",
+  INVALID_DATA: "Invalid data",
 } as const;
 
 export const DELAY_TIME = 300;
@@ -81,3 +81,5 @@ export const API_HEADER = {
   "Content-Type": "application/json",
 } as const;
 export const COUNT_HEADER = "X-Total-Count";
+
+export const NOTIFICATION_TIME = 4000;

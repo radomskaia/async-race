@@ -1,4 +1,4 @@
-import type { AnimateCar } from "@/components/options/animate-car.ts";
+import type { AnimateCar } from "@/components/cars/animate-car.ts";
 import type { Injectable } from "@/types/di-container-types.ts";
 
 export interface RaceServiceInterface extends Injectable {

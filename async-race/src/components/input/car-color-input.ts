@@ -1,6 +1,6 @@
 import { BaseInput } from "@/components/input/base-input.ts";
 import { INPUT_NAMES, INPUT_TYPES } from "@/constants/input-constants.ts";
-import styles from "@/components/options/cars-list.module.css";
+import styles from "@/components/cars/cars-list.module.css";
 
 export class CarColorInput extends BaseInput {
   constructor(value?: string) {

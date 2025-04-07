@@ -1,7 +1,7 @@
 import type { AddCarsList, Car } from "@/types";
 import { BaseComponent } from "@/components/base-component.ts";
-import styles from "@/components/options/cars-list.module.css";
-import { CarItem } from "@/components/options/car-item/car-item.ts";
+import styles from "@/components/cars/cars-list.module.css";
+import { CarItem } from "@/components/cars/car-item/car-item.ts";
 import utilitiesStyles from "@/styles/utilities.module.css";
 import { DIContainer } from "@/services/di-container.ts";
 import { ServiceName } from "@/types/di-container-types.ts";

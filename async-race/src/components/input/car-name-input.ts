@@ -4,7 +4,7 @@ import {
   INPUT_TYPES,
   PLACEHOLDER,
 } from "@/constants/input-constants.ts";
-import styles from "@/components/options/cars-list.module.css";
+import styles from "@/components/cars/cars-list.module.css";
 
 export class CarNameInput extends BaseInput {
   constructor(value?: string) {

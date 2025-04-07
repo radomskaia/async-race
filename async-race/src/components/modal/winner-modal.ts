@@ -1,9 +1,9 @@
 import { BaseModal } from "@/components/modal/base/base-modal.ts";
 import utilitiesStyles from "@/styles/utilities.module.css";
-import styles from "@/components/modal/base/modal.module.css";
-import type { WinnerData } from "@/types/api-service-types.ts";
 import { ActionType } from "@/types/event-emitter-types.ts";
-import { isWinnerData } from "@/services/validator.ts";
+import { isModelData } from "@/services/validator.ts";
+import type { ModalData } from "@/types";
+import { NOTIFICATION_TIME, TWO } from "@/constants/constants.ts";
 
 export class WinnerModal extends BaseModal {
   private static instance: WinnerModal | undefined;
@@ -12,8 +12,7 @@ export class WinnerModal extends BaseModal {
     super();
     this.modalWrapper.append(this.addContent());
     this.registerEvent(ActionType.winnerDetected, (winner) => {
-      console.log(winner);
-      if (isWinnerData(winner)) {
+      if (isModelData(winner)) {
         this.showWinnerModal(winner);
       }
     });
@@ -27,16 +26,20 @@ export class WinnerModal extends BaseModal {
     return WinnerModal.instance;
   }
 
-  public showWinnerModal(winner: WinnerData): void {
-    this.changeWinner(JSON.stringify(winner));
+  public showWinnerModal(winner: ModalData): void {
+    this.changeWinner(winner);
     this.showModal();
+
+    setTimeout(() => {
+      this.element.close();
+    }, NOTIFICATION_TIME);
   }
 
-  public changeWinner(winner: string): void {
+  public changeWinner(winner: ModalData): void {
     if (this.modalText) {
-      console.log(this.modalText.textContent);
-      this.modalText.textContent = winner;
-      console.log(this.modalText);
+      this.modalText.textContent = `Winner is 
+            ${winner.name}     with time
+        ${winner.time.toFixed(TWO)}s`;
     }
   }
 
@@ -52,8 +55,7 @@ export class WinnerModal extends BaseModal {
     });
     const text = this.createDOMElement({
       tagName: "p",
-      classList: [styles.validText],
-      textContent: "QQQQQQQ",
+      classList: [],
     });
 
     this.modalText = text;

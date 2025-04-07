@@ -1,5 +1,5 @@
 import { BaseComponent } from "@/components/base-component.ts";
-import styles from "@/components/options/cars-list.module.css";
+import styles from "@/components/cars/cars-list.module.css";
 import utilitiesStyles from "@/styles/utilities.module.css";
 import { IconButton } from "@/components/buttons/icon-button.ts";
 import { BUTTON_TEXT, ICON_PATH } from "@/constants/buttons-constants.ts";
@@ -60,7 +60,7 @@ export abstract class BaseForm extends BaseComponent<"form", number> {
     const name = formData.get(INPUT_NAMES.CAR_NAME);
     const color = formData.get(INPUT_NAMES.CAR_COLOR);
     if (typeof name !== "string" || typeof color !== "string") {
-      throw new TypeError(MESSAGES.INVALID_FORM_DATA);
+      throw new TypeError(MESSAGES.INVALID_DATA);
     }
     return { name, color };
   }

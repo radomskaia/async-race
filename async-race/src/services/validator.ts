@@ -5,7 +5,7 @@ import {
   WINNER_KEYS,
   ZERO,
 } from "@/constants/constants.ts";
-import type { Car, CarProperties } from "@/types";
+import type { Car, CarProperties, ModalData } from "@/types";
 import type {
   ResponseCarData,
   ResponseData,
@@ -107,6 +107,20 @@ export function isCar(value: unknown): value is Car {
     checkCarProperties(value) &&
     CAR_KEYS.ID in value &&
     isPositiveNumber(value.id)
+  );
+}
+
+export function isModelData(value: unknown): value is ModalData {
+  if (!isObject(value)) {
+    return false;
+  }
+  return (
+    CAR_KEYS.ID in value &&
+    isPositiveNumber(value.id) &&
+    CAR_KEYS.NAME in value &&
+    isString(value.name) &&
+    WINNER_KEYS.TIME in value &&
+    isPositiveNumber(value.time)
   );
 }
 

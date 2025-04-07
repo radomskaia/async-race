@@ -38,3 +38,9 @@ export interface Car extends CarProperties {
 }
 
 export type AddCarsList = (list: Car[]) => void;
+
+export interface ModalData {
+  time: number;
+  name: string;
+  id: number;
+}
