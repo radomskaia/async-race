@@ -1,7 +1,5 @@
 import { AnimateCar } from "@/components/options/animate-car.ts";
 import { MS_IS_SECOND, ONE, TWO, ZERO } from "@/constants/constants.ts";
-import { isRaceData } from "@/services/validator.ts";
-import { EngineStatus } from "@/types/api-service-types.ts";
 import type {
   AnimationData,
   RaceData,
@@ -15,8 +13,7 @@ import type { Callback } from "@/types";
 export class RaceService implements RaceServiceInterface {
   public name: ServiceName = ServiceName.RACE;
   private diContainer = DIContainer.getInstance();
-  private requestEngine = this.diContainer.getService(ServiceName.API)
-    .requestEngine;
+  private engineService = this.diContainer.getService(ServiceName.ENGINE);
   private eventEmitter = this.diContainer.getService(ServiceName.EVENT_EMITTER);
   private cars: Record<number, AnimationData> = {};
   private distance = ZERO;
@@ -59,7 +56,7 @@ export class RaceService implements RaceServiceInterface {
   }
 
   public async stopSingleRace(id: number, isRace = false): Promise<void> {
-    void this.requestEngine(EngineStatus.STOPPED, id);
+    void this.engineService.stop(id);
     const car = this.cars[id];
     const index = this.raceStack.indexOf(id);
     if (index >= ZERO) {
@@ -134,10 +131,7 @@ export class RaceService implements RaceServiceInterface {
   }
 
   private async startEngine(id: number): Promise<void> {
-    const data = await this.requestEngine(EngineStatus.STARTED, id);
-    if (!isRaceData(data)) {
-      throw new Error(`Invalid data: ${data}`);
-    }
+    const data = await this.engineService.start(id);
     this.cars[id].duration = RaceService.calculateDuration(data);
     if (this.distance === ZERO && this.container) {
       this.distance =
@@ -164,6 +158,6 @@ export class RaceService implements RaceServiceInterface {
   private async drive(id: number): Promise<void> {
     const controller = new AbortController();
     this.abortControllers.set(id, controller);
-    await this.requestEngine(EngineStatus.DRIVE, id, controller.signal);
+    await this.engineService.drive(id, controller.signal);
   }
 }

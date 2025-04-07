@@ -1,13 +1,11 @@
 import {
   API_HEADER,
   API_URL,
-  API_URLS,
   COUNT_HEADER,
   ZERO,
 } from "@/constants/constants.ts";
 import type {
   ApiServiceInterface,
-  RequestEngine,
   ResponseData,
   DeleteData,
   CombinedResponse,
@@ -23,7 +21,6 @@ export class ApiService implements ApiServiceInterface {
   public name: ServiceName = ServiceName.API;
   private baseUrl = API_URL;
   private headers = API_HEADER;
-  private engine = API_URLS.ENGINE;
 
   public static getResponse: CombinedResponse<Response> = async (
     url,
@@ -60,31 +57,6 @@ export class ApiService implements ApiServiceInterface {
     return total ? Number(total) : ZERO;
   }
 
-  private static getEngineData: CombinedResponse<unknown> = async (
-    url,
-    init?,
-  ) => {
-    const response = await this.getResponse(url, init);
-    if (!response.ok) {
-      throw response;
-    }
-    return await response.json();
-  };
-
-  public requestEngine: RequestEngine = async (status, id, signal?) => {
-    const query = new URLSearchParams({
-      id: String(id),
-      status: status,
-    });
-    const url = `${this.baseUrl}${this.engine}?${query}`;
-    let data;
-    data = await ApiService.getEngineData(url, {
-      method: REQUEST_METHOD.PATCH,
-      signal,
-    });
-    return data;
-  };
-
   public getData: GetDataHandler = async (url) => {
     const baseUrl = `${this.baseUrl}${url}`;
     let data;
@@ -111,21 +83,26 @@ export class ApiService implements ApiServiceInterface {
     }
   };
 
-  public updateData: CreateOrUpdateHandler = async (url, data) => {
-    void this.sendData(url, data, REQUEST_METHOD.PUT);
+  public updateData: CreateOrUpdateHandler = async (url, data, signal?) => {
+    void this.sendData(url, data, REQUEST_METHOD.PUT, signal);
   };
 
-  public createData: CreateOrUpdateHandler = async (url, data) => {
-    void this.sendData(url, data, REQUEST_METHOD.POST);
+  public createData: CreateOrUpdateHandler = async (url, data, signal?) => {
+    void this.sendData(url, data, REQUEST_METHOD.POST, signal);
   };
 
-  private sendData: SendData = async (url, data, method) => {
+  public patchData: CreateOrUpdateHandler = async (url, data, signal?) => {
+    void this.sendData(url, data, REQUEST_METHOD.PATCH, signal);
+  };
+
+  private sendData: SendData = async (url, data, method, signal?) => {
     const baseUrl = `${this.baseUrl}${url}`;
-    const init = {
-      method,
-      headers: this.headers,
-      body: JSON.stringify(data),
-    };
+    const init: RequestInit = { method, signal };
+
+    if (method !== REQUEST_METHOD.PATCH) {
+      init.headers = this.headers;
+      init.body = JSON.stringify(data);
+    }
 
     try {
       const response = await ApiService.getResponse(baseUrl, init);

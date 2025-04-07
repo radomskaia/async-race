@@ -4,6 +4,7 @@ import type { RouterInterface } from "@/types/router-type.ts";
 import type { EventEmitterInterface } from "@/types/event-emitter-types.ts";
 import type { WinnerServiceInterface } from "@/types/winner-service.ts";
 import type { GarageServiceInterface } from "@/types/garage-service-types.ts";
+import type { EngineServiceInterface } from "@/types/engine-service-interface.ts";
 
 export interface DIContainerInterface {
   register(name: ServiceName, service: new () => Injectable): void;
@@ -22,6 +23,7 @@ export enum ServiceName {
   EVENT_EMITTER = "eventEmitter",
   WINNER = "winnerService",
   GARAGE = "garageService",
+  ENGINE = "engineService",
 }
 
 export interface ServiceMap {
@@ -31,4 +33,5 @@ export interface ServiceMap {
   [ServiceName.EVENT_EMITTER]: EventEmitterInterface;
   [ServiceName.WINNER]: WinnerServiceInterface;
   [ServiceName.GARAGE]: GarageServiceInterface;
+  [ServiceName.ENGINE]: EngineServiceInterface;
 }

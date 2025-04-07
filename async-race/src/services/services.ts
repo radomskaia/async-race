@@ -6,6 +6,7 @@ import { RaceService } from "@/services/race-service.ts";
 import { EventEmitter } from "@/services/event-emitter.ts";
 import { WinnerService } from "@/services/winner-service.ts";
 import { GarageService } from "@/services/garage-service.ts";
+import { EngineService } from "@/services/engine-service.ts";
 
 export function registerServices(): void {
   const diContainer = DIContainer.getInstance();
@@ -15,4 +16,5 @@ export function registerServices(): void {
   diContainer.register(ServiceName.EVENT_EMITTER, EventEmitter);
   diContainer.register(ServiceName.WINNER, WinnerService);
   diContainer.register(ServiceName.GARAGE, GarageService);
+  diContainer.register(ServiceName.ENGINE, EngineService);
 }

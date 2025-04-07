@@ -2,10 +2,10 @@ import type { Car, CarProperties, SetPageCallback } from "@/types/index.ts";
 import type { Injectable } from "@/types/di-container-types.ts";
 
 export interface ApiServiceInterface extends Injectable {
-  requestEngine: RequestEngine;
   deleteData: DeleteData;
   updateData: CreateOrUpdateHandler;
   createData: CreateOrUpdateHandler;
+  patchData: CreateOrUpdateHandler;
   getData: GetDataHandler;
 }
 
@@ -89,10 +89,12 @@ export enum EngineStatus {
 export type CreateOrUpdateHandler = (
   url: string,
   data: unknown,
+  signal?: AbortSignal,
 ) => Promise<void>;
 
 export type SendData = (
   url: string,
   data: unknown,
   method: REQUEST_METHOD,
+  signal?: AbortSignal,
 ) => Promise<void>;
