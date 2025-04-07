@@ -4,11 +4,16 @@ import { FormButtonsConfig } from "@/types/button-types.ts";
 import { ActionType } from "@/types/event-emitter-types.ts";
 import { DIContainer } from "@/services/di-container.ts";
 import { ServiceName } from "@/types/di-container-types.ts";
+import { StorageKeys } from "@/types/session-storage-types.ts";
 
 export class CreateForm extends BaseForm {
   constructor() {
     super();
     this.addFormButton();
+    const storage = DIContainer.getInstance().getService(ServiceName.STORAGE);
+    window.addEventListener("beforeunload", () => {
+      storage.save(StorageKeys.carProperties, this.getFormData());
+    });
   }
 
   protected formHandler(event: Event): void {

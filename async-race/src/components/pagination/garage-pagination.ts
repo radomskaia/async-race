@@ -3,7 +3,7 @@ import { ActionType } from "@/types/event-emitter-types.ts";
 import { BasePagination } from "@/components/pagination/base-pagination.ts";
 import { ServiceName } from "@/types/di-container-types.ts";
 import { DIContainer } from "@/services/di-container.ts";
-import { CARS_PER_PAGE, ONE } from "@/constants/constants.ts";
+import { CARS_PER_PAGE } from "@/constants/constants.ts";
 import type { GarageServiceInterface } from "@/types/garage-service-types.ts";
 
 export class GaragePagination extends BasePagination<
@@ -33,7 +33,7 @@ export class GaragePagination extends BasePagination<
       }
     });
 
-    this.setPage(ONE).catch(console.error);
+    this.setPage(null).catch(console.error);
   }
 
   protected async getPaginationData(): Promise<ResponseCarData> {

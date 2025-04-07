@@ -6,8 +6,6 @@ export type SetPageCallback = (
   isCreate?: boolean,
 ) => Promise<void>;
 
-export type TypeGuard<T> = (value: unknown) => value is T;
-
 interface Options {
   classList?: string[];
   attributes?: Record<string, string>;
@@ -21,10 +19,6 @@ export interface ElementOptions<T> extends Options {
 export interface CreateSVGIconOptions
   extends Required<Omit<ButtonOptions, "title">> {
   attributes?: Record<string, string>;
-}
-
-export enum StorageKeys {
-  soundSettings = "soundSettings",
 }
 
 export interface CarProperties {

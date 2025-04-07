@@ -12,6 +12,8 @@ import { getRandomHEX } from "@/utilities/utilities.ts";
 import { ServiceName } from "@/types/di-container-types.ts";
 import { DIContainer } from "@/services/di-container.ts";
 import type { FormButtonsConfig } from "@/types/button-types.ts";
+import { StorageKeys } from "@/types/session-storage-types.ts";
+import { isCarProperties } from "@/services/validator.ts";
 
 export abstract class BaseForm extends BaseComponent<"form", number> {
   protected readonly nameElement;
@@ -21,8 +23,13 @@ export abstract class BaseForm extends BaseComponent<"form", number> {
   );
   protected constructor(value?: Car) {
     super(value?.id);
-    this.nameElement = this.addCarName(value?.name);
-    const color = value?.color ?? getRandomHEX();
+    const storage = DIContainer.getInstance().getService(ServiceName.STORAGE);
+    const carProperties = storage.load(
+      StorageKeys.carProperties,
+      isCarProperties,
+    );
+    this.nameElement = this.addCarName(value?.name ?? carProperties?.name);
+    const color = value?.color ?? carProperties?.color ?? getRandomHEX();
     this.colorElement = new CarColorInput(color);
     this.appendElement(
       this.colorElement.getElement(),

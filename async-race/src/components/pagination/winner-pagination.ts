@@ -3,7 +3,7 @@ import { Order, Sort } from "@/types/api-service-types.ts";
 import { BasePagination } from "@/components/pagination/base-pagination.ts";
 import { ServiceName } from "@/types/di-container-types.ts";
 import { DIContainer } from "@/services/di-container.ts";
-import { ONE, WINNERS_PER_PAGE } from "@/constants/constants.ts";
+import { WINNERS_PER_PAGE } from "@/constants/constants.ts";
 import type { WinnerServiceInterface } from "@/types/winner-service.ts";
 
 export class WinnerPagination extends BasePagination<
@@ -20,7 +20,7 @@ export class WinnerPagination extends BasePagination<
     this.apiHandler = diContainer.getService(ServiceName.WINNER);
     this.limit = WINNERS_PER_PAGE;
 
-    this.setPage(ONE).catch(console.error);
+    this.setPage(null).catch(console.error);
   }
 
   protected getPaginationData(): Promise<ResponseWinnerData> {

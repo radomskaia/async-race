@@ -14,10 +14,6 @@ import type {
 } from "@/types/api-service-types.ts";
 import type { RaceData } from "@/types/race-service-types.ts";
 
-export function isBoolean(value: unknown): value is boolean {
-  return typeof value === "boolean";
-}
-
 export function isResponseCarData(value: unknown): value is ResponseCarData {
   if (!isResponseData(value)) {
     return false;
@@ -135,7 +131,7 @@ export function isObject(value: unknown): value is object {
   return typeof value === "object" && value !== null;
 }
 
-function isString(value: unknown): value is string {
+export function isString(value: unknown): value is string {
   return typeof value === "string";
 }
 
