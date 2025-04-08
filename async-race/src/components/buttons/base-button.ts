@@ -3,9 +3,16 @@ import styles from "./button.module.css";
 import { BaseComponent } from "@/components/base-component.ts";
 import type { ButtonOptions, Callback } from "@/types/button-types.ts";
 import { ActionType } from "@/types/event-emitter-types.ts";
+import { ZERO } from "@/constants/constants.ts";
 
 export class BaseButton extends BaseComponent<"button", ButtonOptions> {
-  private wasDisabled = false;
+  private wasDisabled: {
+    isDisabled: boolean;
+    singleStack: boolean[];
+  } = {
+    isDisabled: false,
+    singleStack: [],
+  };
   constructor(callback?: Callback) {
     super();
     if (callback) {
@@ -26,22 +33,42 @@ export class BaseButton extends BaseComponent<"button", ButtonOptions> {
   }
 
   public addRaceListeners(id?: number, isSingle = false): void {
-    this.registerEvent(ActionType.singleRaceStarted, (eventID) => {
-      if (isSingle && id && eventID !== id) {
-        return;
-      }
-      this.wasDisabled = this.element.disabled;
-      this.disabledElement(true);
-    });
+    if (isSingle) {
+      this.registerEvent(ActionType.singleRaceStarted, (eventID) => {
+        if (eventID !== id) {
+          return;
+        }
+        this.wasDisabled.singleStack.push(true);
+        this.wasDisabled.isDisabled = this.element.disabled;
+        this.disabledElement(true);
+      });
+
+      this.registerEvent(ActionType.singleRaceEnded, (eventID) => {
+        if (eventID !== id && this.wasDisabled) {
+          return;
+        }
+        this.wasDisabled.singleStack.pop();
+        this.disabledElement(false);
+      });
+    } else {
+      this.registerEvent(ActionType.singleRaceStarted, () => {
+        this.wasDisabled.isDisabled = this.element.disabled;
+        this.disabledElement(true);
+      });
+    }
+
     this.registerEvent(ActionType.raceEnded, () => {
-      if (this.wasDisabled) {
+      if (
+        this.wasDisabled.isDisabled &&
+        this.wasDisabled.singleStack.length !== ZERO
+      ) {
         return;
       }
       this.disabledElement(false);
     });
 
     this.registerEvent(ActionType.raceStarted, () => {
-      this.wasDisabled = this.element.disabled;
+      this.wasDisabled.isDisabled = this.element.disabled;
       this.disabledElement(true);
     });
   }

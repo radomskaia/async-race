@@ -20,7 +20,6 @@ export class RaceService implements RaceServiceInterface {
   private distance = ZERO;
   private container: HTMLElement | null = null;
   private raceStack: number[] = [];
-  private isAnimating = false;
   private abortControllers = new Map<number, AbortController>();
 
   private static calculateDuration(data: RaceData): number {
@@ -45,73 +44,36 @@ export class RaceService implements RaceServiceInterface {
   }
 
   public async startSingleRace(id: number): Promise<void> {
-    if (this.raceStack.length === ZERO) {
-      this.eventEmitter.notify({
-        type: ActionType.singleRaceStarted,
-        data: id,
-      });
-    }
+    this.eventEmitter.notify({
+      type: ActionType.singleRaceStarted,
+      data: id,
+    });
     this.raceStack.push(id);
     await this.startEngine(id);
     await this.startAnimation(id);
   }
 
   public async stopSingleRace(id: number, isRace = false): Promise<void> {
-    void this.engineService.stop(id);
     const car = this.cars[id];
+    const rate = (car.duration * TWO) / MS_IS_SECOND;
+    let callback: Callback | undefined;
+    callback = (): void => {
+      this.abortControllers.get(id)?.abort("Race stopped by user");
+      this.abortControllers.delete(id);
+    };
+    car.animation?.reverse(rate, callback);
+
+    await this.engineService.stop(id);
+    car.animation?.stop();
+    this.eventEmitter.notify({ type: ActionType.singleRaceEnded, data: id });
     const index = this.raceStack.indexOf(id);
     if (index >= ZERO) {
       this.raceStack.splice(index, ONE);
     }
-    const rate = (car.duration * TWO) / MS_IS_SECOND;
-    let callback: Callback | undefined;
-    if (this.isAnimating) {
-      callback = (): void => {
-        this.abortControllers.get(id)?.abort("Race stopped by user");
-      };
-    }
 
     this.distance = ZERO;
-    car.animation?.reverse(rate, callback);
     if (this.raceStack.length === ZERO && !isRace) {
       this.eventEmitter.notify({ type: ActionType.raceEnded });
-      this.isAnimating = false;
-    }
-  }
-
-  public async startRace(): Promise<void> {
-    this.isAnimating = true;
-    this.abortControllers.clear();
-    this.eventEmitter.notify({ type: ActionType.raceStarted });
-
-    const startPromises = [];
-    for (const id in this.cars) {
-      startPromises.push(
-        this.startEngine(Number(id)).then(
-          this.startAnimation.bind(this, Number(id)),
-        ),
-      );
-      this.raceStack.push(Number(id));
-    }
-
-    let winnerId;
-    try {
-      winnerId = await Promise.any(startPromises);
-    } catch (error) {
-      errorHandler(error);
-    }
-
-    if (!winnerId) {
-      return;
-    }
-    this.isAnimating = false;
-
-    if (this.raceStack.length > ONE) {
-      void this.diContainer.getService(ServiceName.WINNER).create({
-        id: winnerId,
-        wins: ONE,
-        time: this.cars[winnerId].duration / MS_IS_SECOND,
-      });
     }
   }
 
@@ -129,6 +91,44 @@ export class RaceService implements RaceServiceInterface {
       errorHandler(error);
     }
     this.eventEmitter.notify({ type: ActionType.raceEnded });
+  }
+
+  public async startRace(): Promise<void> {
+    this.abortControllers.clear();
+    const startPromises = [];
+    const animationPromises = [];
+    this.eventEmitter.notify({ type: ActionType.raceStarted });
+    for (const id in this.cars) {
+      const promise = this.startEngine(Number(id));
+      startPromises.push(promise);
+      animationPromises.push(
+        promise.then(() => this.startAnimation(Number(id))),
+      );
+      this.raceStack.push(Number(id));
+    }
+    Promise.allSettled(startPromises).then(() => {
+      this.eventEmitter.notify({ type: ActionType.enginesStarted });
+    });
+
+    const carCount = this.raceStack.length;
+    let winnerId;
+    try {
+      winnerId = await Promise.any(animationPromises);
+    } catch (error) {
+      errorHandler(error);
+    }
+
+    if (!winnerId) {
+      return;
+    }
+
+    if (carCount > ONE && this.abortControllers.size === carCount) {
+      await this.diContainer.getService(ServiceName.WINNER).create({
+        id: winnerId,
+        wins: ONE,
+        time: this.cars[winnerId].duration / MS_IS_SECOND,
+      });
+    }
   }
 
   private async startEngine(id: number): Promise<void> {

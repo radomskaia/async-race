@@ -1,6 +1,7 @@
 import { BaseComponent } from "@/components/base-component.ts";
 import utilitiesStyles from "@/styles/utilities.module.css";
 import styles from "@/components/modal/base/modal.module.css";
+import { errorHandler } from "@/utilities/utilities.ts";
 
 export abstract class BaseModal extends BaseComponent<"dialog"> {
   protected readonly modalWrapper: HTMLDivElement;
@@ -15,7 +16,11 @@ export abstract class BaseModal extends BaseComponent<"dialog"> {
 
   public showModal(): void {
     document.body.append(this.element);
-    this.element.showModal();
+    try {
+      this.element.showModal();
+    } catch (error) {
+      errorHandler(error);
+    }
   }
 
   protected createElement(): HTMLElementTagNameMap["dialog"] {

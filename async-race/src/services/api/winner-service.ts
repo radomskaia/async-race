@@ -54,7 +54,7 @@ export class WinnerService implements WinnerServiceInterface {
     } finally {
       const newData = WinnerService.createData(data, initData);
       const url = isCreate ? this.url : `${this.url}/${data.id}`;
-      await (isCreate
+      void (isCreate
         ? this.apiService.createData(url, newData)
         : this.apiService.updateData(url, newData));
       void this.notify(newData);

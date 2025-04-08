@@ -44,8 +44,9 @@ export class CarItem extends BaseComponent<"li"> {
       callback: (): void => {
         this.raceService.startSingleRace(this.id).catch(errorHandler);
       },
-      action: (button: IconButton): void =>
-        button.addRaceListeners(this.id, true),
+      action: (button: IconButton): void => {
+        button.addRaceListeners(this.id, true);
+      },
     },
     {
       title: ControlsButtonConfig.STOP_ENGINE,
@@ -158,17 +159,21 @@ export class CarItem extends BaseComponent<"li"> {
   }
 
   private registerStopButton(button: IconButton): void {
-    button.registerEvent(ActionType.raceStarted, () => {
-      button.disabledElement(false);
-    });
     button.registerEvent(ActionType.singleRaceStarted, (eventID) => {
       if (eventID === this.id) {
         button.disabledElement(false);
       }
     });
+
     button.registerEvent(ActionType.raceEnded, () => {
       button.disabledElement(true);
     });
+    button.registerEvent(ActionType.singleRaceEnded, (eventID) => {
+      if (eventID === this.id) {
+        button.disabledElement(true);
+      }
+    });
+    button.addListener(() => button.disabledElement(true));
     button.disabledElement(true);
   }
 }

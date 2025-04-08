@@ -25,9 +25,6 @@ export class AnimateCar {
   }
 
   public stop(): void {
-    if (!this.isAnimating) {
-      return;
-    }
     this.isAnimating = false;
     this.animation?.cancel();
   }

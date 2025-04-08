@@ -1,6 +1,5 @@
 import { BaseComponent } from "@/components/base-component.ts";
 import utilitiesStyles from "@/styles/utilities.module.css";
-import type { Callback } from "@/types";
 import { BUTTON_TEXT, ICON_PATH } from "@/constants/buttons-constants.ts";
 import styles from "@/pages/home/home.module.css";
 import { CarsList } from "@/components/cars/cars-list.ts";
@@ -14,6 +13,7 @@ import {
 import { IconButton } from "@/components/buttons/icon-button.ts";
 import { DIContainer } from "@/services/di-container.ts";
 import { ServiceName } from "@/types/di-container-types.ts";
+import type { Callback } from "@/types/button-types.ts";
 import { RaceButtonConfig } from "@/types/button-types.ts";
 import { ActionType } from "@/types/event-emitter-types.ts";
 import { GaragePagination } from "@/components/pagination/garage-pagination.ts";
@@ -26,19 +26,19 @@ export class Home extends BaseComponent<"div"> {
     {
       title: RaceButtonConfig.START_RACE,
       callback: (): void => {
-        void this.raceService.startRace();
+        this.raceService.startRace().catch(errorHandler);
       },
     },
     {
       title: RaceButtonConfig.RESET,
       callback: (): void => {
-        void this.raceService.stopRace();
+        this.raceService.stopRace().catch(errorHandler);
       },
     },
     {
       title: RaceButtonConfig.GENERATE_CARS,
       callback: (): void => {
-        this.generateCars();
+        this.generateCars().catch(errorHandler);
       },
     },
   ];
@@ -84,7 +84,7 @@ export class Home extends BaseComponent<"div"> {
         callback,
       );
       if (title === RaceButtonConfig.RESET) {
-        button.registerEvent(ActionType.raceStarted, () => {
+        button.registerEvent(ActionType.enginesStarted, () => {
           button.disabledElement(false);
         });
         button.registerEvent(ActionType.singleRaceStarted, () => {
@@ -94,6 +94,7 @@ export class Home extends BaseComponent<"div"> {
           button.disabledElement(true);
         });
         button.disabledElement(true);
+        button.addListener((): void => button.disabledElement(true));
       } else {
         button.addRaceListeners();
       }
