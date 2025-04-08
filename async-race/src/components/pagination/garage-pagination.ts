@@ -22,12 +22,10 @@ export class GaragePagination extends BasePagination<
     this.limit = CARS_PER_PAGE;
 
     this.registerEvent(ActionType.listUpdated, async (data) => {
-      console.log("listUpdated");
       if (!Array.isArray(data)) {
         return;
       }
       const [newPage, isCreate] = data;
-      console.log(newPage, isCreate);
       if (
         (typeof newPage === "number" || newPage === null) &&
         (typeof isCreate === "boolean" || isCreate === undefined)
