@@ -1,5 +1,5 @@
 import { BaseForm } from "@/components/car-form/base-form.ts";
-import { getRandomHEX } from "@/utilities/utilities.ts";
+import { errorHandler, getRandomHEX } from "@/utilities/utilities.ts";
 import { FormButtonsConfig } from "@/types/button-types.ts";
 import { ActionType } from "@/types/event-emitter-types.ts";
 import { DIContainer } from "@/services/di-container.ts";
@@ -25,7 +25,7 @@ export class CreateForm extends BaseForm {
     try {
       formData = this.getFormData();
     } catch (error) {
-      console.error(error);
+      errorHandler(error);
       return;
     }
 

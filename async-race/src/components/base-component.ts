@@ -42,7 +42,7 @@ export abstract class BaseComponent<
   public update(event: Action): void {
     const callbackArray = this.listeners.get(event.type);
     if (!callbackArray) {
-      console.error("No listeners for event type");
+      console.info("No listeners for event type");
       return;
     }
     for (const callback of callbackArray) {

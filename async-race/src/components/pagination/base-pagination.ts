@@ -18,6 +18,7 @@ import type { GarageServiceInterface } from "@/types/garage-service-types.ts";
 import { DIContainer } from "@/services/di-container.ts";
 import { ServiceName } from "@/types/di-container-types.ts";
 import { isPositiveNumber } from "@/services/validator.ts";
+import { errorHandler } from "@/utilities/utilities.ts";
 
 export abstract class BasePagination<
   T extends WinnerServiceInterface | GarageServiceInterface,
@@ -32,7 +33,7 @@ export abstract class BasePagination<
     {
       name: PaginationButtonConfig.FIRST,
       callback: (): void => {
-        this.setPage(ONE).catch(console.error);
+        this.setPage(ONE).catch(errorHandler);
       },
     },
     {
@@ -40,7 +41,7 @@ export abstract class BasePagination<
       callback: (): void => {
         let newPage = this.currentPage - ONE;
         newPage = newPage <= ZERO ? ONE : newPage;
-        this.setPage(newPage).catch(console.error);
+        this.setPage(newPage).catch(errorHandler);
       },
     },
     {
@@ -48,13 +49,13 @@ export abstract class BasePagination<
       callback: (): void => {
         let newPage = this.currentPage + ONE;
         newPage = Math.min(newPage, this.lastPage);
-        this.setPage(newPage).catch(console.error);
+        this.setPage(newPage).catch(errorHandler);
       },
     },
     {
       name: PaginationButtonConfig.LAST,
       callback: (): void => {
-        this.setPage(this.lastPage).catch(console.error);
+        this.setPage(this.lastPage).catch(errorHandler);
       },
     },
   ];

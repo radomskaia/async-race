@@ -3,6 +3,7 @@ import type { Car } from "@/types";
 import type { BaseButton } from "@/components/buttons/base-button.ts";
 import { BaseForm } from "@/components/car-form/base-form.ts";
 import { FormButtonsConfig } from "@/types/button-types.ts";
+import { errorHandler } from "@/utilities/utilities.ts";
 
 export class UpdateForm extends BaseForm {
   private formButtons: BaseButton[] = [];
@@ -27,13 +28,13 @@ export class UpdateForm extends BaseForm {
     try {
       formData = this.getFormData();
     } catch (error) {
-      console.error(error);
+      errorHandler(error);
       this.resetForm();
       return;
     }
     this.toggleUpdateState();
     this.apiService.updateCar({ id, ...formData }).catch((error) => {
-      console.error(error);
+      errorHandler(error);
       this.resetForm();
     });
   }

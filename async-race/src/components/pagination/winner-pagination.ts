@@ -5,6 +5,7 @@ import { ServiceName } from "@/types/di-container-types.ts";
 import { DIContainer } from "@/services/di-container.ts";
 import { WINNERS_PER_PAGE } from "@/constants/constants.ts";
 import type { WinnerServiceInterface } from "@/types/winner-service.ts";
+import { errorHandler } from "@/utilities/utilities.ts";
 
 export class WinnerPagination extends BasePagination<
   WinnerServiceInterface,
@@ -23,17 +24,17 @@ export class WinnerPagination extends BasePagination<
     this.limit = WINNERS_PER_PAGE;
     this.order = order;
     this.sort = sort;
-    this.setPage(null).catch(console.error);
+    this.setPage(null).catch(errorHandler);
   }
 
   public setOrder(order: Order): void {
     this.order = order;
-    this.setPage(null).catch(console.error);
+    this.setPage(null).catch(errorHandler);
   }
 
   public setSort(sort: Sort): void {
     this.sort = sort;
-    this.setPage(null).catch(console.error);
+    this.setPage(null).catch(errorHandler);
   }
 
   protected getPaginationData(): Promise<ResponseWinnerData> {

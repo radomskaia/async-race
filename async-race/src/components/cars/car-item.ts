@@ -12,6 +12,7 @@ import { ActionType } from "@/types/event-emitter-types.ts";
 import { DIContainer } from "@/services/di-container.ts";
 import { ServiceName } from "@/types/di-container-types.ts";
 import { isCar } from "@/services/validator.ts";
+import { errorHandler } from "@/utilities/utilities.ts";
 
 export class CarItem extends BaseComponent<"li"> {
   private controlsButtons: Record<string, BaseButton> = {};
@@ -23,7 +24,7 @@ export class CarItem extends BaseComponent<"li"> {
     {
       title: ControlsButtonConfig.DELETE,
       callback: async (): Promise<void> => {
-        await this.garageService.deleteCar(this.id).catch(console.error);
+        await this.garageService.deleteCar(this.id).catch(errorHandler);
         this.eventEmitter.notify({
           type: ActionType.listUpdated,
           data: [null],
@@ -41,7 +42,7 @@ export class CarItem extends BaseComponent<"li"> {
     {
       title: ControlsButtonConfig.START_ENGINE,
       callback: (): void => {
-        this.raceService.startSingleRace(this.id).catch(console.error);
+        this.raceService.startSingleRace(this.id).catch(errorHandler);
       },
       action: (button: IconButton): void =>
         button.addRaceListeners(this.id, true),
@@ -49,7 +50,7 @@ export class CarItem extends BaseComponent<"li"> {
     {
       title: ControlsButtonConfig.STOP_ENGINE,
       callback: (): void => {
-        this.raceService.stopSingleRace(this.id).catch(console.error);
+        this.raceService.stopSingleRace(this.id).catch(errorHandler);
       },
       action: (button: IconButton): void => this.registerStopButton(button),
     },

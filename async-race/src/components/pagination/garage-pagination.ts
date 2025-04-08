@@ -5,6 +5,7 @@ import { ServiceName } from "@/types/di-container-types.ts";
 import { DIContainer } from "@/services/di-container.ts";
 import { CARS_PER_PAGE } from "@/constants/constants.ts";
 import type { GarageServiceInterface } from "@/types/garage-service-types.ts";
+import { errorHandler } from "@/utilities/utilities.ts";
 
 export class GaragePagination extends BasePagination<
   GarageServiceInterface,
@@ -21,19 +22,21 @@ export class GaragePagination extends BasePagination<
     this.limit = CARS_PER_PAGE;
 
     this.registerEvent(ActionType.listUpdated, async (data) => {
+      console.log("listUpdated");
       if (!Array.isArray(data)) {
         return;
       }
       const [newPage, isCreate] = data;
+      console.log(newPage, isCreate);
       if (
         (typeof newPage === "number" || newPage === null) &&
         (typeof isCreate === "boolean" || isCreate === undefined)
       ) {
-        await this.setPage(newPage, isCreate).catch(console.error);
+        await this.setPage(newPage, isCreate).catch(errorHandler);
       }
     });
 
-    this.setPage(null).catch(console.error);
+    this.setPage(null).catch(errorHandler);
   }
 
   protected async getPaginationData(): Promise<ResponseCarData> {
@@ -44,7 +47,7 @@ export class GaragePagination extends BasePagination<
         limit: this.limit,
       });
     } catch (error) {
-      console.error(error);
+      errorHandler(error);
     }
     if (!data) {
       throw new Error("Invalid data");

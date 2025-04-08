@@ -9,6 +9,7 @@ import { DIContainer } from "@/services/di-container.ts";
 import { ServiceName } from "@/types/di-container-types.ts";
 import { ActionType } from "@/types/event-emitter-types.ts";
 import type { Callback } from "@/types";
+import { errorHandler } from "@/utilities/utilities.ts";
 
 export class RaceService implements RaceServiceInterface {
   public name: ServiceName = ServiceName.RACE;
@@ -97,7 +98,7 @@ export class RaceService implements RaceServiceInterface {
     try {
       winnerId = await Promise.any(startPromises);
     } catch (error) {
-      console.info(error);
+      errorHandler(error);
     }
 
     if (!winnerId) {
@@ -125,7 +126,7 @@ export class RaceService implements RaceServiceInterface {
     try {
       await Promise.allSettled(stopPromises);
     } catch (error) {
-      console.info(error);
+      errorHandler(error);
     }
     this.eventEmitter.notify({ type: ActionType.raceEnded });
   }

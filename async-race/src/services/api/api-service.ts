@@ -16,6 +16,7 @@ import type {
 import { REQUEST_METHOD } from "@/types/api-service-types.ts";
 import { ServiceName } from "@/types/di-container-types.ts";
 import { isResponseData } from "@/services/validator.ts";
+import { errorHandler } from "@/utilities/utilities.ts";
 
 export class ApiService implements ApiServiceInterface {
   public name: ServiceName = ServiceName.API;
@@ -79,7 +80,7 @@ export class ApiService implements ApiServiceInterface {
         method: REQUEST_METHOD.DELETE,
       });
     } catch (error) {
-      console.error(error);
+      errorHandler(error);
     }
   };
 

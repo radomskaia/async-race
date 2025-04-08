@@ -6,7 +6,11 @@ import styles from "@/pages/home/home.module.css";
 import { CarsList } from "@/components/cars/cars-list.ts";
 import { CreateForm } from "@/components/car-form/create-form.ts";
 import { CARS_COUNT, ZERO } from "@/constants/constants.ts";
-import { getRandomCarName, getRandomHEX } from "@/utilities/utilities.ts";
+import {
+  errorHandler,
+  getRandomCarName,
+  getRandomHEX,
+} from "@/utilities/utilities.ts";
 import { IconButton } from "@/components/buttons/icon-button.ts";
 import { DIContainer } from "@/services/di-container.ts";
 import { ServiceName } from "@/types/di-container-types.ts";
@@ -137,7 +141,7 @@ export class Home extends BaseComponent<"div"> {
           name,
           color,
         })
-        .catch(console.error);
+        .catch(errorHandler);
       requests.push(request);
     }
     await Promise.all(requests);
