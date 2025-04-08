@@ -56,7 +56,10 @@ export class GarageService implements GarageServiceInterface {
   public updateCar: UpdateCar = async ({ id, ...properties }) => {
     const url = `${this.url}/${id}`;
     await this.apiService.updateData(url, properties);
-    this.eventEmitter.notify({ type: ActionType.updateCar, data: properties });
+    this.eventEmitter.notify({
+      type: ActionType.updateCar,
+      data: { id, ...properties },
+    });
   };
 
   public async getCar(id: number): Promise<Car> {

@@ -11,7 +11,7 @@ import { ControlsButtonConfig } from "@/types/button-types.ts";
 import { ActionType } from "@/types/event-emitter-types.ts";
 import { DIContainer } from "@/services/di-container.ts";
 import { ServiceName } from "@/types/di-container-types.ts";
-import { isCarProperties } from "@/services/validator.ts";
+import { isCar } from "@/services/validator.ts";
 
 export class CarItem extends BaseComponent<"li"> {
   private controlsButtons: Record<string, BaseButton> = {};
@@ -65,10 +65,12 @@ export class CarItem extends BaseComponent<"li"> {
   constructor(value: Car) {
     super();
     this.registerEvent(ActionType.updateCar, (data) => {
-      if (!isCarProperties(data)) {
+      if (!isCar(data)) {
         throw new Error("Invalid data");
       }
-      this.updateCarView(data);
+      if (data.id === value.id) {
+        this.updateCarView(data);
+      }
     });
     const diContainer = DIContainer.getInstance();
     this.raceService = diContainer.getService(ServiceName.RACE);
