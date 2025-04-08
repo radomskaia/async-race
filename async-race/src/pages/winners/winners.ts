@@ -39,6 +39,10 @@ export class Winners extends BaseComponent<"div"> {
       storage.save(StorageKeys.isASC, this.isASC);
       storage.save(StorageKeys.sort, this.sort);
     });
+    this.registerEvent(ActionType.changeRoute, () => {
+      storage.save(StorageKeys.isASC, this.isASC);
+      storage.save(StorageKeys.sort, this.sort);
+    });
 
     this.registerEvent(ActionType.paginationUpdated, (data) => {
       if (isFullData(data)) {

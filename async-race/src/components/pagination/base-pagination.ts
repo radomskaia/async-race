@@ -75,6 +75,9 @@ export abstract class BasePagination<
     window.addEventListener("beforeunload", () => {
       storage.save(pageName, this.currentPage);
     });
+    this.registerEvent(ActionType.changeRoute, () => {
+      storage.save(pageName, this.currentPage);
+    });
 
     this.counterElement = this.createDOMElement({
       tagName: "span",

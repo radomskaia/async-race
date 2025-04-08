@@ -14,6 +14,9 @@ export class CreateForm extends BaseForm {
     window.addEventListener("beforeunload", () => {
       storage.save(StorageKeys.carProperties, this.getFormData());
     });
+    this.registerEvent(ActionType.changeRoute, () => {
+      storage.save(StorageKeys.carProperties, this.getFormData());
+    });
   }
 
   protected formHandler(event: Event): void {
