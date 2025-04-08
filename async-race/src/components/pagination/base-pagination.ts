@@ -4,7 +4,7 @@ import type { BaseButton } from "@/components/buttons/base-button.ts";
 import { type Callback } from "@/types";
 import { IconButton } from "@/components/buttons/icon-button.ts";
 import { BUTTON_TEXT, ICON_PATH } from "@/constants/buttons-constants.ts";
-import styles from "@/components/cars/cars-list.module.css";
+import carStyles from "@/components/cars/cars-list.module.css";
 import { ONE, ZERO } from "@/constants/constants.ts";
 import { PaginationButtonConfig } from "@/types/button-types.ts";
 import type { EventEmitterInterface } from "@/types/event-emitter-types.ts";
@@ -174,7 +174,7 @@ export abstract class BasePagination<
         {
           title: BUTTON_TEXT[config.name],
           path: ICON_PATH[config.name],
-          classList: [styles.icon],
+          classList: [carStyles.icon],
         },
         config.callback,
       );

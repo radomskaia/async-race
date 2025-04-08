@@ -1,6 +1,6 @@
 import type { AddCarsList, Car } from "@/types";
 import { BaseComponent } from "@/components/base-component.ts";
-import styles from "@/components/cars/cars-list.module.css";
+import carStyles from "@/components/cars/cars-list.module.css";
 import { CarItem } from "@/components/cars/car-item.ts";
 import utilitiesStyles from "@/styles/utilities.module.css";
 import { DIContainer } from "@/services/di-container.ts";
@@ -41,7 +41,7 @@ export class CarsList extends BaseComponent<"ul"> {
     return this.createDOMElement({
       tagName: "ul",
       classList: [
-        styles.carsList,
+        carStyles.carsList,
         utilitiesStyles.flex,
         utilitiesStyles.flexColumn,
         utilitiesStyles.gap20,

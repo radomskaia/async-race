@@ -7,6 +7,7 @@ import {
 } from "@/constants/constants.ts";
 import type { Car, CarProperties, ModalData } from "@/types";
 import type {
+  FullData,
   ResponseCarData,
   ResponseData,
   ResponseWinnerData,
@@ -105,6 +106,10 @@ export function isCar(value: unknown): value is Car {
     CAR_KEYS.ID in value &&
     isPositiveNumber(value.id)
   );
+}
+
+export function isFullData(value: unknown): value is FullData[] {
+  return isCarArray(value) && isWinnerArray(value);
 }
 
 export function isModelData(value: unknown): value is ModalData {

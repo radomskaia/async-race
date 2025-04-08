@@ -1,4 +1,4 @@
-declare const styles: {
+declare const carStyles: {
   carsList: string;
   icon: string;
   carIcon: string;
@@ -7,4 +7,4 @@ declare const styles: {
   formButton: string;
   form: string;
 };
-export default styles;
+export default carStyles;

@@ -1,5 +1,5 @@
 import { BaseComponent } from "@/components/base-component.ts";
-import styles from "@/components/cars/cars-list.module.css";
+import carStyles from "@/components/cars/cars-list.module.css";
 import utilitiesStyles from "@/styles/utilities.module.css";
 import { IconButton } from "@/components/buttons/icon-button.ts";
 import { BUTTON_TEXT, ICON_PATH } from "@/constants/buttons-constants.ts";
@@ -41,14 +41,14 @@ export abstract class BaseForm extends BaseComponent<"form", number> {
     return new IconButton({
       title: BUTTON_TEXT[buttonText],
       path: ICON_PATH[buttonText],
-      classList: [styles.formButton],
+      classList: [carStyles.formButton],
     });
   }
 
   protected createElement(id: number): HTMLElementTagNameMap["form"] {
     const form = this.createDOMElement({
       tagName: "form",
-      classList: [styles.form],
+      classList: [carStyles.form],
     });
     this.addClassList(
       [

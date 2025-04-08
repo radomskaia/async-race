@@ -2,7 +2,7 @@ import { BaseComponent } from "@/components/base-component.ts";
 import type { BaseButton } from "@/components/buttons/base-button.ts";
 import { BUTTON_TEXT, ICON_PATH } from "@/constants/buttons-constants.ts";
 import { IconButton } from "@/components/buttons/icon-button.ts";
-import styles from "@/components/cars/cars-list.module.css";
+import carStyles from "@/components/cars/cars-list.module.css";
 import type { Car, CarProperties } from "@/types";
 import utilitiesStyles from "@/styles/utilities.module.css";
 import { UpdateForm } from "@/components/car-form/update-form.ts";
@@ -78,7 +78,7 @@ export class CarItem extends BaseComponent<"li"> {
     this.id = value.id;
     this.element.append(this.createCarPanel());
     const { use, svg } = this.createSVG({
-      classList: [styles.carIcon],
+      classList: [carStyles.carIcon],
       path: ICON_PATH.CAR,
     });
     this.useElement = use;
@@ -142,7 +142,7 @@ export class CarItem extends BaseComponent<"li"> {
         {
           title: BUTTON_TEXT[title],
           path: ICON_PATH[title],
-          classList: [styles.icon],
+          classList: [carStyles.icon],
         },
         callback,
       );

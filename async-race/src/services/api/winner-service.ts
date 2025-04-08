@@ -1,4 +1,5 @@
 import type {
+  FullData,
   GetWinnersHandler,
   WinnerData,
 } from "@/types/api-service-types.ts";
@@ -97,6 +98,22 @@ export class WinnerService implements WinnerServiceInterface {
     if (!isResponseWinnerData(data)) {
       throw new Error("Invalid data");
     }
-    return data;
+    const result: {
+      count: number;
+      data: FullData[];
+    } = {
+      count: data.count,
+      data: [],
+    };
+    for (const { id } of data.data) {
+      const carData = await this.diContainer
+        .getService(ServiceName.GARAGE)
+        .getCar(id);
+      const winner = data.data.find((item) => item.id === id);
+      if (winner) {
+        result.data.push({ ...winner, ...carData });
+      }
+    }
+    return result;
   };
 }

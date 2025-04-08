@@ -78,7 +78,10 @@ export type GetCarsHandler = (
 
 export type GetWinnersHandler = (
   parameters: SortedPaginationParameters,
-) => Promise<ResponseWinnerData>;
+) => Promise<{
+  count: number;
+  data: FullData[];
+}>;
 
 export enum Order {
   ASC = "ASC",
@@ -109,3 +112,5 @@ export type SendData = (
   method: REQUEST_METHOD,
   signal?: AbortSignal,
 ) => Promise<unknown>;
+
+export interface FullData extends WinnerData, Car {}
