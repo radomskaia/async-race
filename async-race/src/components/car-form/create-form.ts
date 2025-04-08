@@ -31,16 +31,14 @@ export class CreateForm extends BaseForm {
 
     this.apiService
       .createCar(formData)
-      .catch((error) => {
-        console.error(error);
-      })
-      .finally(() => {
+      .then(() => {
         this.nameElement.resetValue();
         this.colorElement.value = getRandomHEX();
-      });
-    DIContainer.getInstance()
-      .getService(ServiceName.EVENT_EMITTER)
-      .notify({ type: ActionType.listUpdated, data: [null, true] });
+        DIContainer.getInstance()
+          .getService(ServiceName.EVENT_EMITTER)
+          .notify({ type: ActionType.listUpdated, data: [null, true] });
+      })
+      .catch(errorHandler);
   }
 
   private addFormButton(): void {

@@ -37,8 +37,4 @@ export class EventEmitter implements EventEmitterInterface {
       }
     }
   }
-
-  // private showObservers(type: ActionType): void {
-  //   console.log(type, this.observers.get(type));
-  // }
 }
