@@ -103,16 +103,15 @@ export abstract class BasePagination<
     this.setPageNumber();
     const data = await this.getPaginationData();
     this.setElementsCount(data.count);
+    const oldLastPage = this.lastPage;
     this.setLastPage(data.count);
     if (this.currentPage > this.lastPage) {
       this.currentPage = this.lastPage + ONE;
     }
-
     if (data.data.length === ZERO && this.currentPage > ONE) {
       await this.setPage(this.currentPage - ONE);
       return;
     }
-    const oldLastPage = this.lastPage;
     this.updateButtonsState();
     if (isCreate && this.currentPage !== oldLastPage) {
       return;
