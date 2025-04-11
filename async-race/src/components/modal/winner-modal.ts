@@ -3,7 +3,12 @@ import utilitiesStyles from "@/styles/utilities.module.css";
 import { ActionType } from "@/types/event-emitter-types.ts";
 import { isModelData } from "@/services/validator.ts";
 import type { ModalData } from "@/types";
-import { NOTIFICATION_TIME, TWO } from "@/constants/constants.ts";
+import {
+  NOTIFICATION_TIME,
+  TIME_MESSAGE,
+  TWO,
+  WINNER_MESSAGE,
+} from "@/constants/constants.ts";
 
 export class WinnerModal extends BaseModal {
   private static instance: WinnerModal | undefined;
@@ -37,9 +42,7 @@ export class WinnerModal extends BaseModal {
 
   public changeWinner(winner: ModalData): void {
     if (this.modalText) {
-      this.modalText.textContent = `Winner is 
-            ${winner.name}     with time
-        ${winner.time.toFixed(TWO)}s`;
+      this.modalText.textContent = `${WINNER_MESSAGE} ${winner.name} ${TIME_MESSAGE} ${winner.time.toFixed(TWO)}s`;
     }
   }
 

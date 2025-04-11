@@ -1,5 +1,11 @@
 import { AnimateCar } from "@/services/race/animate-car.ts";
-import { MS_IS_SECOND, ONE, TWO, ZERO } from "@/constants/constants.ts";
+import {
+  ERROR_MESSAGES,
+  MS_IS_SECOND,
+  ONE,
+  TWO,
+  ZERO,
+} from "@/constants/constants.ts";
 import type {
   AnimationData,
   RaceData,
@@ -58,7 +64,7 @@ export class RaceService implements RaceServiceInterface {
     const rate = (car.duration * TWO) / MS_IS_SECOND;
     let callback: Callback | undefined;
     callback = (): void => {
-      this.abortControllers.get(id)?.abort("Race stopped by user");
+      this.abortControllers.get(id)?.abort(ERROR_MESSAGES.RACE_STOPPED);
       this.abortControllers.delete(id);
     };
     car.animation?.reverse(rate, callback);

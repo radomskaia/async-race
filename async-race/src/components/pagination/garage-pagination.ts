@@ -3,9 +3,14 @@ import { ActionType } from "@/types/event-emitter-types.ts";
 import { BasePagination } from "@/components/pagination/base-pagination.ts";
 import { ServiceName } from "@/types/di-container-types.ts";
 import { DIContainer } from "@/services/di-container.ts";
-import { CARS_PER_PAGE } from "@/constants/constants.ts";
+import {
+  CARS_PER_PAGE,
+  ERROR_MESSAGES,
+  PAGE_NAME,
+} from "@/constants/constants.ts";
 import type { GarageServiceInterface } from "@/types/garage-service-types.ts";
 import { errorHandler } from "@/utilities/utilities.ts";
+import { isBoolean, isNumber } from "@/services/validator.ts";
 
 export class GaragePagination extends BasePagination<
   GarageServiceInterface,
@@ -15,7 +20,7 @@ export class GaragePagination extends BasePagination<
   protected eventEmitter;
   protected apiHandler;
   constructor() {
-    super("Garage");
+    super(PAGE_NAME.GARAGE);
     const diContainer = DIContainer.getInstance();
     this.eventEmitter = diContainer.getService(ServiceName.EVENT_EMITTER);
     this.apiHandler = diContainer.getService(ServiceName.GARAGE);
@@ -27,8 +32,8 @@ export class GaragePagination extends BasePagination<
       }
       const [newPage, isCreate] = data;
       if (
-        (typeof newPage === "number" || newPage === null) &&
-        (typeof isCreate === "boolean" || isCreate === undefined)
+        (isNumber(newPage) || newPage === null) &&
+        (isBoolean(isCreate) || isCreate === undefined)
       ) {
         await this.setPage(newPage, isCreate).catch(errorHandler);
       }
@@ -48,7 +53,7 @@ export class GaragePagination extends BasePagination<
       errorHandler(error);
     }
     if (!data) {
-      throw new Error("Invalid data");
+      throw new Error(ERROR_MESSAGES.INVALID_DATA);
     }
     return data;
   }

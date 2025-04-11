@@ -1,5 +1,6 @@
 import {
   EMPTY_STRING,
+  ERROR_MESSAGES,
   MESSAGES,
   PAGE_PATH,
   SYMBOLS,
@@ -41,7 +42,7 @@ export class Router implements RouterInterface {
     }
     globalThis.location.hash = path;
     if (!this.container) {
-      throw new Error("Container is not set");
+      throw new Error(ERROR_MESSAGES.CONTAINER_NOT_FOUND);
     }
     DIContainer.getInstance()
       .getService(ServiceName.EVENT_EMITTER)
@@ -62,7 +63,7 @@ export class Router implements RouterInterface {
 
   private routerChange(): void {
     const hash: string =
-      globalThis.location.hash.slice(SYMBOLS.hash.length) || PAGE_PATH.HOME;
+      globalThis.location.hash.slice(SYMBOLS.HASH.length) || PAGE_PATH.HOME;
     if (hash === this.currentPath) {
       return;
     }

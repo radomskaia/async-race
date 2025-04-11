@@ -8,7 +8,7 @@ import {
   isResponseWinnerData,
   isWinnerData,
 } from "@/services/validator.ts";
-import { API_URLS } from "@/constants/constants.ts";
+import { API_URLS, ERROR_MESSAGES } from "@/constants/constants.ts";
 import type { WinnerServiceInterface } from "@/types/winner-service.ts";
 import { ServiceName } from "@/types/di-container-types.ts";
 import { DIContainer } from "@/services/di-container.ts";
@@ -79,7 +79,7 @@ export class WinnerService implements WinnerServiceInterface {
     data = await this.apiService.getData(url);
     if (!isResponseData(data) || !isWinnerData(data.data)) {
       console.log(data);
-      throw new Error("Invalid data");
+      throw new Error(ERROR_MESSAGES.INVALID_DATA);
     }
     return data.data;
   }
@@ -96,7 +96,7 @@ export class WinnerService implements WinnerServiceInterface {
 
     data = await this.apiService.getData(url);
     if (!isResponseWinnerData(data)) {
-      throw new Error("Invalid data");
+      throw new Error(ERROR_MESSAGES.INVALID_DATA);
     }
     const result: {
       count: number;

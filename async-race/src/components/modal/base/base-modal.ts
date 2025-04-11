@@ -23,7 +23,7 @@ export abstract class BaseModal extends BaseComponent<"dialog"> {
     }
   }
 
-  protected createElement(): HTMLElementTagNameMap["dialog"] {
+  protected createElement(): HTMLDialogElement {
     const modal = this.createDOMElement({
       tagName: "dialog",
       classList: [styles.modal],

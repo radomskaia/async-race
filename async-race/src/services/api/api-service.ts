@@ -2,6 +2,7 @@ import {
   API_HEADER,
   API_URL,
   COUNT_HEADER,
+  ERROR_MESSAGES,
   ZERO,
 } from "@/constants/constants.ts";
 import type {
@@ -29,7 +30,7 @@ export class ApiService implements ApiServiceInterface {
   ) => {
     const response = await fetch(url, init);
     if (init?.signal?.aborted) {
-      throw new Error("Aborted");
+      throw new Error(ERROR_MESSAGES.ABORTED);
     }
     return response;
   };
@@ -45,7 +46,7 @@ export class ApiService implements ApiServiceInterface {
     }
     totalCount = ApiService.getTotalCountCars(response);
     if (totalCount < ZERO) {
-      throw new Error("Invalid data");
+      throw new Error(ERROR_MESSAGES.INVALID_DATA);
     }
     return {
       data: await response.json(),
@@ -64,10 +65,10 @@ export class ApiService implements ApiServiceInterface {
     try {
       data = await ApiService.getResponseData(baseUrl);
     } catch (error) {
-      throw new Error(`Error while fetching data: ${error}`);
+      throw new Error(`${ERROR_MESSAGES.FETCH}${error}`);
     }
     if (!isResponseData(data)) {
-      throw new Error("Invalid data");
+      throw new Error(ERROR_MESSAGES.INVALID_DATA);
     }
     return data;
   };

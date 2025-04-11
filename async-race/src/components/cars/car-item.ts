@@ -13,6 +13,7 @@ import { DIContainer } from "@/services/di-container.ts";
 import { ServiceName } from "@/types/di-container-types.ts";
 import { isCar } from "@/services/validator.ts";
 import { errorHandler } from "@/utilities/utilities.ts";
+import { ATTRIBUTES, ERROR_MESSAGES } from "@/constants/constants.ts";
 
 export class CarItem extends BaseComponent<"li"> {
   private controlsButtons: Record<string, BaseButton> = {};
@@ -68,7 +69,7 @@ export class CarItem extends BaseComponent<"li"> {
     super();
     this.registerEvent(ActionType.updateCar, (data) => {
       if (!isCar(data)) {
-        throw new Error("Invalid data");
+        throw new Error(ERROR_MESSAGES.INVALID_DATA);
       }
       if (data.id === value.id) {
         this.updateCarView(data);
@@ -101,10 +102,10 @@ export class CarItem extends BaseComponent<"li"> {
     if (!carUse) {
       return;
     }
-    carUse.setAttribute("fill", value.color);
+    carUse.setAttribute(ATTRIBUTES.FILL, value.color);
   }
 
-  protected createElement(): HTMLElementTagNameMap["li"] {
+  protected createElement(): HTMLLIElement {
     return this.createDOMElement({
       tagName: "li",
       classList: [

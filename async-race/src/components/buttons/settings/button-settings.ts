@@ -3,6 +3,7 @@ import type { SettingsAction } from "@/services/settings/settings-action.ts";
 import { IconButton } from "@/components/buttons/icon-button.ts";
 import { SVG_CONFIG } from "@/constants/buttons-constants.ts";
 import type { ButtonOptions } from "@/types/button-types.ts";
+import { ERROR_MESSAGES } from "@/constants/constants.ts";
 
 export abstract class ButtonSettings extends IconButton {
   protected abstract pathOff: string;
@@ -11,7 +12,7 @@ export abstract class ButtonSettings extends IconButton {
 
   protected constructor(options: ButtonOptions) {
     if (!options.path) {
-      throw new Error("Path is required");
+      throw new Error(ERROR_MESSAGES.PATH_REQUIRED);
     }
     super({
       title: options.title,

@@ -18,7 +18,7 @@ export class NotFound extends BaseComponent<"div"> {
     this.appendElement(this.homeButton.getElement());
   }
 
-  protected createElement(): HTMLElementTagNameMap["div"] {
+  protected createElement(): HTMLDivElement {
     const main = this.createDOMElement({
       tagName: "div",
       classList: [

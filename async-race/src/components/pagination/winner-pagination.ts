@@ -3,7 +3,7 @@ import type { Order, Sort } from "@/types/api-service-types.ts";
 import { BasePagination } from "@/components/pagination/base-pagination.ts";
 import { ServiceName } from "@/types/di-container-types.ts";
 import { DIContainer } from "@/services/di-container.ts";
-import { WINNERS_PER_PAGE } from "@/constants/constants.ts";
+import { PAGE_NAME, WINNERS_PER_PAGE } from "@/constants/constants.ts";
 import type { WinnerServiceInterface } from "@/types/winner-service.ts";
 import { errorHandler } from "@/utilities/utilities.ts";
 
@@ -17,7 +17,7 @@ export class WinnerPagination extends BasePagination<
   protected eventEmitter;
   protected apiHandler;
   constructor(order: Order, sort: Sort) {
-    super("Winner");
+    super(PAGE_NAME.WINNERS);
     const diContainer = DIContainer.getInstance();
     this.eventEmitter = diContainer.getService(ServiceName.EVENT_EMITTER);
     this.apiHandler = diContainer.getService(ServiceName.WINNER);

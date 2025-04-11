@@ -13,7 +13,7 @@ import { ServiceName } from "@/types/di-container-types.ts";
 import { DIContainer } from "@/services/di-container.ts";
 import type { FormButtonsConfig } from "@/types/button-types.ts";
 import { StorageKeys } from "@/types/session-storage-types.ts";
-import { isCarProperties } from "@/services/validator.ts";
+import { isCarProperties, isString } from "@/services/validator.ts";
 
 export abstract class BaseForm extends BaseComponent<"form", number> {
   protected readonly nameElement;
@@ -45,7 +45,7 @@ export abstract class BaseForm extends BaseComponent<"form", number> {
     });
   }
 
-  protected createElement(id: number): HTMLElementTagNameMap["form"] {
+  protected createElement(id: number): HTMLFormElement {
     const form = this.createDOMElement({
       tagName: "form",
       classList: [carStyles.form],
@@ -66,7 +66,7 @@ export abstract class BaseForm extends BaseComponent<"form", number> {
     const formData = new FormData(this.element);
     const name = formData.get(INPUT_NAMES.CAR_NAME);
     const color = formData.get(INPUT_NAMES.CAR_COLOR);
-    if (typeof name !== "string" || typeof color !== "string") {
+    if (!isString(name) || !isString(color)) {
       throw new TypeError(MESSAGES.INVALID_DATA);
     }
     return { name, color };

@@ -1,16 +1,13 @@
-import type { Callback } from "@/types";
 import { BaseComponent } from "@/components/base-component.ts";
+import { EMPTY_STRING } from "@/constants/constants.ts";
 
 export class BaseInput extends BaseComponent<"input"> {
-  private defaultValue = "";
+  private defaultValue = EMPTY_STRING;
   constructor(value?: string) {
     super();
     if (value) {
       this.element.value = value;
     }
-  }
-  public get value(): string {
-    return this.element.value;
   }
 
   public set value(value: string) {
@@ -27,14 +24,6 @@ export class BaseInput extends BaseComponent<"input"> {
 
   public toggleDisabled(): void {
     this.element.disabled = !this.element.disabled;
-  }
-
-  public addListener(callback: Callback): void {
-    this.element.addEventListener("change", callback);
-  }
-
-  public toggleClass(className: string): void {
-    this.element.classList.toggle(className);
   }
 
   protected createElement(): HTMLInputElement {

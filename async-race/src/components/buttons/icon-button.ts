@@ -1,7 +1,7 @@
 import styles from "./button.module.css";
 
 import { BaseButton } from "@/components/buttons/base-button.ts";
-import { ATTRIBUTES } from "@/constants/buttons-constants.ts";
+import { ATTRIBUTES } from "@/constants/constants.ts";
 import type { ButtonOptions, Callback } from "@/types/button-types.ts";
 
 export class IconButton extends BaseButton {
@@ -15,7 +15,7 @@ export class IconButton extends BaseButton {
       classList: [styles.iconButton, ...options.classList],
       attributes: {
         title: options.title,
-        [ATTRIBUTES.ariaLabel]: options.title,
+        [ATTRIBUTES.ARIA_LABEL]: options.title,
       },
     });
     this.useSVGIcon = use;

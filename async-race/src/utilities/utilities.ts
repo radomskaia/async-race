@@ -8,7 +8,7 @@ function getColorValue(): string {
 }
 
 export function getRandomHEX(): string {
-  let hexString = `${SYMBOLS.hash}`;
+  let hexString = `${SYMBOLS.HASH}`;
   for (let index = ZERO; index < COLOR.RGB.length; index++) {
     hexString += getColorValue();
   }

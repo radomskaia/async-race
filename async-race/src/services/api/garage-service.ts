@@ -1,6 +1,6 @@
 import { DIContainer } from "@/services/di-container.ts";
 import { ServiceName } from "@/types/di-container-types.ts";
-import { API_URLS } from "@/constants/constants.ts";
+import { API_URLS, ERROR_MESSAGES } from "@/constants/constants.ts";
 import type {
   CreateCar,
   GetCarsHandler,
@@ -44,7 +44,7 @@ export class GarageService implements GarageServiceInterface {
 
     data = await this.apiService.getData(url);
     if (!isResponseCarData(data)) {
-      throw new Error("Invalid data");
+      throw new Error(ERROR_MESSAGES.INVALID_DATA);
     }
     return data;
   };
@@ -69,7 +69,7 @@ export class GarageService implements GarageServiceInterface {
     data = await this.apiService.getData(url);
     if (!isResponseData(data) || !isCar(data.data)) {
       console.log(data);
-      throw new Error("Invalid data");
+      throw new Error(ERROR_MESSAGES.INVALID_DATA);
     }
     return data.data;
   }

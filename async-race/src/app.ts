@@ -11,7 +11,7 @@ export function app(): void {
 
   const body = document.body;
   const header = new Header()
-    .addSettingsButton("theme")
+    .addSettingsButton(BUTTON_TEXT.THEME)
     .addPageButton(BUTTON_TEXT.TO_GARAGE)
     .addPageButton(BUTTON_TEXT.TO_WINNERS)
     .getElement();

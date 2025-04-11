@@ -1,4 +1,10 @@
-import { ZERO } from "@/constants/constants.ts";
+import {
+  ANIMATE_FILL_MODE,
+  SUFFIXES,
+  SYMBOLS,
+  TRANSFORM_TYPE,
+  ZERO,
+} from "@/constants/constants.ts";
 import type { Callback } from "@/types";
 
 export class AnimateCar {
@@ -10,12 +16,16 @@ export class AnimateCar {
     this.isAnimating = true;
     this.animation = this.car.animate(
       [
-        { transform: `translateX(${ZERO}px)` },
-        { transform: `translateX(${distance}px)` },
+        {
+          transform: `${TRANSFORM_TYPE}${SYMBOLS.BRACKET.OPEN}${ZERO}${SUFFIXES.PIXELS}${SYMBOLS.BRACKET.CLOSE}`,
+        },
+        {
+          transform: `${TRANSFORM_TYPE}${SYMBOLS.BRACKET.OPEN}${distance}${SUFFIXES.PIXELS}${SYMBOLS.BRACKET.CLOSE}`,
+        },
       ],
       {
         duration: duration,
-        fill: "forwards",
+        fill: ANIMATE_FILL_MODE,
       },
     );
   }

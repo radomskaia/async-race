@@ -17,6 +17,7 @@ export const BUTTON_TEXT = {
   CROSS: "cross",
   CONFIRM: "confirm",
   ORDER: "Change sort order",
+  THEME: "theme",
 } as const;
 export const BUTTON_TITLE = {
   VOLUME: "Volume",
@@ -56,9 +57,6 @@ export const ICON_PATH = {
   RESET: SPRITE_PATH + "reset",
   GENERATE_CARS: SPRITE_PATH + "wheel",
   ORDER: SPRITE_PATH + "sort",
-} as const;
-export const ATTRIBUTES = {
-  ariaLabel: "aria-label",
 } as const;
 export const BUTTON_TYPES = {
   SUBMIT: "submit",

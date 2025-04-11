@@ -1,5 +1,5 @@
 import { ServiceName } from "@/types/di-container-types.ts";
-import { API_URLS } from "@/constants/constants.ts";
+import { API_URLS, ERROR_MESSAGES } from "@/constants/constants.ts";
 import { DIContainer } from "@/services/di-container.ts";
 import type { EngineServiceInterface } from "@/types/engine-service-interface.ts";
 import type { RequestEngine } from "@/types/api-service-types.ts";
@@ -29,7 +29,10 @@ export class EngineService implements EngineServiceInterface {
     try {
       await this.requestEngine(EngineStatus.DRIVE, id, signal);
     } catch (error) {
-      if (error instanceof Error && error.message === "Invalid data") {
+      if (
+        error instanceof Error &&
+        error.message === ERROR_MESSAGES.INVALID_DATA
+      ) {
         return id;
       }
       throw error;
@@ -49,7 +52,7 @@ export class EngineService implements EngineServiceInterface {
       signal,
     });
     if (!isRaceData(data)) {
-      throw new Error(`Invalid data`);
+      throw new Error(ERROR_MESSAGES.INVALID_DATA);
     }
     return data;
   };

@@ -10,7 +10,11 @@ export const EMPTY_STRING = "";
 export const CARS_COUNT = 100;
 export const MS_IS_SECOND = 1000;
 export const SYMBOLS = {
-  hash: "#",
+  HASH: "#",
+  BRACKET: {
+    OPEN: "(",
+    CLOSE: ")",
+  },
 };
 
 export const COLOR = {
@@ -73,3 +77,45 @@ export const API_HEADER = {
 export const COUNT_HEADER = "X-Total-Count";
 
 export const NOTIFICATION_TIME = 4000;
+
+export const ERROR_MESSAGES = {
+  PATH_REQUIRED: "Path is required",
+  INVALID_DATA: "Invalid data",
+  NO_LISTENERS: "No listeners for event type",
+  ABORTED: "Aborted",
+  RACE_STOPPED: "Race stopped by user",
+  FETCH: "Error while fetching data: ",
+  SERVICE_NOT_FOUND: "Service not found",
+  INVALID_SERVICE: "Invalid service",
+  CONTAINER_NOT_FOUND: "Container not found",
+} as const;
+
+export const ATTRIBUTES = {
+  FILL: "fill",
+  ARIA_LABEL: "aria-label",
+} as const;
+
+export const WINNER_MESSAGE = "Winner is";
+export const TIME_MESSAGE = "with time";
+
+export const PAGE_NAME = {
+  GARAGE: "Garage",
+  WINNERS: "Winners",
+};
+
+export const WINNERS_TABLE_HEADERS = [
+  "ID",
+  "Car",
+  "Name",
+  "Wins",
+  "Time",
+] as const;
+
+export const SUFFIXES = {
+  COUNT: "x",
+  SECONDS: "s",
+  PIXELS: "px",
+};
+
+export const TRANSFORM_TYPE = "translateX";
+export const ANIMATE_FILL_MODE = "forwards";

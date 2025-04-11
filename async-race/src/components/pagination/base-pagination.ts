@@ -5,7 +5,7 @@ import { type Callback } from "@/types";
 import { IconButton } from "@/components/buttons/icon-button.ts";
 import { BUTTON_TEXT, ICON_PATH } from "@/constants/buttons-constants.ts";
 import carStyles from "@/components/cars/cars-list.module.css";
-import { ONE, ZERO } from "@/constants/constants.ts";
+import { ONE, SYMBOLS, ZERO } from "@/constants/constants.ts";
 import { PaginationButtonConfig } from "@/types/button-types.ts";
 import type { EventEmitterInterface } from "@/types/event-emitter-types.ts";
 import { ActionType } from "@/types/event-emitter-types.ts";
@@ -195,8 +195,8 @@ export abstract class BasePagination<
       tagName: "p",
       textContent: pageName,
     });
-    const openBracket = document.createTextNode("(");
-    const closeBracket = document.createTextNode(")");
+    const openBracket = document.createTextNode(SYMBOLS.BRACKET.OPEN);
+    const closeBracket = document.createTextNode(SYMBOLS.BRACKET.CLOSE);
     pageNameElement.append(openBracket, this.counterElement, closeBracket);
     this.appendElement(pageNameElement);
   }

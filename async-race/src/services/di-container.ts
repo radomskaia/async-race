@@ -4,6 +4,7 @@ import type {
   ServiceMap,
   ServiceName,
 } from "@/types/di-container-types.ts";
+import { ERROR_MESSAGES } from "@/constants/constants.ts";
 
 export class DIContainer implements DIContainerInterface {
   private static instance: DIContainer | undefined;
@@ -36,13 +37,13 @@ export class DIContainer implements DIContainerInterface {
     if (!service) {
       const factoryService = this.factory.get(name);
       if (!factoryService) {
-        throw new Error(`Service ${name} not found`);
+        throw new Error(`${ERROR_MESSAGES.SERVICE_NOT_FOUND} ${name}`);
       }
       service = new factoryService();
       this.services.set(name, service);
     }
     if (!DIContainer.isServiceType(name, service)) {
-      throw new Error(`Service ${name} is not a service`);
+      throw new Error(`${ERROR_MESSAGES.INVALID_SERVICE} ${name}`);
     }
     return service;
   }

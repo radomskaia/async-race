@@ -15,6 +15,7 @@ import type {
   CreateDOMElement,
   CreateSVG,
 } from "@/types/base-component-types.ts";
+import { ERROR_MESSAGES } from "@/constants/constants.ts";
 
 export abstract class BaseComponent<
   T extends keyof HTMLElementTagNameMap,
@@ -42,7 +43,7 @@ export abstract class BaseComponent<
   public update(event: Action): void {
     const callbackArray = this.listeners.get(event.type);
     if (!callbackArray) {
-      console.info("No listeners for event type");
+      console.info(ERROR_MESSAGES.NO_LISTENERS);
       return;
     }
     for (const callback of callbackArray) {
