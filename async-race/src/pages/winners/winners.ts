@@ -10,14 +10,19 @@ import { isBoolean, isFullData, isSort } from "@/services/validator.ts";
 import { DIContainer } from "@/services/di-container.ts";
 import { ServiceName } from "@/types/di-container-types.ts";
 import { StorageKeys } from "@/types/session-storage-types.ts";
-import { TWO } from "@/constants/constants.ts";
+import {
+  ATTRIBUTES,
+  SUFFIXES,
+  TWO,
+  WINNERS_TABLE_HEADERS,
+} from "@/constants/constants.ts";
 import carStyles from "@/components/cars/cars-list.module.css";
 import { ActionType } from "@/types/event-emitter-types.ts";
 
 export class Winners extends BaseComponent<"div"> {
   private pagination;
   private isASC = false;
-  private order;
+  private readonly order;
   private sort;
   private tableWrapper = this.createDOMElement({
     tagName: "div",
@@ -107,9 +112,6 @@ export class Winners extends BaseComponent<"div"> {
     const selectElement = this.createDOMElement({
       tagName: "select",
       classList: [styles.filter],
-      attributes: {
-        id: "filter",
-      },
     });
     selectElement.addEventListener("change", () => {
       if (isSort(selectElement.value)) {
@@ -141,43 +143,30 @@ export class Winners extends BaseComponent<"div"> {
     });
 
     this.tableWrapper.append(table);
-    table.append(this.createTh());
+    table.append(this.createTableHeader());
 
     for (const fullData of data.values()) {
-      table.append(this.createTr(fullData));
+      table.append(this.createTableRow(fullData));
     }
     return table;
   }
 
-  private createTh(): HTMLTableRowElement {
+  private createTableHeader(): HTMLTableRowElement {
+    const headers = WINNERS_TABLE_HEADERS;
     const tr = this.createDOMElement({
       tagName: "tr",
     });
-    const thID = this.createDOMElement({
-      tagName: "th",
-      textContent: "ID",
-    });
-    const thCar = this.createDOMElement({
-      tagName: "th",
-      textContent: "Car",
-    });
-    const thName = this.createDOMElement({
-      tagName: "th",
-      textContent: "Name",
-    });
-    const thWins = this.createDOMElement({
-      tagName: "th",
-      textContent: "Wins",
-    });
-    const thTime = this.createDOMElement({
-      tagName: "th",
-      textContent: "Time",
-    });
-    tr.append(thID, thCar, thName, thWins, thTime);
+    for (const header of headers) {
+      const th = this.createDOMElement({
+        tagName: "th",
+        textContent: header,
+      });
+      tr.append(th);
+    }
     return tr;
   }
 
-  private createTr({
+  private createTableRow({
     name,
     color,
     id,
@@ -187,32 +176,35 @@ export class Winners extends BaseComponent<"div"> {
     const tr = this.createDOMElement({
       tagName: "tr",
     });
-    const thID = this.createDOMElement({
-      tagName: "td",
-      textContent: id.toString(),
-    });
-    const thCar = this.createDOMElement({
-      tagName: "td",
-    });
-    const { use, svg } = this.createSVG({
-      classList: [carStyles.carIcon],
-      path: ICON_PATH.CAR,
-    });
-    use.setAttribute("fill", color);
-    thCar.append(svg);
-    const thName = this.createDOMElement({
-      tagName: "td",
-      textContent: name,
-    });
-    const thWins = this.createDOMElement({
-      tagName: "td",
-      textContent: wins.toString() + "x",
-    });
-    const thTime = this.createDOMElement({
-      tagName: "td",
-      textContent: time.toFixed(TWO) + "s",
-    });
-    tr.append(thID, thCar, thName, thWins, thTime);
+
+    const rowData = [
+      id.toString(),
+      color,
+      name,
+      `${wins.toString()}${SUFFIXES.COUNT}`,
+      `${time.toFixed(TWO)}${SUFFIXES.SECONDS}`,
+    ];
+    for (const data of rowData) {
+      let td;
+      if (data === color) {
+        td = this.createDOMElement({
+          tagName: "td",
+        });
+        const { use, svg } = this.createSVG({
+          classList: [carStyles.carIcon],
+          path: ICON_PATH.CAR,
+        });
+        use.setAttribute(ATTRIBUTES.FILL, color);
+        td.append(svg);
+      } else {
+        td = this.createDOMElement({
+          tagName: "td",
+          textContent: data,
+        });
+      }
+      tr.append(td);
+    }
+
     return tr;
   }
 }
