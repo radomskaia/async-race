@@ -6,6 +6,7 @@ import type { WinnerServiceInterface } from "@/types/winner-service.ts";
 import type { GarageServiceInterface } from "@/types/garage-service-types.ts";
 import type { EngineServiceInterface } from "@/types/engine-service-interface.ts";
 import type { SessionStorageInterface } from "@/types/session-storage-types.ts";
+import type { ValidatorInterface } from "@/types/validator-types.ts";
 
 export interface DIContainerInterface {
   register(name: ServiceName, service: new () => Injectable): void;
@@ -26,6 +27,7 @@ export enum ServiceName {
   GARAGE = "garageService",
   ENGINE = "engineService",
   STORAGE = "sessionStorage",
+  VALIDATOR = "validator",
 }
 
 export interface ServiceMap {
@@ -37,4 +39,5 @@ export interface ServiceMap {
   [ServiceName.GARAGE]: GarageServiceInterface;
   [ServiceName.ENGINE]: EngineServiceInterface;
   [ServiceName.STORAGE]: SessionStorageInterface;
+  [ServiceName.VALIDATOR]: ValidatorInterface;
 }

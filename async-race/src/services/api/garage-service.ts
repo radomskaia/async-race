@@ -6,14 +6,10 @@ import type {
   GetCarsHandler,
   UpdateCar,
 } from "@/types/api-service-types.ts";
-import {
-  isCar,
-  isResponseCarData,
-  isResponseData,
-} from "@/services/validator.ts";
 import type { GarageServiceInterface } from "@/types/garage-service-types.ts";
 import { ActionType } from "@/types/event-emitter-types.ts";
 import type { Car } from "@/types";
+import { TypeNames } from "@/types/validator-types.ts";
 
 export class GarageService implements GarageServiceInterface {
   public name = ServiceName.GARAGE;
@@ -21,11 +17,13 @@ export class GarageService implements GarageServiceInterface {
   private apiService;
   private winnerService;
   private eventEmitter;
+  private validator;
   constructor() {
     const diContainer = DIContainer.getInstance();
     this.apiService = diContainer.getService(ServiceName.API);
     this.winnerService = diContainer.getService(ServiceName.WINNER);
     this.eventEmitter = diContainer.getService(ServiceName.EVENT_EMITTER);
+    this.validator = diContainer.getService(ServiceName.VALIDATOR);
   }
 
   public async deleteCar(id: number): Promise<void> {
@@ -43,7 +41,7 @@ export class GarageService implements GarageServiceInterface {
     let data: unknown;
 
     data = await this.apiService.getData(url);
-    if (!isResponseCarData(data)) {
+    if (!this.validator.validate(TypeNames.responseCarData, data)) {
       throw new Error(ERROR_MESSAGES.INVALID_DATA);
     }
     return data;
@@ -67,8 +65,10 @@ export class GarageService implements GarageServiceInterface {
     let data: unknown;
 
     data = await this.apiService.getData(url);
-    if (!isResponseData(data) || !isCar(data.data)) {
-      console.log(data);
+    if (
+      !this.validator.validate(TypeNames.responseData, data) ||
+      !this.validator.validate(TypeNames.car, data.data)
+    ) {
       throw new Error(ERROR_MESSAGES.INVALID_DATA);
     }
     return data.data;

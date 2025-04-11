@@ -1,34 +1,29 @@
 import type {
   FullData,
   GetWinnersHandler,
-  WinnerData,
+  Winner,
 } from "@/types/api-service-types.ts";
-import {
-  isResponseData,
-  isResponseWinnerData,
-  isWinnerData,
-} from "@/services/validator.ts";
 import { API_URLS, ERROR_MESSAGES } from "@/constants/constants.ts";
 import type { WinnerServiceInterface } from "@/types/winner-service.ts";
 import { ServiceName } from "@/types/di-container-types.ts";
 import { DIContainer } from "@/services/di-container.ts";
 import { ActionType } from "@/types/event-emitter-types.ts";
+import { TypeNames } from "@/types/validator-types.ts";
 
 export class WinnerService implements WinnerServiceInterface {
   public name = ServiceName.WINNER;
   private url = API_URLS.WINNERS;
   private apiService;
   private diContainer;
+  private validator;
 
   constructor() {
     this.diContainer = DIContainer.getInstance();
     this.apiService = this.diContainer.getService(ServiceName.API);
+    this.validator = this.diContainer.getService(ServiceName.VALIDATOR);
   }
 
-  private static createData(
-    newData: WinnerData,
-    oldData?: WinnerData,
-  ): WinnerData {
+  private static createData(newData: Winner, oldData?: Winner): Winner {
     if (!oldData) {
       return newData;
     }
@@ -44,8 +39,8 @@ export class WinnerService implements WinnerServiceInterface {
     void this.apiService.deleteData(url);
   }
 
-  public async create(data: WinnerData): Promise<void> {
-    let initData: WinnerData | undefined;
+  public async create(data: Winner): Promise<void> {
+    let initData: Winner | undefined;
     let isCreate = false;
     try {
       initData = await this.getWinner(data.id);
@@ -61,7 +56,7 @@ export class WinnerService implements WinnerServiceInterface {
     }
   }
 
-  public async notify(winnerData: WinnerData): Promise<void> {
+  public async notify(winnerData: Winner): Promise<void> {
     const id = winnerData.id;
     const data = await this.diContainer
       .getService(ServiceName.GARAGE)
@@ -72,13 +67,15 @@ export class WinnerService implements WinnerServiceInterface {
     });
   }
 
-  public async getWinner(id: number): Promise<WinnerData> {
+  public async getWinner(id: number): Promise<Winner> {
     const url = `${this.url}/${id}`;
     let data: unknown;
 
     data = await this.apiService.getData(url);
-    if (!isResponseData(data) || !isWinnerData(data.data)) {
-      console.log(data);
+    if (
+      !this.validator.validate(TypeNames.responseData, data) ||
+      !this.validator.validate(TypeNames.winner, data.data)
+    ) {
       throw new Error(ERROR_MESSAGES.INVALID_DATA);
     }
     return data.data;
@@ -95,7 +92,7 @@ export class WinnerService implements WinnerServiceInterface {
     let data: unknown;
 
     data = await this.apiService.getData(url);
-    if (!isResponseWinnerData(data)) {
+    if (!this.validator.validate(TypeNames.responseWinnerData, data)) {
       throw new Error(ERROR_MESSAGES.INVALID_DATA);
     }
     const result: {

@@ -17,8 +17,8 @@ import type { WinnerServiceInterface } from "@/types/winner-service.ts";
 import type { GarageServiceInterface } from "@/types/garage-service-types.ts";
 import { DIContainer } from "@/services/di-container.ts";
 import { ServiceName } from "@/types/di-container-types.ts";
-import { isPositiveNumber } from "@/services/validator.ts";
 import { errorHandler } from "@/utilities/utilities.ts";
+import { TypeNames } from "@/types/validator-types.ts";
 
 export abstract class BasePagination<
   T extends WinnerServiceInterface | GarageServiceInterface,
@@ -70,7 +70,9 @@ export abstract class BasePagination<
     super();
     const storage = DIContainer.getInstance().getService(ServiceName.STORAGE);
 
-    const currentPage = Number(storage.load(pageName, isPositiveNumber));
+    const currentPage = Number(
+      storage.load(pageName, TypeNames.positiveNumber),
+    );
     this.currentPage = currentPage || ONE;
 
     window.addEventListener("beforeunload", () => {

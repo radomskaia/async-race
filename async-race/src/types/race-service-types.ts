@@ -11,7 +11,7 @@ export interface RaceServiceInterface extends Injectable {
   stopRace(): Promise<void>;
 }
 
-export interface RaceData {
+export interface RaceData extends Record<string, number> {
   velocity: number;
   distance: number;
 }

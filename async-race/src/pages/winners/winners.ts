@@ -6,7 +6,6 @@ import type { FullData } from "@/types/api-service-types.ts";
 import { Order, Sort } from "@/types/api-service-types.ts";
 import { IconButton } from "@/components/buttons/icon-button.ts";
 import { BUTTON_TEXT, ICON_PATH } from "@/constants/buttons-constants.ts";
-import { isBoolean, isFullData, isSort } from "@/services/validator.ts";
 import { DIContainer } from "@/services/di-container.ts";
 import { ServiceName } from "@/types/di-container-types.ts";
 import { StorageKeys } from "@/types/session-storage-types.ts";
@@ -18,6 +17,7 @@ import {
 } from "@/constants/constants.ts";
 import carStyles from "@/components/cars/cars-list.module.css";
 import { ActionType } from "@/types/event-emitter-types.ts";
+import { TypeNames } from "@/types/validator-types.ts";
 
 export class Winners extends BaseComponent<"div"> {
   private pagination;
@@ -27,13 +27,16 @@ export class Winners extends BaseComponent<"div"> {
   private tableWrapper = this.createDOMElement({
     tagName: "div",
   });
+  private validator = DIContainer.getInstance().getService(
+    ServiceName.VALIDATOR,
+  );
 
   constructor() {
     super();
     const storage = DIContainer.getInstance().getService(ServiceName.STORAGE);
-    this.isASC = storage.load(StorageKeys.isASC, isBoolean) || false;
+    this.isASC = storage.load(StorageKeys.isASC, TypeNames.boolean) || false;
     this.order = this.isASC ? Order.ASC : Order.DESC;
-    this.sort = storage.load(StorageKeys.sort, isSort) || Sort.ID;
+    this.sort = storage.load(StorageKeys.sort, TypeNames.sort) || Sort.ID;
 
     this.pagination = new WinnerPagination(this.order, this.sort);
     this.appendElement(this.pagination.getElement());
@@ -50,7 +53,7 @@ export class Winners extends BaseComponent<"div"> {
     });
 
     this.registerEvent(ActionType.paginationUpdated, (data) => {
-      if (isFullData(data)) {
+      if (this.validator.validate(TypeNames.fullData, data)) {
         this.tableWrapper.replaceChildren();
         this.createWinnerTable(data);
       }
@@ -114,7 +117,7 @@ export class Winners extends BaseComponent<"div"> {
       classList: [styles.filter],
     });
     selectElement.addEventListener("change", () => {
-      if (isSort(selectElement.value)) {
+      if (this.validator.validate(TypeNames.sort, selectElement.value)) {
         this.sort = selectElement.value;
         this.pagination.setSort(this.sort);
       }

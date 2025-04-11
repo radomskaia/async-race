@@ -10,7 +10,7 @@ import {
 } from "@/constants/constants.ts";
 import type { GarageServiceInterface } from "@/types/garage-service-types.ts";
 import { errorHandler } from "@/utilities/utilities.ts";
-import { isBoolean, isNumber } from "@/services/validator.ts";
+import { TypeNames } from "@/types/validator-types.ts";
 
 export class GaragePagination extends BasePagination<
   GarageServiceInterface,
@@ -19,6 +19,9 @@ export class GaragePagination extends BasePagination<
   protected limit;
   protected eventEmitter;
   protected apiHandler;
+  private validator = DIContainer.getInstance().getService(
+    ServiceName.VALIDATOR,
+  );
   constructor() {
     super(PAGE_NAME.GARAGE);
     const diContainer = DIContainer.getInstance();
@@ -32,8 +35,10 @@ export class GaragePagination extends BasePagination<
       }
       const [newPage, isCreate] = data;
       if (
-        (isNumber(newPage) || newPage === null) &&
-        (isBoolean(isCreate) || isCreate === undefined)
+        (this.validator.validate(TypeNames.number, newPage) ||
+          newPage === null) &&
+        (this.validator.validate(TypeNames.boolean, isCreate) ||
+          isCreate === undefined)
       ) {
         await this.setPage(newPage, isCreate).catch(errorHandler);
       }

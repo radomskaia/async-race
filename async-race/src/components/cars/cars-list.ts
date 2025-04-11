@@ -6,7 +6,7 @@ import utilitiesStyles from "@/styles/utilities.module.css";
 import { DIContainer } from "@/services/di-container.ts";
 import { ServiceName } from "@/types/di-container-types.ts";
 import { ActionType } from "@/types/event-emitter-types.ts";
-import { isCarArray } from "@/services/validator.ts";
+import { TypeNames } from "@/types/validator-types.ts";
 
 export class CarsList extends BaseComponent<"ul"> {
   private readonly raceService;
@@ -15,9 +15,9 @@ export class CarsList extends BaseComponent<"ul"> {
     const diContainer = DIContainer.getInstance();
     this.raceService = diContainer.getService(ServiceName.RACE);
     this.raceService.init(this.element);
-
+    const validator = diContainer.getService(ServiceName.VALIDATOR);
     this.registerEvent(ActionType.paginationUpdated, (data: unknown) => {
-      if (isCarArray(data)) {
+      if (validator.validate(TypeNames.carArray, data)) {
         this.addCarsList(data);
       }
     });

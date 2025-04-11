@@ -19,7 +19,7 @@ export type CreateCar = (
   callback?: SetPageCallback,
 ) => Promise<unknown>;
 
-export interface WinnerData {
+export interface Winner {
   id: number;
   wins: number;
   time: number;
@@ -53,7 +53,7 @@ export interface ResponseCarData extends ResponseData {
 }
 
 export interface ResponseWinnerData extends ResponseData {
-  data: WinnerData[];
+  data: Winner[];
 }
 
 export type GetDataHandler = (url: string) => Promise<ResponseData>;
@@ -113,4 +113,4 @@ export type SendData = (
   signal?: AbortSignal,
 ) => Promise<unknown>;
 
-export interface FullData extends WinnerData, Car {}
+export interface FullData extends Winner, Car {}

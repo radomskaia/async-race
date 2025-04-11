@@ -1,7 +1,6 @@
 import { BaseModal } from "@/components/modal/base/base-modal.ts";
 import utilitiesStyles from "@/styles/utilities.module.css";
 import { ActionType } from "@/types/event-emitter-types.ts";
-import { isModelData } from "@/services/validator.ts";
 import type { ModalData } from "@/types";
 import {
   NOTIFICATION_TIME,
@@ -9,6 +8,9 @@ import {
   TWO,
   WINNER_MESSAGE,
 } from "@/constants/constants.ts";
+import { TypeNames } from "@/types/validator-types.ts";
+import { ServiceName } from "@/types/di-container-types.ts";
+import { DIContainer } from "@/services/di-container.ts";
 
 export class WinnerModal extends BaseModal {
   private static instance: WinnerModal | undefined;
@@ -16,8 +18,11 @@ export class WinnerModal extends BaseModal {
   private constructor() {
     super();
     this.modalWrapper.append(this.addContent());
+    const validator = DIContainer.getInstance().getService(
+      ServiceName.VALIDATOR,
+    );
     this.registerEvent(ActionType.winnerDetected, (winner) => {
-      if (isModelData(winner)) {
+      if (validator.validate(TypeNames.modalData, winner)) {
         this.showWinnerModal(winner);
       }
     });

@@ -11,9 +11,9 @@ import { ControlsButtonConfig } from "@/types/button-types.ts";
 import { ActionType } from "@/types/event-emitter-types.ts";
 import { DIContainer } from "@/services/di-container.ts";
 import { ServiceName } from "@/types/di-container-types.ts";
-import { isCar } from "@/services/validator.ts";
 import { errorHandler } from "@/utilities/utilities.ts";
 import { ATTRIBUTES, ERROR_MESSAGES } from "@/constants/constants.ts";
+import { TypeNames } from "@/types/validator-types.ts";
 
 export class CarItem extends BaseComponent<"li"> {
   private controlsButtons: Record<string, BaseButton> = {};
@@ -67,15 +67,16 @@ export class CarItem extends BaseComponent<"li"> {
 
   constructor(value: Car) {
     super();
+    const diContainer = DIContainer.getInstance();
+    const validator = diContainer.getService(ServiceName.VALIDATOR);
     this.registerEvent(ActionType.updateCar, (data) => {
-      if (!isCar(data)) {
+      if (!validator.validate(TypeNames.car, data)) {
         throw new Error(ERROR_MESSAGES.INVALID_DATA);
       }
       if (data.id === value.id) {
         this.updateCarView(data);
       }
     });
-    const diContainer = DIContainer.getInstance();
     this.raceService = diContainer.getService(ServiceName.RACE);
     this.garageService = diContainer.getService(ServiceName.GARAGE);
     this.eventEmitter = diContainer.getService(ServiceName.EVENT_EMITTER);

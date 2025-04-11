@@ -1,6 +1,5 @@
 import type { Injectable } from "@/types/di-container-types.ts";
-
-export type TypeGuard<T> = (value: unknown) => value is T;
+import type { TypeNames, TypesForValidator } from "@/types/validator-types.ts";
 
 export enum StorageKeys {
   sort = "sort",
@@ -12,5 +11,8 @@ export enum StorageKeys {
 
 export interface SessionStorageInterface extends Injectable {
   save(key: string, value: unknown): void;
-  load<T>(key: string, typeGuard: TypeGuard<T>): T | null;
+  load<T extends TypeNames>(
+    key: string,
+    typeName: T,
+  ): TypesForValidator[T] | null;
 }

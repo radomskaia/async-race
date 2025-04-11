@@ -13,7 +13,7 @@ import { ServiceName } from "@/types/di-container-types.ts";
 import { DIContainer } from "@/services/di-container.ts";
 import type { FormButtonsConfig } from "@/types/button-types.ts";
 import { StorageKeys } from "@/types/session-storage-types.ts";
-import { isCarProperties, isString } from "@/services/validator.ts";
+import { TypeNames } from "@/types/validator-types.ts";
 
 export abstract class BaseForm extends BaseComponent<"form", number> {
   protected readonly nameElement;
@@ -21,12 +21,16 @@ export abstract class BaseForm extends BaseComponent<"form", number> {
   protected apiService = DIContainer.getInstance().getService(
     ServiceName.GARAGE,
   );
+  protected validator = DIContainer.getInstance().getService(
+    ServiceName.VALIDATOR,
+  );
   protected constructor(value?: Car) {
     super(value?.id);
     const storage = DIContainer.getInstance().getService(ServiceName.STORAGE);
+
     const carProperties = storage.load(
       StorageKeys.carProperties,
-      isCarProperties,
+      TypeNames.carProperties,
     );
     this.nameElement = this.addCarName(value?.name ?? carProperties?.name);
     const color = value?.color ?? carProperties?.color ?? getRandomHEX();
@@ -66,7 +70,10 @@ export abstract class BaseForm extends BaseComponent<"form", number> {
     const formData = new FormData(this.element);
     const name = formData.get(INPUT_NAMES.CAR_NAME);
     const color = formData.get(INPUT_NAMES.CAR_COLOR);
-    if (!isString(name) || !isString(color)) {
+    if (
+      !this.validator.validate(TypeNames.string, name) ||
+      !this.validator.validate(TypeNames.string, color)
+    ) {
       throw new TypeError(MESSAGES.INVALID_DATA);
     }
     return { name, color };

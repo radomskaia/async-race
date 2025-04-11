@@ -1,14 +1,15 @@
 import { LS_PREFIX } from "@/constants/constants.ts";
-import type {
-  SessionStorageInterface,
-  TypeGuard,
-} from "@/types/session-storage-types.ts";
+import type { SessionStorageInterface } from "@/types/session-storage-types.ts";
 import { ServiceName } from "@/types/di-container-types.ts";
+import type { TypeNames, TypesForValidator } from "@/types/validator-types.ts";
+import { DIContainer } from "@/services/di-container.ts";
 
 export class SessionStorage implements SessionStorageInterface {
   public name = ServiceName.STORAGE;
   private readonly prefix: string;
-
+  private validator = DIContainer.getInstance().getService(
+    ServiceName.VALIDATOR,
+  );
   constructor() {
     this.prefix = LS_PREFIX;
   }
@@ -18,7 +19,10 @@ export class SessionStorage implements SessionStorageInterface {
     globalThis.sessionStorage.setItem(storageKey, JSON.stringify(value));
   }
 
-  public load<T>(key: string, typeGuard: TypeGuard<T>): T | null {
+  public load<T extends TypeNames>(
+    key: string,
+    typeName: T,
+  ): TypesForValidator[T] | null {
     const storageKey = this.prefix + key;
     const value = globalThis.sessionStorage.getItem(storageKey);
     if (!value) {
@@ -26,7 +30,7 @@ export class SessionStorage implements SessionStorageInterface {
     }
     try {
       const result = JSON.parse(value);
-      if (typeGuard(result)) {
+      if (this.validator.validate(typeName, result)) {
         return result;
       }
       return null;

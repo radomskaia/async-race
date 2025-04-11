@@ -8,6 +8,7 @@ import { WinnerService } from "@/services/api/winner-service.ts";
 import { GarageService } from "@/services/api/garage-service.ts";
 import { EngineService } from "@/services/api/engine-service.ts";
 import { SessionStorage } from "@/services/session-storage.ts";
+import { Validator } from "@/services/validator.ts";
 
 export function registerServices(): void {
   const diContainer = DIContainer.getInstance();
@@ -19,4 +20,5 @@ export function registerServices(): void {
   diContainer.register(ServiceName.GARAGE, GarageService);
   diContainer.register(ServiceName.ENGINE, EngineService);
   diContainer.register(ServiceName.STORAGE, SessionStorage);
+  diContainer.register(ServiceName.VALIDATOR, Validator);
 }

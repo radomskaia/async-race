@@ -16,8 +16,9 @@ import type {
 } from "@/types/api-service-types.ts";
 import { REQUEST_METHOD } from "@/types/api-service-types.ts";
 import { ServiceName } from "@/types/di-container-types.ts";
-import { isResponseData } from "@/services/validator.ts";
 import { errorHandler } from "@/utilities/utilities.ts";
+import { DIContainer } from "@/services/di-container.ts";
+import { TypeNames } from "@/types/validator-types.ts";
 
 export class ApiService implements ApiServiceInterface {
   public name: ServiceName = ServiceName.API;
@@ -67,7 +68,11 @@ export class ApiService implements ApiServiceInterface {
     } catch (error) {
       throw new Error(`${ERROR_MESSAGES.FETCH}${error}`);
     }
-    if (!isResponseData(data)) {
+
+    const validator = DIContainer.getInstance().getService(
+      ServiceName.VALIDATOR,
+    );
+    if (!validator.validate(TypeNames.responseData, data)) {
       throw new Error(ERROR_MESSAGES.INVALID_DATA);
     }
     return data;

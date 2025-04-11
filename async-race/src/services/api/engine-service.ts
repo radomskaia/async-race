@@ -6,17 +6,18 @@ import type { RequestEngine } from "@/types/api-service-types.ts";
 import { EngineStatus } from "@/types/api-service-types.ts";
 import { REQUEST_METHOD } from "@/types/api-service-types.ts";
 import type { RaceData } from "@/types/race-service-types.ts";
-import { isRaceData } from "@/services/validator.ts";
+import { TypeNames } from "@/types/validator-types.ts";
 
 export class EngineService implements EngineServiceInterface {
   public name = ServiceName.ENGINE;
   private url = API_URLS.ENGINE;
   private apiService;
-  private diContainer;
+  private validator;
 
   constructor() {
-    this.diContainer = DIContainer.getInstance();
-    this.apiService = this.diContainer.getService(ServiceName.API);
+    const diContainer = DIContainer.getInstance();
+    this.apiService = diContainer.getService(ServiceName.API);
+    this.validator = diContainer.getService(ServiceName.VALIDATOR);
   }
 
   public async start(id: number): Promise<RaceData> {
@@ -51,7 +52,7 @@ export class EngineService implements EngineServiceInterface {
       method: REQUEST_METHOD.PATCH,
       signal,
     });
-    if (!isRaceData(data)) {
+    if (!this.validator.validate(TypeNames.raceData, data)) {
       throw new Error(ERROR_MESSAGES.INVALID_DATA);
     }
     return data;
