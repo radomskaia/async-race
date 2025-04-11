@@ -10,6 +10,10 @@ export class BaseInput extends BaseComponent<"input"> {
     }
   }
 
+  public get value(): string {
+    return this.element.value;
+  }
+
   public set value(value: string) {
     this.element.value = value;
   }

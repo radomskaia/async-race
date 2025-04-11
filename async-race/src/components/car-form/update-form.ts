@@ -4,13 +4,31 @@ import type { BaseButton } from "@/components/buttons/base-button.ts";
 import { BaseForm } from "@/components/car-form/base-form.ts";
 import { FormButtonsConfig } from "@/types/button-types.ts";
 import { errorHandler } from "@/utilities/utilities.ts";
+import { ActionType } from "@/types/event-emitter-types.ts";
+import { DIContainer } from "@/services/di-container.ts";
+import { ServiceName } from "@/types/di-container-types.ts";
 
 export class UpdateForm extends BaseForm {
   private formButtons: BaseButton[] = [];
   private formButtonsConfig = FormButtonsConfig;
+  private eventEmitter = DIContainer.getInstance().getService(
+    ServiceName.EVENT_EMITTER,
+  );
+  private readonly id;
   constructor(value: Car) {
     super(value);
     this.addFormButtons();
+    this.id = value.id;
+    this.colorElement.getElement().addEventListener("change", () => {
+      this.eventEmitter.notify({
+        type: ActionType.updateCar,
+        data: {
+          id: this.id,
+          name: this.nameElement.value,
+          color: this.colorElement.value,
+        },
+      });
+    });
   }
 
   public editHandler(): void {
@@ -66,6 +84,14 @@ export class UpdateForm extends BaseForm {
   private resetForm(): void {
     this.colorElement.resetValue();
     this.nameElement.resetValue();
+    this.eventEmitter.notify({
+      type: ActionType.updateCar,
+      data: {
+        id: this.id,
+        name: this.nameElement.value,
+        color: this.colorElement.value,
+      },
+    });
   }
 
   private createFormButtons(): void {
