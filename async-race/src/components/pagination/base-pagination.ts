@@ -7,21 +7,21 @@ import { BUTTON_TEXT, ICON_PATH } from "@/constants/buttons-constants.ts";
 import carStyles from "@/components/cars/cars-list.module.css";
 import { ONE, SYMBOLS, ZERO } from "@/constants/constants.ts";
 import { PaginationButtonConfig } from "@/types/button-types.ts";
-import type { EventEmitterInterface } from "@/types/event-emitter-types.ts";
 import { ActionType } from "@/types/event-emitter-types.ts";
 import type {
   ResponseCarData,
   ResponseWinnerData,
 } from "@/types/api-service-types.ts";
-import type { WinnerServiceInterface } from "@/types/winner-service.ts";
-import type { GarageServiceInterface } from "@/types/garage-service-types.ts";
 import { DIContainer } from "@/services/di-container.ts";
 import { ServiceName } from "@/types/di-container-types.ts";
 import { errorHandler } from "@/utilities/utilities.ts";
 import { TypeNames } from "@/types/validator-types.ts";
+import type { EventEmitter } from "@/services/event-emitter.ts";
+import type { WinnerService } from "@/services/api/winner-service.ts";
+import type { GarageService } from "@/services/api/garage-service.ts";
 
 export abstract class BasePagination<
-  T extends WinnerServiceInterface | GarageServiceInterface,
+  T extends WinnerService | GarageService,
   D extends ResponseWinnerData | ResponseCarData,
 > extends BaseComponent<"div"> {
   protected currentPage: number;
@@ -63,7 +63,7 @@ export abstract class BasePagination<
   private readonly counterElement: HTMLSpanElement;
   private lastPage: number;
   protected abstract limit: number;
-  protected abstract eventEmitter: EventEmitterInterface;
+  protected abstract eventEmitter: EventEmitter;
   protected abstract apiHandler: T;
 
   protected constructor(pageName: string) {

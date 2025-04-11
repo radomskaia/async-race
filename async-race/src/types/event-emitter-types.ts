@@ -1,4 +1,3 @@
-import type { Injectable } from "@/types/di-container-types.ts";
 import type { Callback } from "@/types/button-types.ts";
 
 export enum ActionType {
@@ -12,12 +11,6 @@ export enum ActionType {
   paginationUpdated = "paginationUpdated",
   changeRoute = "changeRoute",
   enginesStarted = "enginesStarted",
-}
-
-export interface EventEmitterInterface extends Injectable {
-  subscribe: RegisterObserver;
-  unsubscribe: RegisterObserver;
-  notify(action: Action): void;
 }
 
 export type RegisterObserver = (

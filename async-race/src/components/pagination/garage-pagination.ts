@@ -8,12 +8,12 @@ import {
   ERROR_MESSAGES,
   PAGE_NAME,
 } from "@/constants/constants.ts";
-import type { GarageServiceInterface } from "@/types/garage-service-types.ts";
 import { errorHandler } from "@/utilities/utilities.ts";
 import { TypeNames } from "@/types/validator-types.ts";
+import type { GarageService } from "@/services/api/garage-service.ts";
 
 export class GaragePagination extends BasePagination<
-  GarageServiceInterface,
+  GarageService,
   ResponseCarData
 > {
   protected limit;

@@ -5,12 +5,13 @@ import {
   PAGE_PATH,
   SYMBOLS,
 } from "@/constants/constants.ts";
+import type { Injectable } from "@/types/di-container-types";
 import { ServiceName } from "@/types/di-container-types";
-import type { Route, RouterInterface } from "@/types/router-type.ts";
+import type { Route } from "@/types/router-type.ts";
 import { DIContainer } from "@/services/di-container.ts";
 import { ActionType } from "@/types/event-emitter-types.ts";
 
-export class Router implements RouterInterface {
+export class Router implements Injectable {
   public name: ServiceName = ServiceName.ROUTER;
   private routes: Route = new Map();
   private container: HTMLElement | null = null;
@@ -48,10 +49,6 @@ export class Router implements RouterInterface {
       .getService(ServiceName.EVENT_EMITTER)
       .notify({ type: ActionType.changeRoute, data: path });
     this.container.append(new route().getElement());
-  }
-
-  public getCurrentRoute(): string {
-    return this.currentPath;
   }
 
   private clearPage(): void {

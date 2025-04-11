@@ -6,18 +6,15 @@ import {
   TWO,
   ZERO,
 } from "@/constants/constants.ts";
-import type {
-  AnimationData,
-  RaceData,
-  RaceServiceInterface,
-} from "@/types/race-service-types.ts";
+import type { AnimationData, RaceData } from "@/types/race-service-types.ts";
 import { DIContainer } from "@/services/di-container.ts";
+import type { Injectable } from "@/types/di-container-types.ts";
 import { ServiceName } from "@/types/di-container-types.ts";
 import { ActionType } from "@/types/event-emitter-types.ts";
 import type { Callback } from "@/types";
 import { errorHandler } from "@/utilities/utilities.ts";
 
-export class RaceService implements RaceServiceInterface {
+export class RaceService implements Injectable {
   public name: ServiceName = ServiceName.RACE;
   private diContainer = DIContainer.getInstance();
   private engineService = this.diContainer.getService(ServiceName.ENGINE);

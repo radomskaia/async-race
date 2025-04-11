@@ -6,7 +6,6 @@ import {
   ZERO,
 } from "@/constants/constants.ts";
 import type {
-  ApiServiceInterface,
   ResponseData,
   DeleteData,
   CombinedResponse,
@@ -15,12 +14,13 @@ import type {
   SendData,
 } from "@/types/api-service-types.ts";
 import { REQUEST_METHOD } from "@/types/api-service-types.ts";
+import type { Injectable } from "@/types/di-container-types.ts";
 import { ServiceName } from "@/types/di-container-types.ts";
 import { errorHandler } from "@/utilities/utilities.ts";
 import { DIContainer } from "@/services/di-container.ts";
 import { TypeNames } from "@/types/validator-types.ts";
 
-export class ApiService implements ApiServiceInterface {
+export class ApiService implements Injectable {
   public name: ServiceName = ServiceName.API;
   private baseUrl = API_URL;
   private headers = API_HEADER;

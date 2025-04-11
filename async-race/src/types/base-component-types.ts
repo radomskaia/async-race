@@ -1,22 +1,4 @@
-import type {
-  Action,
-  Observer,
-  RegisterEvent,
-} from "@/types/event-emitter-types.ts";
 import type { CreateSVGIconOptions, ElementOptions } from "@/types/index.ts";
-
-export interface BaseComponentInterface<T extends keyof HTMLElementTagNameMap>
-  extends Observer {
-  registerEvent: RegisterEvent;
-
-  update(event: Action): void;
-
-  getElement(): HTMLElementTagNameMap[T];
-
-  appendElement(...child: Element[]): void;
-
-  clearElement(): void;
-}
 
 export type CreateDOMElement = <T extends keyof HTMLElementTagNameMap>({
   tagName,

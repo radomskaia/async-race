@@ -1,4 +1,3 @@
-import type { Injectable } from "@/types/di-container-types.ts";
 import type {
   FullData,
   ResponseCarData,
@@ -9,13 +8,6 @@ import type {
 } from "@/types/api-service-types.ts";
 import type { Car, CarProperties, ModalData } from "@/types/index.ts";
 import type { RaceData } from "@/types/race-service-types.ts";
-
-export interface ValidatorInterface extends Injectable {
-  validate<T extends TypeNames>(
-    typeName: T,
-    value: unknown,
-  ): value is TypesForValidator[T];
-}
 
 export enum TypeNames {
   object = "object",

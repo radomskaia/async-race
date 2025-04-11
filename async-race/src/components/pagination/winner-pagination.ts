@@ -4,11 +4,11 @@ import { BasePagination } from "@/components/pagination/base-pagination.ts";
 import { ServiceName } from "@/types/di-container-types.ts";
 import { DIContainer } from "@/services/di-container.ts";
 import { PAGE_NAME, WINNERS_PER_PAGE } from "@/constants/constants.ts";
-import type { WinnerServiceInterface } from "@/types/winner-service.ts";
 import { errorHandler } from "@/utilities/utilities.ts";
+import type { WinnerService } from "@/services/api/winner-service.ts";
 
 export class WinnerPagination extends BasePagination<
-  WinnerServiceInterface,
+  WinnerService,
   ResponseWinnerData
 > {
   protected limit;

@@ -14,15 +14,13 @@ import type {
   Winner,
 } from "@/types/api-service-types.ts";
 import { Sort } from "@/types/api-service-types.ts";
+import type { Injectable } from "@/types/di-container-types";
 import { ServiceName } from "@/types/di-container-types";
 import type { RaceData } from "@/types/race-service-types.ts";
-import type {
-  TypesForValidator,
-  ValidatorInterface,
-} from "@/types/validator-types.ts";
+import type { TypesForValidator } from "@/types/validator-types.ts";
 import { TypeNames } from "@/types/validator-types.ts";
 
-export class Validator implements ValidatorInterface {
+export class Validator implements Injectable {
   public name = ServiceName.VALIDATOR;
   private privateTypes = {
     object: TypeNames.object,

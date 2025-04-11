@@ -4,13 +4,13 @@ import type {
   Winner,
 } from "@/types/api-service-types.ts";
 import { API_URLS, ERROR_MESSAGES } from "@/constants/constants.ts";
-import type { WinnerServiceInterface } from "@/types/winner-service.ts";
+import type { Injectable } from "@/types/di-container-types.ts";
 import { ServiceName } from "@/types/di-container-types.ts";
 import { DIContainer } from "@/services/di-container.ts";
 import { ActionType } from "@/types/event-emitter-types.ts";
 import { TypeNames } from "@/types/validator-types.ts";
 
-export class WinnerService implements WinnerServiceInterface {
+export class WinnerService implements Injectable {
   public name = ServiceName.WINNER;
   private url = API_URLS.WINNERS;
   private apiService;

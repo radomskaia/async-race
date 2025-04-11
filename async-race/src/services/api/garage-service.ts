@@ -1,4 +1,5 @@
 import { DIContainer } from "@/services/di-container.ts";
+import type { Injectable } from "@/types/di-container-types.ts";
 import { ServiceName } from "@/types/di-container-types.ts";
 import { API_URLS, ERROR_MESSAGES } from "@/constants/constants.ts";
 import type {
@@ -6,12 +7,11 @@ import type {
   GetCarsHandler,
   UpdateCar,
 } from "@/types/api-service-types.ts";
-import type { GarageServiceInterface } from "@/types/garage-service-types.ts";
 import { ActionType } from "@/types/event-emitter-types.ts";
 import type { Car } from "@/types";
 import { TypeNames } from "@/types/validator-types.ts";
 
-export class GarageService implements GarageServiceInterface {
+export class GarageService implements Injectable {
   public name = ServiceName.GARAGE;
   private url = API_URLS.GARAGE;
   private apiService;

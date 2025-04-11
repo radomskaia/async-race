@@ -1,14 +1,5 @@
 import type { Car, CarProperties, SetPageCallback } from "@/types/index.ts";
-import type { Injectable } from "@/types/di-container-types.ts";
 import type { RaceData } from "@/types/race-service-types.ts";
-
-export interface ApiServiceInterface extends Injectable {
-  deleteData: DeleteData;
-  updateData: CreateOrUpdateHandler;
-  createData: CreateOrUpdateHandler;
-  patchData: CreateOrUpdateHandler;
-  getData: GetDataHandler;
-}
 
 export type DeleteData = (url: string) => Promise<void>;
 

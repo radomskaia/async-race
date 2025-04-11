@@ -1,13 +1,12 @@
 import type {
   Action,
-  EventEmitterInterface,
   Observer,
   RegisterObserver,
 } from "@/types/event-emitter-types.ts";
-import { ONE, ZERO } from "@/constants/constants.ts";
+import type { Injectable } from "@/types/di-container-types.ts";
 import { ServiceName } from "@/types/di-container-types.ts";
 
-export class EventEmitter implements EventEmitterInterface {
+export class EventEmitter implements Injectable {
   public name = ServiceName.EVENT_EMITTER;
   private observers = new Map<string, Observer[]>();
 
@@ -17,16 +16,6 @@ export class EventEmitter implements EventEmitterInterface {
     }
     const observers = this.observers.get(eventType);
     observers?.push(observer);
-  };
-
-  public unsubscribe: RegisterObserver = (eventType, observer) => {
-    const observers = this.observers.get(eventType);
-    if (observers) {
-      const index = observers.indexOf(observer);
-      if (index >= ZERO) {
-        observers.splice(index, ONE);
-      }
-    }
   };
 
   public notify(event: Action): void {

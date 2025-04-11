@@ -1,18 +1,15 @@
 import { LS_PREFIX } from "@/constants/constants.ts";
-import type { SessionStorageInterface } from "@/types/session-storage-types.ts";
+import type { Injectable } from "@/types/di-container-types.ts";
 import { ServiceName } from "@/types/di-container-types.ts";
 import type { TypeNames, TypesForValidator } from "@/types/validator-types.ts";
 import { DIContainer } from "@/services/di-container.ts";
 
-export class SessionStorage implements SessionStorageInterface {
+export class SessionStorage implements Injectable {
   public name = ServiceName.STORAGE;
-  private readonly prefix: string;
+  private readonly prefix = LS_PREFIX;
   private validator = DIContainer.getInstance().getService(
     ServiceName.VALIDATOR,
   );
-  constructor() {
-    this.prefix = LS_PREFIX;
-  }
 
   public save(key: string, value: unknown): void {
     const storageKey = this.prefix + key;

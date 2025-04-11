@@ -2,6 +2,7 @@ import { SVG_CONFIG } from "@/constants/buttons-constants.ts";
 import type {
   Action,
   ActionType,
+  Observer,
   RegisterEvent,
 } from "@/types/event-emitter-types.ts";
 import type { Callback } from "@/types/button-types.ts";
@@ -11,7 +12,6 @@ import type {
   AddAttributes,
   AddClassList,
   AddTextContent,
-  BaseComponentInterface,
   CreateDOMElement,
   CreateSVG,
 } from "@/types/base-component-types.ts";
@@ -20,7 +20,7 @@ import { ERROR_MESSAGES } from "@/constants/constants.ts";
 export abstract class BaseComponent<
   T extends keyof HTMLElementTagNameMap,
   O = void,
-> implements BaseComponentInterface<T>
+> implements Observer
 {
   protected element: HTMLElementTagNameMap[T];
   protected listeners = new Map<ActionType, Callback[]>();

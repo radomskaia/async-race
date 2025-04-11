@@ -1,12 +1,11 @@
 import type {
-  DIContainerInterface,
   Injectable,
   ServiceMap,
   ServiceName,
 } from "@/types/di-container-types.ts";
 import { ERROR_MESSAGES } from "@/constants/constants.ts";
 
-export class DIContainer implements DIContainerInterface {
+export class DIContainer {
   private static instance: DIContainer | undefined;
   private services: Map<string, Injectable>;
   private factory: Map<string, new () => Injectable>;
