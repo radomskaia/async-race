@@ -114,8 +114,6 @@ export const WINNERS_TABLE_HEADERS = [
 export const SUFFIXES = {
   COUNT: "x",
   SECONDS: "s",
-  PIXELS: "px",
 };
 
-export const TRANSFORM_TYPE = "translateX";
 export const ANIMATE_FILL_MODE = "forwards";
