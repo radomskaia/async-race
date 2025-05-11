@@ -11,7 +11,7 @@
 .actionButton {
   border: 1px solid var(--primary);
   border-radius: var(--border-radius);
-  padding: 10px 20px;
+  padding: 1rem 2rem;
   box-shadow: none;
   font-family: inherit;
   font-weight: 700;
@@ -24,14 +24,14 @@
 
 @media screen and (max-width: 47rem) {
   .actionButton {
-    padding: 5px 10px;
+    padding: 0.5rem 1rem;
     font-size: 1.6rem;
   }
 }
 
 .iconButton {
-  width: 45px;
-  height: 45px;
+  width: 4.5rem;
+  height: 4.5rem;
   filter: invert(0) brightness(1);
   transform: scale(1);
   transition: 0.3s ease-in-out;
@@ -39,13 +39,13 @@
 }
 
 .settings {
-  width: 40px;
-  height: 40px;
+  width: 4rem;
+  height: 4rem;
 }
 
 .actions {
-  width: 50px;
-  height: 50px;
+  width: 5rem;
+  height: 5rem;
 }
 
 .button:disabled {

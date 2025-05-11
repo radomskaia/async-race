@@ -8,13 +8,13 @@
 }
 
 .icon {
-  width: 35px;
-  height: 35px;
+  width: 3.5rem;
+  height: 3.5rem;
 }
 
 .carIcon {
-  width: 80px;
-  height: 45px;
+  width: 8rem;
+  height: 4.5rem;
 }
 
 .carName {
@@ -24,8 +24,8 @@
   text-overflow: ellipsis;
   color: inherit;
   background-color: var(--secondary-alpha);
-  padding-block: 5px;
-  padding-inline: 10px;
+  padding-block: 0.5rem;
+  padding-inline: 1rem;
 }
 
 .carName:disabled {
@@ -36,8 +36,8 @@
 .carColor {
   border: none;
   padding: 0;
-  width: 35px;
-  height: 35px;
+  width: 3.5rem;
+  height: 3.5rem;
   opacity: 1;
   transition: all 0.2s ease-in-out;
   cursor: pointer;
@@ -55,8 +55,8 @@
 .formButton {
   border: none;
   padding: 0;
-  width: 20px;
-  height: 20px;
+  width: 2rem;
+  height: 2rem;
   background-color: transparent;
   opacity: 1;
   transition: opacity 0.2s ease-in-out;
@@ -78,6 +78,14 @@
 
 @media screen and (max-width: 47rem) {
   .carsList {
-    border-spacing: 5px;
+    border-spacing: 0.5rem;
+  }
+}
+
+@media screen and (max-width: 29rem) {
+  .carPanel {
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+    gap: 1rem;
   }
 }

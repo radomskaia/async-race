@@ -124,6 +124,7 @@ export class CarItem extends BaseComponent<"li"> {
         utilitiesStyles.flex,
         utilitiesStyles.justifyBetween,
         utilitiesStyles.alignCenter,
+        carStyles.carPanel,
       ],
     });
     carPanel.append(this.form.getElement(), this.addControlsButtons());

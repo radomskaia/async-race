@@ -111,6 +111,7 @@ export class Home extends BaseComponent<"div"> {
         utilitiesStyles.justifyBetween,
         utilitiesStyles.alignCenter,
         utilitiesStyles.widthFull,
+          styles.uiPanel,
       ],
     });
     const createForm = new CreateForm();

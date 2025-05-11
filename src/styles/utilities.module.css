@@ -1,7 +1,7 @@
 .container {
   margin: 0 auto;
   max-width: 1200px;
-  padding-inline: 30px;
+  padding-inline: 3rem;
 }
 
 .flex {
@@ -35,15 +35,15 @@
 }
 
 .gap30 {
-  gap: 30px;
+  gap: 3rem;
 }
 
 .gap20 {
-  gap: 20px;
+  gap: 2rem;
 }
 
 .gap10 {
-  gap: 10px;
+  gap: 1rem;
 }
 
 .displayNone {
@@ -74,7 +74,7 @@
 }
 
 .width80px {
-  width: 80px;
+  width: 8rem;
 }
 
 .positionRelative {
@@ -82,11 +82,11 @@
 }
 
 .marginInline10 {
-  margin-inline: 10px;
+  margin-inline: 1rem;
 }
 
 @media screen and (max-width: 47rem) {
   .gap30 {
-    gap: 20px;
+    gap: 2rem;
   }
 }

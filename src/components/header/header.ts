@@ -19,7 +19,7 @@ export class Header extends BaseComponent<"header"> {
   };
   private readonly settingsWrapper: HTMLDivElement;
   private readonly pagesWrapper: HTMLDivElement;
-  private pagesButtons: TextButton[] = [];
+
   private disabledConfig: Record<string, string> = {
     [BUTTON_TEXT.TO_WINNERS]: PAGE_PATH.WINNERS,
     [BUTTON_TEXT.TO_GARAGE]: PAGE_PATH.HOME,
@@ -42,8 +42,6 @@ export class Header extends BaseComponent<"header"> {
   public addPageButton(buttonName: string): this {
     const router = DIContainer.getInstance().getService(ServiceName.ROUTER);
     const button = new TextButton(buttonName);
-
-    this.pagesButtons.push(button);
 
     button.registerEvent(ActionType.changeRoute, (data: unknown) => {
       const isDisabled = this.disabledConfig[buttonName] === data;
@@ -93,6 +91,7 @@ export class Header extends BaseComponent<"header"> {
         utilitiesStyles.center,
         utilitiesStyles.gap30,
         utilitiesStyles.marginInline10,
+        styles.icon,
       ],
     });
   }

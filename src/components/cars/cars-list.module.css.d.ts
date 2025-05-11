@@ -6,5 +6,6 @@ declare const carStyles: {
   carColor: string;
   formButton: string;
   form: string;
+  carPanel: string;
 };
 export default carStyles;

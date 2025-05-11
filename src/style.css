@@ -63,30 +63,8 @@ input {
   }
 }
 
-table {
-  border-collapse: collapse;
-  width: 100%;
-  text-align: left;
-}
-
-th,
-td {
-  border-bottom: 1px solid var(--primary);
-  padding: 10px 15px;
-}
-
-th {
-  font-weight: 700;
-  color: var(--secondary);
-  background-color: var(--primary-alpha);
-}
-
-tr:hover {
-  background-color: var(--secondary-alpha);
-}
-
-td svg {
-  vertical-align: middle;
-  width: 20px;
-  height: 20px;
+@media screen and (max-width: 29rem) {
+  html {
+    font-size: 50%;
+  }
 }
