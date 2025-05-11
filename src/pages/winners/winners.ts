@@ -143,6 +143,7 @@ export class Winners extends BaseComponent<"div"> {
   private createWinnerTable(data: FullData[]): HTMLTableElement {
     const table = this.createDOMElement({
       tagName: "table",
+      classList: [styles.table, utilitiesStyles.widthFull],
     });
 
     this.tableWrapper.append(table);
@@ -158,11 +159,13 @@ export class Winners extends BaseComponent<"div"> {
     const headers = WINNERS_TABLE_HEADERS;
     const tr = this.createDOMElement({
       tagName: "tr",
+      classList: [styles.tableRow],
     });
     for (const header of headers) {
       const th = this.createDOMElement({
         tagName: "th",
         textContent: header,
+        classList: [styles.tableHeader],
       });
       tr.append(th);
     }
@@ -178,6 +181,7 @@ export class Winners extends BaseComponent<"div"> {
   }: FullData): HTMLTableRowElement {
     const tr = this.createDOMElement({
       tagName: "tr",
+      classList: [styles.tableRow],
     });
 
     const rowData = [
@@ -188,11 +192,11 @@ export class Winners extends BaseComponent<"div"> {
       `${time.toFixed(TWO)}${SUFFIXES.SECONDS}`,
     ];
     for (const data of rowData) {
-      let td;
+      const td = this.createDOMElement({
+        tagName: "td",
+        classList: [styles.tableData],
+      });
       if (data === color) {
-        td = this.createDOMElement({
-          tagName: "td",
-        });
         const { use, svg } = this.createSVG({
           classList: [carStyles.carIcon],
           path: ICON_PATH.CAR,
@@ -200,10 +204,7 @@ export class Winners extends BaseComponent<"div"> {
         use.setAttribute(ATTRIBUTES.FILL, color);
         td.append(svg);
       } else {
-        td = this.createDOMElement({
-          tagName: "td",
-          textContent: data,
-        });
+        this.addTextContent(data, td);
       }
       tr.append(td);
     }

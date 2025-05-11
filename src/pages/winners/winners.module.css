@@ -1,10 +1,11 @@
+
 .tabButton {
-  border: 1px solid var(--dark);
+  border: 1px solid var(--primary);
   border-radius: var(--border-radius);
   padding: 5px;
   width: 100px;
   text-transform: capitalize;
-  color: var(--dark);
+  color: var(--primary);
   background-color: inherit;
 }
 
@@ -15,7 +16,7 @@ input:disabled ~ .tabButton {
 
 input:checked ~ .tabButton {
   color: var(--static-white);
-  background-color: var(--dark);
+  background-color: var(--primary);
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -30,7 +31,7 @@ input:checked ~ .tabButton {
 
   input:checked ~ .tabButton:hover {
     color: var(--static-white);
-    background-color: var(--dark);
+    background-color: var(--primary);
   }
 }
 
@@ -56,3 +57,38 @@ input:checked ~ .tabButton {
 .orderIconRotate {
   transform: scaleY(-1);
 }
+
+
+ .table {
+  border-collapse: collapse;
+  text-align: left;
+ }
+
+ .tableHeader,
+ .tableData {
+  border-bottom: 1px solid var(--primary);
+  padding: 1rem 1.5rem;
+ }
+
+ .tableHeader {
+  font-weight: 700;
+  color: var(--secondary);
+  background-color: var(--primary-alpha);
+ }
+
+ .tableRow:hover {
+  background-color: var(--secondary-alpha);
+ }
+
+ @media screen and (max-width: 29rem) {
+   .tableData svg {
+      width: 6rem;
+      height: 3.5rem;
+  }
+
+   .tableHeader,
+   .tableData {
+      padding: 1rem;
+  }
+}
+

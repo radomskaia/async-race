@@ -59,6 +59,11 @@ export abstract class BaseComponent<
     this.element.append(...child);
   }
 
+  public addTextContent: AddTextContent = (textContent, element) => {
+    element = element ?? this.element;
+    element.textContent = textContent;
+  };
+
   public clearElement(): void {
     this.element.replaceChildren();
   }
@@ -93,11 +98,6 @@ export abstract class BaseComponent<
     for (const [key, value] of Object.entries(attributes)) {
       element.setAttribute(key, value);
     }
-  };
-
-  protected addTextContent: AddTextContent = (textContent, element) => {
-    element = element ?? this.element;
-    element.textContent = textContent;
   };
 
   protected createSVG: CreateSVG = ({ path, classList, attributes }) => {
