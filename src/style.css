@@ -1,0 +1,70 @@
+@import "styles/variables.css";
+
+/* base */
+*,
+*::before,
+*::after {
+  padding: 0;
+  box-sizing: border-box;
+}
+
+*:not(dialog),
+*::before,
+*::after {
+  margin: 0;
+}
+
+html {
+  font-size: 62.5%;
+  scroll-behavior: smooth;
+}
+
+a:link,
+a:visited {
+  text-decoration: none;
+  color: inherit;
+}
+
+ul {
+  list-style: none;
+}
+
+body {
+  padding-bottom: 20px;
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.8rem;
+  color: var(--primary);
+  background-image:
+    linear-gradient(
+      rgba(var(--content-background-alpha50)),
+      rgba(var(--content-background-alpha50))
+    ),
+    url("../bg.webp");
+}
+
+input::placeholder {
+  color: inherit;
+  opacity: 0.5;
+}
+
+input {
+  border-radius: var(--border-radius);
+  padding-block: 5px;
+  padding-inline: 15px;
+}
+
+@media screen and (max-width: 47rem) {
+  html {
+    font-size: 56.25%;
+  }
+
+  body {
+    font-size: 1.6rem;
+  }
+}
+
+@media screen and (max-width: 29rem) {
+  html {
+    font-size: 50%;
+  }
+}

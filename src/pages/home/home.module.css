@@ -1,0 +1,17 @@
+.buttonWrapper {
+  border-radius: var(--border-radius);
+  background-color: transparent;
+  transition: all 0.2s ease-in-out;
+}
+
+.uiPanel {
+  @media screen and (max-width: 29rem) {
+  flex-wrap: wrap;
+  justify-content: center;
+    gap: 1.5rem;
+}
+}
+
+.highlight {
+  background-color: var(--content-background-alpha);
+}

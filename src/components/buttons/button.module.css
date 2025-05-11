@@ -1,0 +1,87 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background-color: transparent;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.actionButton {
+  border: 1px solid var(--primary);
+  border-radius: var(--border-radius);
+  padding: 1rem 2rem;
+  box-shadow: none;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 2rem;
+  text-transform: uppercase;
+  color: var(--primary);
+  background-color: var(--secondary);
+  transform: translateY(0);
+}
+
+@media screen and (max-width: 47rem) {
+  .actionButton {
+    padding: 0.5rem 1rem;
+    font-size: 1.6rem;
+  }
+}
+
+.iconButton {
+  width: 4.5rem;
+  height: 4.5rem;
+  filter: invert(0) brightness(1);
+  transform: scale(1);
+  transition: 0.3s ease-in-out;
+  cursor: pointer;
+}
+
+.settings {
+  width: 4rem;
+  height: 4rem;
+}
+
+.actions {
+  width: 5rem;
+  height: 5rem;
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: auto;
+}
+
+.button:disabled .iconButton {
+  filter: invert(0.2) brightness(1);
+  transform: scale(0.9);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .actionButton:hover {
+    filter: brightness(1.1);
+  }
+
+  .iconButton:hover {
+    transform: scale(1.2);
+  }
+
+  .iconButton:active {
+    transform: scale(1.05);
+  }
+
+  button:disabled:hover {
+    cursor: auto;
+  }
+
+  button:disabled .iconButton:hover {
+    transform: scale(0.9);
+    cursor: auto;
+  }
+
+  button:disabled .iconButton:active {
+    transform: scale(0.9);
+    cursor: auto;
+  }
+}

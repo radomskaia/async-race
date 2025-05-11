@@ -1,0 +1,94 @@
+
+.tabButton {
+  border: 1px solid var(--primary);
+  border-radius: var(--border-radius);
+  padding: 5px;
+  width: 100px;
+  text-transform: capitalize;
+  color: var(--primary);
+  background-color: inherit;
+}
+
+input:disabled ~ .tabButton {
+  background-color: inherit;
+  cursor: auto;
+}
+
+input:checked ~ .tabButton {
+  color: var(--static-white);
+  background-color: var(--primary);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .tabButton:hover {
+    background-color: var(--primary-alpha);
+  }
+
+  input:disabled ~ .tabButton:hover {
+    background-color: inherit;
+    cursor: auto;
+  }
+
+  input:checked ~ .tabButton:hover {
+    color: var(--static-white);
+    background-color: var(--primary);
+  }
+}
+
+.filter {
+  border: solid 1px var(--primary);
+  border-radius: var(--border-radius);
+  width: 150px;
+  font-family: inherit;
+  font-size: inherit;
+  text-align: center;
+  text-transform: uppercase;
+  color: inherit;
+  background-color: inherit;
+  padding-block: 5px;
+  padding-inline: 10px;
+}
+
+.orderIcon {
+  transform: scaleY(1);
+  transition: all 0.2s ease-in-out;
+}
+
+.orderIconRotate {
+  transform: scaleY(-1);
+}
+
+
+ .table {
+  border-collapse: collapse;
+  text-align: left;
+ }
+
+ .tableHeader,
+ .tableData {
+  border-bottom: 1px solid var(--primary);
+  padding: 1rem 1.5rem;
+ }
+
+ .tableHeader {
+  font-weight: 700;
+  color: var(--secondary);
+  background-color: var(--primary-alpha);
+ }
+
+ .tableRow:hover {
+  background-color: var(--secondary-alpha);
+ }
+
+ @media screen and (max-width: 29rem) {
+   .tableData svg {
+      width: 6rem;
+      height: 3.5rem;
+  }
+
+   .tableHeader,
+   .tableData {
+      padding: 1rem;
+  }
+}
+

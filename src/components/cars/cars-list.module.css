@@ -1,0 +1,91 @@
+.carsList {
+  width: 100%;
+  white-space: nowrap;
+}
+
+.carsList li {
+  border-bottom: 3px dashed var(--primary-alpha);
+}
+
+.icon {
+  width: 3.5rem;
+  height: 3.5rem;
+}
+
+.carIcon {
+  width: 8rem;
+  height: 4.5rem;
+}
+
+.carName {
+  border: 1px solid var(--primary);
+  width: fit-content;
+  font-size: inherit;
+  text-overflow: ellipsis;
+  color: inherit;
+  background-color: var(--secondary-alpha);
+  padding-block: 0.5rem;
+  padding-inline: 1rem;
+}
+
+.carName:disabled {
+  border: 1px solid transparent;
+  background-color: transparent;
+}
+
+.carColor {
+  border: none;
+  padding: 0;
+  width: 3.5rem;
+  height: 3.5rem;
+  opacity: 1;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.carColor::-webkit-color-swatch {
+  border: 1px solid var(--primary);
+  border-radius: 50%;
+}
+
+.carColor::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.formButton {
+  border: none;
+  padding: 0;
+  width: 2rem;
+  height: 2rem;
+  background-color: transparent;
+  opacity: 1;
+  transition: opacity 0.2s ease-in-out;
+  cursor: pointer;
+  scale: 1;
+}
+
+.form:has(.carName:disabled) .formButton {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.carColor:disabled {
+  opacity: 0.5;
+  pointer-events: none;
+  scale: 0.8;
+}
+
+@media screen and (max-width: 47rem) {
+  .carsList {
+    border-spacing: 0.5rem;
+  }
+}
+
+@media screen and (max-width: 29rem) {
+  .carPanel {
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+    gap: 1rem;
+  }
+}

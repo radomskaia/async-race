@@ -1,0 +1,92 @@
+.container {
+  margin: 0 auto;
+  max-width: 1200px;
+  padding-inline: 3rem;
+}
+
+.flex {
+  display: flex;
+}
+
+.flexColumn {
+  flex-direction: column;
+}
+
+.alignCenter {
+  align-items: center;
+}
+
+.center {
+  align-items: center;
+  justify-content: center;
+}
+
+.justifyAround {
+  justify-content: space-around;
+}
+
+.justifyBetween {
+  justify-content: space-between;
+}
+
+.flexWrap {
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.gap30 {
+  gap: 3rem;
+}
+
+.gap20 {
+  gap: 2rem;
+}
+
+.gap10 {
+  gap: 1rem;
+}
+
+.displayNone {
+  display: none;
+}
+
+.image {
+  width: 100%;
+  object-fit: contain;
+}
+
+.widthFull {
+  width: 100%;
+}
+
+.noPointerEvents {
+  pointer-events: none;
+}
+
+.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.centerMargin {
+  margin: 0 auto;
+}
+
+.width80px {
+  width: 8rem;
+}
+
+.positionRelative {
+  position: relative;
+}
+
+.marginInline10 {
+  margin-inline: 1rem;
+}
+
+@media screen and (max-width: 47rem) {
+  .gap30 {
+    gap: 2rem;
+  }
+}
