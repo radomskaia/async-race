@@ -1,2 +1,1 @@
-cd async-race
 npx --no-install commitlint --edit "$1"
