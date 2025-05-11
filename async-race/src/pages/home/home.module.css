@@ -1,9 +1,0 @@
-.buttonWrapper {
-  border-radius: var(--border-radius);
-  background-color: transparent;
-  transition: all 0.2s ease-in-out;
-}
-
-.highlight {
-  background-color: var(--content-background-alpha);
-}

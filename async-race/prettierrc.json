@@ -1,6 +1,0 @@
-{
-  "singleQuote": true,
-  "quoteProps": "consistent",
-  "singleAttributePerLine": true,
-  "bracketSameLine": false
-}
