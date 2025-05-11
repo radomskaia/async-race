@@ -8,15 +8,15 @@
     "dev": "vite --host",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "format": "prettier --write .",
+    "format": "prettier --write async-race",
     "deploy": "npm run build && npx gh-pages -d dist -e async-race",
-    "ci:format": "prettier --check .",
+    "ci:format": "prettier --check async-race",
     "typecheck": "tsc --noEmit",
-    "lint": "eslint .",
-    "lint:fix": "eslint --ext ts --fix .",
+    "lint": "eslint async-race",
+    "lint:fix": "eslint --ext ts --fix async-race",
     "stylelint": "stylelint \"**/*.css\"",
     "stylelint:fix": "stylelint \"**/*.css\" --fix",
-    "prepare": "cd .. && husky async-race/.husky"
+    "prepare": "cd  && husky async-race/.husky"
   },
   "lint-staged": {
     "*": [

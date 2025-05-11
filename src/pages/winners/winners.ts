@@ -1,4 +1,4 @@
-import { BaseComponent } from "@/components/base-component.js";
+import { BaseComponent } from "@/components/base-component.ts";
 import utilitiesStyles from "@/styles/utilities.module.css";
 import { WinnerPagination } from "@/components/pagination/winner-pagination.ts";
 import styles from "@/pages/winners/winners.module.css";

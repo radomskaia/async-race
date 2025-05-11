@@ -32,6 +32,13 @@ export class BaseButton extends BaseComponent<"button", ButtonOptions> {
     this.element.addEventListener("click", callback);
   }
 
+  protected createElement(): HTMLButtonElement {
+    return this.createDOMElement({
+      tagName: "button",
+      classList: [styles.button],
+    });
+  }
+
   public addRaceListeners(id?: number, isSingle = false): void {
     if (isSingle) {
       this.registerEvent(ActionType.singleRaceStarted, (eventID) => {
@@ -70,13 +77,6 @@ export class BaseButton extends BaseComponent<"button", ButtonOptions> {
     this.registerEvent(ActionType.raceStarted, () => {
       this.wasDisabled.isDisabled = this.element.disabled;
       this.disabledElement(true);
-    });
-  }
-
-  protected createElement(): HTMLButtonElement {
-    return this.createDOMElement({
-      tagName: "button",
-      classList: [styles.button],
     });
   }
 }

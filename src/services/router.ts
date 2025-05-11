@@ -5,8 +5,8 @@ import {
   PAGE_PATH,
   SYMBOLS,
 } from "@/constants/constants.ts";
-import type { Injectable } from "@/types/di-container-types";
-import { ServiceName } from "@/types/di-container-types";
+import type { Injectable } from "@/types/di-container-types.ts";
+import { ServiceName } from "@/types/di-container-types.ts";
 import type { Route } from "@/types/router-type.ts";
 import { DIContainer } from "@/services/di-container.ts";
 import { ActionType } from "@/types/event-emitter-types.ts";

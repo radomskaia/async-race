@@ -14,8 +14,8 @@ import type {
   Winner,
 } from "@/types/api-service-types.ts";
 import { Sort } from "@/types/api-service-types.ts";
-import type { Injectable } from "@/types/di-container-types";
-import { ServiceName } from "@/types/di-container-types";
+import type { Injectable } from "@/types/di-container-types.ts";
+import { ServiceName } from "@/types/di-container-types.ts";
 import type { RaceData } from "@/types/race-service-types.ts";
 import type { TypesForValidator } from "@/types/validator-types.ts";
 import { TypeNames } from "@/types/validator-types.ts";
